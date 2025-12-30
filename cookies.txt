@@ -1,0 +1,8 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+bean-style.mysapo.net	TRUE	/	FALSE	1999999999	_landing_page	%2F
+bean-style.mysapo.net	TRUE	/	FALSE	1999999999	cart	237e818155e6137cbec2a2dce2f32f3a
+bean-style.mysapo.net	TRUE	/	FALSE	1999999999	cart_sig	6f9122cb6601da44ca6a0c37479add72
+bean-style.mysapo.net	TRUE	/	FALSE	1999999999	cart_currency	VND
+bean-style.mysapo.net	TRUE	/	FALSE	1999999999	samesite	none
+
