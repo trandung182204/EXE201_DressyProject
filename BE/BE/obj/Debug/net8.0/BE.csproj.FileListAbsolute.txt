@@ -118,11 +118,6 @@ C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\BE.MvcApplicationPartsAss
 C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\BE.sourcelink.json
 C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets.development.json
-C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets\msbuild.BE.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets\msbuild.build.BE.props
-C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.BE.props
-C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.BE.props
-C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\scopedcss\bundle\BE.styles.css
 C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\BE.csproj.Up2Date
 C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\BE.dll
@@ -130,3 +125,15 @@ C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\refint\BE.dll
 C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\BE.pdb
 C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\BE.genruntimeconfig.cache
 C:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\ref\BE.dll
+c:\Users\dungb\Downloads\EXE201\BE\BE\bin\Debug\net8.0\BE.staticwebassets.endpoints.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\bin\Debug\net8.0\Microsoft.OpenApi.dll
+c:\Users\dungb\Downloads\EXE201\BE\BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+c:\Users\dungb\Downloads\EXE201\BE\BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+c:\Users\dungb\Downloads\EXE201\BE\BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\rpswa.dswa.cache.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\BE.MvcApplicationPartsAssemblyInfo.cs
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\rjimswa.dswa.cache.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets.build.json.cache
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets.build.endpoints.json

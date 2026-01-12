@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj": {}
+    "c:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj": {
+    "c:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj",
+        "projectUniqueName": "c:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj",
         "projectName": "BE",
-        "projectPath": "C:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj",
+        "projectPath": "c:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj",
         "packagesPath": "C:\\Users\\dungb\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\obj\\",
+        "outputPath": "c:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -43,7 +43,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -64,6 +65,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
             }
           },
           "imports": [
@@ -85,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
