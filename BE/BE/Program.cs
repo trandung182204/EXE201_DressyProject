@@ -30,7 +30,12 @@ builder.Services.AddScoped<BE.Services.Interfaces.IUsersService, BE.Services.Imp
  builder.Services.AddScoped<BE.Services.Interfaces.IPaymentsService, BE.Services.Implementations.PaymentsService>();
 builder.Services.AddScoped<BE.Services.Interfaces.IProvidersService, BE.Services.Implementations.ProvidersService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 // Đảm bảo ApplicationDbContext đã được đăng ký cho StatisticsController
 
 builder.Services.AddCors(options =>

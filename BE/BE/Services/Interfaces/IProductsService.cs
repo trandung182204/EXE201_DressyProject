@@ -11,5 +11,7 @@ namespace BE.Services.Interfaces
         Task<Products> AddAsync(Products model);
         Task<Products?> UpdateAsync(int id, Products model);
         Task<bool> DeleteAsync(int id);
+        Task<bool> UpdateStatusAsync(long id, string status);
+
     }
 }

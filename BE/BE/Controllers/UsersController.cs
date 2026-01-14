@@ -1,6 +1,8 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BE.Services.Interfaces;
 using BE.Models;
+using BE.DTOs;
 
 namespace BE.Controllers
 {
@@ -45,11 +47,33 @@ namespace BE.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(long id)
         {
             var deleted = await _service.DeleteAsync(id);
             if (!deleted) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
             return Ok(new { success = true, data = (object?)null, message = "Deleted successfully" });
         }
-    }
+
+
+        [HttpPut("{id}/status")]
+public async Task<IActionResult> UpdateStatus(long id, [FromBody] UpdateUserStatusDto dto)
+{
+    if (string.IsNullOrWhiteSpace(dto.Status))
+        return BadRequest(new { success = false, message = "Status is required" });
+
+    var user = await _service.GetByIdAsync(id);
+    if (user == null)
+        return NotFound(new { success = false, message = "User not found" });
+
+    user.Status = dto.Status;
+    var updated = await _service.UpdateAsync(id, user);
+
+    return Ok(new
+    {
+        success = true,
+        data = updated,
+        message = "Status updated successfully"
+    });
+}
+}
 }

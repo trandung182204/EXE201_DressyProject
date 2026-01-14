@@ -44,5 +44,22 @@ namespace BE.Services.Implementations
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> UpdateStatusAsync(long id, string status)
+{
+    var product = await _context.Products.FindAsync(id);
+    if (product == null) return false;
+
+    status = status.Trim().ToUpper();
+
+    if (status != "AVAILABLE" && status != "UNAVAILABLE")
+        return false;
+
+    product.Status = status;
+    await _context.SaveChangesAsync();
+    return true;
+}
+
+
     }
 }

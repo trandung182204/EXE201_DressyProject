@@ -16,7 +16,11 @@ namespace BE.Repositories.Implementations
         }
         public async Task<IEnumerable<Products>> GetAllAsync()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products
+                .Include(p => p.Provider)
+                .Include(p => p.Category)
+                .Include(p => p.ProductImages)
+                .ToListAsync();
         }
         public async Task<Products?> GetByIdAsync(int id)
         {

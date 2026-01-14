@@ -51,5 +51,18 @@ namespace BE.Controllers
             if (!deleted) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
             return Ok(new { success = true, data = (object?)null, message = "Deleted successfully" });
         }
+
+        [HttpGet("list")]
+public async Task<IActionResult> GetBookingList()
+{
+    var data = await _service.GetBookingListAsync();
+    return Ok(new
+    {
+        success = true,
+        data,
+        message = "Fetched successfully"
+    });
+}
+
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BE.Services.Interfaces;
 using BE.Models;
+using BE.DTOs;
 
 namespace BE.Controllers
 {
@@ -51,5 +52,15 @@ namespace BE.Controllers
             if (!deleted) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
             return Ok(new { success = true, data = (object?)null, message = "Deleted successfully" });
         }
+
+        [HttpPut("{id}/status")]
+public async Task<IActionResult> UpdateStatus(long id, [FromBody] UpdateProductStatusDto dto)
+{
+    var updated = await _service.UpdateStatusAsync(id, dto.Status);
+    if (!updated)
+        return NotFound(new { success = false, message = "Not found" });
+
+    return Ok(new { success = true, message = "Status updated" });
+}
     }
 }
