@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj": {}
+    "C:\\Users\\Acer\\Documents\\EXE201_DressyProject\\BE\\BE\\BE.csproj": {}
   },
   "projects": {
-    "c:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj": {
+    "C:\\Users\\Acer\\Documents\\EXE201_DressyProject\\BE\\BE\\BE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj",
+        "projectUniqueName": "C:\\Users\\Acer\\Documents\\EXE201_DressyProject\\BE\\BE\\BE.csproj",
         "projectName": "BE",
-        "projectPath": "c:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\BE.csproj",
-        "packagesPath": "C:\\Users\\dungb\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\dungb\\Downloads\\EXE201\\BE\\BE\\obj\\",
+        "projectPath": "C:\\Users\\Acer\\Documents\\EXE201_DressyProject\\BE\\BE\\BE.csproj",
+        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Acer\\Documents\\EXE201_DressyProject\\BE\\BE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\dungb\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -90,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.308/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
