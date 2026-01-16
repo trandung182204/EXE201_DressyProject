@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using BE.Services.Interfaces;
 using BE.Models;
-using BE.DTOs;
 
 namespace BE.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class FeedbackResponsesController : ControllerBase
     {
-        private readonly IProductsService _service;
-        public ProductsController(IProductsService service)
+        private readonly IFeedbackResponsesService _service;
+        public FeedbackResponsesController(IFeedbackResponsesService service)
         {
             _service = service;
         }
@@ -31,14 +30,14 @@ namespace BE.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Products model)
+        public async Task<IActionResult> Create([FromBody] FeedbackResponses model)
         {
             var created = await _service.AddAsync(model);
             return Ok(new { success = true, data = created, message = "Created successfully" });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Products model)
+        public async Task<IActionResult> Update(int id, [FromBody] FeedbackResponses model)
         {
             var updated = await _service.UpdateAsync(id, model);
             if (updated == null) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
@@ -49,18 +48,8 @@ namespace BE.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _service.DeleteAsync(id);
-            if (!deleted) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
-            return Ok(new { success = true, data = (object?)null, message = "Deleted successfully" });
+            if (!deleted) return NotFound(new { success = false, message = "Not found" });
+            return Ok(new { success = true, message = "Deleted successfully" });
         }
-
-        [HttpPut("{id}/status")]
-public async Task<IActionResult> UpdateStatus(long id, [FromBody] UpdateProductStatusDto dto)
-{
-    var updated = await _service.UpdateStatusAsync(id, dto.Status);
-    if (!updated)
-        return NotFound(new { success = false, message = "Not found" });
-
-    return Ok(new { success = true, message = "Status updated" });
-}
     }
 }

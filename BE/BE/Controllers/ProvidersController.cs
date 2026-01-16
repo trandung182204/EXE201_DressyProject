@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using BE.Models;
 using BE.Services.Interfaces;
+using BE.Models;
 
 namespace BE.Controllers
 {
@@ -9,7 +9,6 @@ namespace BE.Controllers
     public class ProvidersController : ControllerBase
     {
         private readonly IProvidersService _service;
-
         public ProvidersController(IProvidersService service)
         {
             _service = service;
@@ -23,12 +22,10 @@ namespace BE.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(long id)
+        public async Task<IActionResult> Get(int id)
         {
             var item = await _service.GetByIdAsync(id);
-            if (item == null)
-                return NotFound(new { success = false, data = (object?)null, message = "Not found" });
-
+            if (item == null) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
             return Ok(new { success = true, data = item, message = "Fetched successfully" });
         }
 
@@ -40,23 +37,19 @@ namespace BE.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(long id, [FromBody] Providers model)
+        public async Task<IActionResult> Update(int id, [FromBody] Providers model)
         {
             var updated = await _service.UpdateAsync(id, model);
-            if (updated == null)
-                return NotFound(new { success = false, data = (object?)null, message = "Not found" });
-
+            if (updated == null) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
             return Ok(new { success = true, data = updated, message = "Updated successfully" });
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _service.DeleteAsync(id);
-            if (!deleted)
-                return NotFound(new { success = false, data = (object?)null, message = "Not found" });
-
-            return Ok(new { success = true, data = (object?)null, message = "Deleted successfully" });
+            if (!deleted) return NotFound(new { success = false, message = "Not found" });
+            return Ok(new { success = true, message = "Deleted successfully" });
         }
     }
 }

@@ -15,10 +15,11 @@ namespace BE.Repositories.Implementations
 
         public async Task<IEnumerable<Users>> GetAllAsync()
         {
-            return await _context.Users.ToListAsync();
+            // Include roles for each user
+            return await _context.Users.Include(u => u.Role).ToListAsync();
         }
 
-        public async Task<Users?> GetByIdAsync(int id)
+        public async Task<Users?> GetByIdAsync(long id)
         {
             return await _context.Users.FindAsync(id);
         }
@@ -30,7 +31,7 @@ namespace BE.Repositories.Implementations
             return user;
         }
 
-        public async Task<Users?> UpdateAsync(int id, Users user)
+        public async Task<Users?> UpdateAsync(long id, Users user)
         {
             var existing = await _context.Users.FindAsync(id);
             if (existing == null) return null;
@@ -39,7 +40,7 @@ namespace BE.Repositories.Implementations
             return existing;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(long id)
         {
             var existing = await _context.Users.FindAsync(id);
             if (existing == null) return false;

@@ -5,9 +5,9 @@ namespace BE.Services.Interfaces
     public interface IProvidersService
     {
         Task<IEnumerable<Providers>> GetAllAsync();
-        Task<Providers?> GetByIdAsync(long id);
+        Task<Providers?> GetByIdAsync(int id);
         Task<Providers> AddAsync(Providers model);
-        Task<Providers?> UpdateAsync(long id, Providers model);
-        Task<bool> DeleteAsync(long id);
+        Task<Providers?> UpdateAsync(int id, Providers model);
+        Task<bool> DeleteAsync(int id);
     }
 }
