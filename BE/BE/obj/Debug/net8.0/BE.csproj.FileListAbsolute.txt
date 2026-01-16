@@ -130,8 +130,10 @@ c:\Users\dungb\Downloads\EXE201\BE\BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.Sw
 c:\Users\dungb\Downloads\EXE201\BE\BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 c:\Users\dungb\Downloads\EXE201\BE\BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\BE.MvcApplicationPartsAssemblyInfo.cs
-c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets\msbuild.BE.Microsoft.AspNetCore.StaticWebAssets.props
-c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets\msbuild.build.BE.props
-c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.BE.props
-c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.BE.props
-c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets.pack.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\bin\Debug\net8.0\BE.staticwebassets.endpoints.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\rpswa.dswa.cache.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\rjimswa.dswa.cache.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets.build.json.cache
+c:\Users\dungb\Downloads\EXE201\BE\BE\obj\Debug\net8.0\staticwebassets.build.endpoints.json
