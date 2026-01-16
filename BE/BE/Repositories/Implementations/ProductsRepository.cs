@@ -48,5 +48,23 @@ namespace BE.Repositories.Implementations
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<Products>> GetByBranchAsync(long branchId)
+        {
+            return await _context.Products
+                .Where(p => p.ProviderBranchId == branchId)
+                .Include(p => p.Category)
+                .Include(p => p.ProductImages)
+                .ToListAsync();
+        }
+
+        public async Task<Products?> GetByBranchAndIdAsync(long branchId, long productId)
+        {
+            return await _context.Products
+                .FirstOrDefaultAsync(p =>
+                    p.Id == productId &&
+                    p.ProviderBranchId == branchId);
+        }
+
     }
 }
