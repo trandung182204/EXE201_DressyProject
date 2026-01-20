@@ -61,6 +61,77 @@
 			--txtHeader: #ffffff;
 			--bgBodySub: #ffe6e0;
 			--bgincol: linear-gradient(to right, #ea4420, rgba(234, 68, 32, 0.8), rgba(234, 68, 32, 0.3), rgba(234, 68, 32, 0));
+
+			.role-switch-wrap {
+				margin-top: 10px;
+			}
+
+			.role-switch {
+				position: relative;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 0;
+				border: 1px solid #e5e7eb;
+				border-radius: 999px;
+				overflow: hidden;
+				background: #f8f9fa;
+				height: 44px;
+			}
+
+			.role-btn {
+				position: relative;
+				z-index: 2;
+				border: 0;
+				background: transparent;
+				padding: 10px 12px;
+				font-weight: 600;
+				cursor: pointer;
+				transition: color .25s ease;
+				color: #6b7280;
+			}
+
+			.role-btn.is-active {
+				color: #111827;
+			}
+
+			/* pill highlight */
+			.role-pill {
+				position: absolute;
+				top: 3px;
+				left: 3px;
+				width: calc(50% - 6px);
+				height: calc(100% - 6px);
+				border-radius: 999px;
+				background: #ffffff;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+				transform: translateX(0%);
+				transition: transform .25s ease;
+				z-index: 1;
+			}
+
+			/* when provider selected */
+			.role-switch[data-selected="provider"] .role-pill {
+				transform: translateX(100%);
+			}
+
+			/* optional: change active theme color for provider */
+			.role-switch[data-selected="provider"] {
+				border-color: #c7d2fe;
+				background: #eef2ff;
+			}
+
+			.role-switch[data-selected="customer"] {
+				border-color: #e5e7eb;
+				background: #f8f9fa;
+			}
+
+			.role-hint {
+				margin-top: 6px;
+				font-size: 13px;
+				color: #6b7280;
+			}
+
+
 		}
 	</style>
 	<link href="../../bizweb.dktcdn.net/100/566/174/themes/1008318/assets/fonts.scssbf6b.css?1758853455743"
@@ -1486,6 +1557,30 @@
 																			value="" name="password" id="password"
 																			placeholder="Mật khẩu" required>
 																	</fieldset>
+																</div>
+
+																<!-- Role switch (Customer / Provider) -->
+																<input type="hidden" name="role" id="role"
+																	value="customer" />
+
+																<div class="role-switch-wrap">
+																	<div class="role-switch" id="roleSwitch"
+																		role="tablist" aria-label="Chọn loại tài khoản">
+																		<button type="button" class="role-btn is-active"
+																			data-role="customer">
+																			Khách hàng
+																		</button>
+																		<button type="button" class="role-btn"
+																			data-role="provider">
+																			Nhà cung cấp
+																		</button>
+																		<span class="role-pill"
+																			aria-hidden="true"></span>
+																	</div>
+
+																	<div class="role-hint" id="roleHint">
+																		Mặc định đăng ký tài khoản khách hàng.
+																	</div>
 																</div>
 															</div>
 															<div class="section">
@@ -3724,7 +3819,7 @@
 							password,
 							fullName,
 							phone,
-							role: "customer" // trang này mặc định đăng ký customer
+							role: document.getElementById("role")?.value || "customer" // trang này mặc định đăng ký customer
 						}),
 					});
 
@@ -3743,6 +3838,44 @@
 			});
 		});
 	</script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			const switchEl = document.getElementById("roleSwitch");
+			if (!switchEl) return;
+
+			const roleInput = document.getElementById("role");
+			const hint = document.getElementById("roleHint");
+			const btns = switchEl.querySelectorAll(".role-btn");
+
+			function setRole(role) {
+				// set attribute for pill animation + theme
+				switchEl.setAttribute("data-selected", role);
+
+				// toggle active class
+				btns.forEach(b => b.classList.toggle("is-active", b.dataset.role === role));
+
+				// set hidden role for backend
+				if (roleInput) roleInput.value = role;
+
+				// hint text
+				if (hint) {
+					hint.textContent = role === "provider"
+						? "Bạn đang đăng ký tài khoản Nhà cung cấp (Provider)."
+						: "Bạn đang đăng ký tài khoản Khách hàng.";
+				}
+			}
+
+			// default
+			setRole("customer");
+
+			// click handlers
+			btns.forEach(btn => {
+				btn.addEventListener("click", () => setRole(btn.dataset.role));
+			});
+		});
+	</script>
+
 
 </body>
 

@@ -22,7 +22,6 @@ public class AuthService : IAuthService
     private readonly ApplicationDbContext _db;
     private readonly IConfiguration _cfg;
 
-    // Dùng PasswordHasher để hash/verify password (không cần Identity full)
     private readonly PasswordHasher<Users> _hasher = new();
 
     public AuthService(ApplicationDbContext db, IConfiguration cfg)
@@ -40,42 +39,83 @@ public class AuthService : IAuthService
         var exists = await _db.Users.AnyAsync(u => u.Email.ToLower() == email);
         if (exists) throw new Exception("Email đã tồn tại.");
 
-        var user = new Users
-        {
-            Email = email,
-            FullName = req.FullName,
-            Phone = req.Phone,
-            Status = "active",
-        };
-
-        user.PasswordHash = _hasher.HashPassword(user, req.Password);
-
-        // role mặc định
         var roleName = (req.Role ?? "customer").Trim().ToLower();
         var role = await _db.Roles.FirstOrDefaultAsync(r => r.RoleName!.ToLower() == roleName);
         if (role == null) throw new Exception($"Role '{roleName}' không tồn tại trong bảng roles.");
 
-        // Many-to-many: Users.Role <-> Roles.User
-        user.Role.Add(role);
+        await using var tx = await _db.Database.BeginTransactionAsync();
 
-        _db.Users.Add(user);
-        await _db.SaveChangesAsync();
-
-        // Sau SaveChanges, user đã có Id
-        // Lấy role tốt nhất (admin > provider > customer)
-        var finalRole = await GetBestRoleAsync(user.Id);
-
-        var token = CreateJwt(user, finalRole);
-
-        return new AuthResponse
+        try
         {
-            UserId = user.Id,
-            Email = user.Email,
-            Role = finalRole,
-            Token = token,
-            RedirectUrl = MapRedirect(finalRole)
-        };
+            var user = new Users
+            {
+                Email = email,
+                FullName = req.FullName,
+                Phone = req.Phone,
+                Status = "active",
+            };
+            user.PasswordHash = _hasher.HashPassword(user, req.Password);
+
+            // Add user + role (insert users + user_roles)
+            user.Role.Add(role);
+            _db.Users.Add(user);
+            await _db.SaveChangesAsync(); // ✅ user.Id có ở đây
+
+            long? providerId = null;
+
+            // ✅ Nếu role = provider thì tạo providers row
+            if (roleName == "provider")
+            {
+                // tránh tạo trùng
+                providerId = await _db.Providers
+                    .Where(p => p.UserId == user.Id)
+                    .Select(p => (long?)p.Id)
+                    .FirstOrDefaultAsync();
+
+                if (!providerId.HasValue)
+                {
+                    var provider = new Providers
+                    {
+                        UserId = user.Id,
+                        BrandName = string.IsNullOrWhiteSpace(user.FullName) ? "Provider" : user.FullName,
+                        ProviderType = "OUTFIT",
+                        Status = "ACTIVE",
+                        Verified = true // hoặc false tuỳ bạn
+                    };
+
+                    _db.Providers.Add(provider);
+                    await _db.SaveChangesAsync();
+
+                    providerId = provider.Id;
+                }
+            }
+
+            await tx.CommitAsync();
+
+            // role cuối cùng (nếu bạn muốn ưu tiên admin/provider/customer)
+            var finalRole = roleName;
+
+            var token = CreateJwt(user, finalRole, providerId);
+
+            return new AuthResponse
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                Role = finalRole,
+                ProviderId = providerId,
+                Token = token,
+                RedirectUrl = MapRedirect(finalRole)
+            };
+        }
+        catch (Exception ex)
+        {
+            await tx.RollbackAsync();
+            throw new Exception(ex.InnerException?.Message ?? ex.Message);
+        }
     }
+
+
+
 
     public async Task<AuthResponse> LoginAsync(LoginRequest req)
     {
@@ -83,14 +123,13 @@ public class AuthService : IAuthService
         if (string.IsNullOrWhiteSpace(email)) throw new Exception("Email không được để trống.");
         if (string.IsNullOrWhiteSpace(req.Password)) throw new Exception("Password không được để trống.");
 
-        // Include Role để khỏi query lại nhiều lần
+        // Include Role để lấy role ngay
         var user = await _db.Users
             .Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Email.ToLower() == email);
 
         if (user == null) throw new Exception("Sai email hoặc mật khẩu.");
 
-        // (Tuỳ bạn) chặn account bị khóa
         if (!string.IsNullOrEmpty(user.Status) &&
             !user.Status.Equals("active", StringComparison.OrdinalIgnoreCase))
         {
@@ -100,28 +139,33 @@ public class AuthService : IAuthService
         var verify = _hasher.VerifyHashedPassword(user, user.PasswordHash, req.Password);
         if (verify == PasswordVerificationResult.Failed) throw new Exception("Sai email hoặc mật khẩu.");
 
-        // Vì đã Include Role nên lấy luôn role từ navigation (không cần _db.UserRoles)
+        // lấy role tốt nhất
         var finalRole = PickBestRole(user.Role.Select(r => r.RoleName));
-
-        // fallback nếu vì lý do nào đó chưa load roleNames
         if (string.IsNullOrWhiteSpace(finalRole))
             finalRole = await GetBestRoleAsync(user.Id);
 
-        var token = CreateJwt(user, finalRole);
+        // ✅ nếu là provider -> lấy providerId
+        long? providerId = null;
+        if (finalRole.Equals("provider", StringComparison.OrdinalIgnoreCase))
+        {
+            providerId = await GetProviderIdAsync(user.Id);
+        }
+
+        // ✅ token có claim providerId (nếu có)
+        var token = CreateJwt(user, finalRole, providerId);
 
         return new AuthResponse
         {
             UserId = user.Id,
             Email = user.Email,
             Role = finalRole,
+            ProviderId = providerId,
             Token = token,
             RedirectUrl = MapRedirect(finalRole)
         };
     }
 
-    /// <summary>
-    /// Lấy role từ navigation Users.Role (many-to-many) - ưu tiên admin > provider > customer
-    /// </summary>
+    // ====== ROLE PICKER ======
     private static string PickBestRole(IEnumerable<string?> roleNames)
     {
         var list = roleNames
@@ -137,9 +181,6 @@ public class AuthService : IAuthService
         return "customer";
     }
 
-    /// <summary>
-    /// Query role từ DB (trường hợp không Include Role)
-    /// </summary>
     private async Task<string> GetBestRoleAsync(long userId)
     {
         var roleNames = await _db.Users
@@ -150,7 +191,18 @@ public class AuthService : IAuthService
         return PickBestRole(roleNames);
     }
 
-    private string CreateJwt(Users user, string role)
+    // ====== ✅ PROVIDER ID ======
+    private async Task<long?> GetProviderIdAsync(long userId)
+    {
+        // Providers.UserId là FK -> users.id (đúng theo DbContext bạn gửi)
+        return await _db.Providers
+            .Where(p => p.UserId == userId)
+            .Select(p => (long?)p.Id)
+            .FirstOrDefaultAsync();
+    }
+
+    // ====== ✅ JWT (có providerId claim) ======
+    private string CreateJwt(Users user, string role, long? providerId)
     {
         var key = _cfg["Jwt:Key"];
         var issuer = _cfg["Jwt:Issuer"];
@@ -170,6 +222,12 @@ public class AuthService : IAuthService
             new(ClaimTypes.Role, role),
         };
 
+        // ✅ nhét providerId vào claim nếu có
+        if (providerId.HasValue)
+        {
+            claims.Add(new Claim("providerId", providerId.Value.ToString()));
+        }
+
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
         var creds = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
@@ -185,15 +243,18 @@ public class AuthService : IAuthService
     }
 
     private string MapRedirect(string role)
-    {
-        role = (role ?? "customer").Trim().ToLower();
+{
+    role = (role ?? "customer").Trim().ToLower();
 
-        return role switch
-        {
-            "customer" => "FE/bean-style.mysapo.net/index.html",
-            "admin" => "FE/Admin/admin-dashboard/index.html",
-            "provider" => "FE/Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html",
-            _ => "FE/bean-style.mysapo.net/index.html"
-        };
-    }
+    return role switch
+    {
+        "admin" => "http://127.0.0.1:5500/EXE201_DressyProject/FE/Admin/admin-dashboard/index.html",
+
+        "provider" => "http://127.0.0.1:5500/EXE201_DressyProject/FE/Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html",
+
+        "customer" => "http://127.0.0.1:5500/EXE201_DressyProject/FE/bean-style.mysapo.net/index.html",
+
+        _ => "http://127.0.0.1:5500/EXE201_DressyProject/FE/bean-style.mysapo.net/index.html"
+    };
+}
 }

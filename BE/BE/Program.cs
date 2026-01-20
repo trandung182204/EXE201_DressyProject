@@ -26,6 +26,7 @@ builder.Services.AddScoped<BE.Repositories.Interfaces.IFeedbackResponsesReposito
 builder.Services.AddScoped<BE.Repositories.Interfaces.IPaymentsRepository, BE.Repositories.Implementations.PaymentsRepository>();
 builder.Services.AddScoped<BE.Repositories.Interfaces.IProvidersRepository, BE.Repositories.Implementations.ProvidersRepository>();
 builder.Services.AddScoped<BE.Repositories.Interfaces.IProviderBranchesRepository, BE.Repositories.Implementations.ProviderBranchesRepository>();
+builder.Services.AddScoped<BE.Repositories.Interfaces.IProductsCustomerRepository, BE.Repositories.Implementations.ProductsCustomerRepository>();
 
 // Services
 builder.Services.AddScoped<BE.Services.Interfaces.IProductsService, BE.Services.Implementations.ProductsService>();
@@ -38,6 +39,7 @@ builder.Services.AddScoped<BE.Services.Interfaces.IFeedbackResponsesService, BE.
 builder.Services.AddScoped<BE.Services.Interfaces.IPaymentsService, BE.Services.Implementations.PaymentsService>();
 builder.Services.AddScoped<BE.Services.Interfaces.IProvidersService, BE.Services.Implementations.ProvidersService>();
 builder.Services.AddScoped<BE.Services.Interfaces.IProviderBranchesService, BE.Services.Implementations.ProviderBranchesService>();
+builder.Services.AddScoped<BE.Services.Interfaces.IProductsCustomerService, BE.Services.Implementations.ProductsCustomerService>();
 
 // AuthService (login/register)
 builder.Services.AddScoped<IAuthService, AuthService>();

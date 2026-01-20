@@ -24,4 +24,5 @@ public class AuthResponse
     public string Role { get; set; } = null!;
     public string Token { get; set; } = null!;
     public string RedirectUrl { get; set; } = null!;
+    public long? ProviderId { get; set; }
 }

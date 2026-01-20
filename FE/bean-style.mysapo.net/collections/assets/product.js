@@ -1,138 +1,98 @@
-// assets/js/products.js
+// assets/product.js
+document.addEventListener("DOMContentLoaded", async () => {
+  const row = document.getElementById("be-products-row");
+  const tpl = document.getElementById("be-product-template");
 
-document.addEventListener('DOMContentLoaded', function () {
-    const API_URL = 'http://localhost:5135/api/products';
-    const productsContainer = document.querySelector('.products-view-grid .row');
-    if (!productsContainer) return;
+  if (!row || !tpl) {
+    console.error("Missing #be-products-row or #be-product-template");
+    return;
+  }
 
-    const productTemplate = `
-<div class="col-6 col-xl-3 col-lg-4 col-md-4">
-    <div class="item_product_main">
-        <form action="https://bean-style.mysapo.net/cart/add" method="post" class="variants product-action item-product-main duration-300" data-cart-form data-id="product-actions-{{id}}" enctype="multipart/form-data">
-            <a href="javascript:;" class="tag-promo" title="Móc khóa hình gấu đan len">
-                <img width="90" height="90" src="//bizweb.dktcdn.net/100/566/174/themes/1008318/assets/icon_fra_1.jpg?1758853455743" alt="Móc khóa hình gấu đan len" />
-                <span>Tặng</span>
-            </a>
-            <div class="product-thumbnail">
-                <a class="image_thumb scale_hover" href="../{{slug}}.html" title="{{name}}">
-                    <img class="duration-300 image1" src="{{image1}}" alt="{{name}}">
-                    <img class="duration-300 image2" src="{{image2}}" alt="{{name}}">
-                </a>
-                <div class="video_tem">
-                    <img width="64" height="64" src="//bizweb.dktcdn.net/100/566/174/themes/1008318/assets/icon_youtube.png?1758853455743" alt="Video"/>
-                </div>
-                <div class="badge">
-                    <span class="new">{{badgeNew}}</span>
-                    <span class="best">{{badgeBest}}</span>
-                </div>
-                <div class="product-button">
-                    <input class="hidden" type="hidden" name="variantId" value="{{variantId}}" />
-                    <button class="btn-cart btn-views quick-view-option btn btn-primary quick-view" title="Xem nhanh" type="button" data-handle="{{slug}}">Xem nhanh</button>
-                    <a href="javascript:void(0)" class="setWishlist btn-views btn-circle" data-wish="{{slug}}" tabindex="0" title="Thêm vào yêu thích">
-                        <img width="25" height="25" src="../../bizweb.dktcdn.net/100/566/174/themes/1008318/assets/heartbf6b.png?1758853455743" alt="Thêm vào yêu thích"/> 
-                    </a>
-                </div>
-            </div>
-            <div class="product-info">
-                <h3 class="product-name line-clamp-1-new">
-                    <a href="../{{slug}}.html" title="{{name}}">{{name}}</a>
-                </h3>
-                <div class="product-price-cart">
-                    <span class="price">{{price}}<span class="flash-sale">{{discount}}</span></span>
-                    <span class="compare-price">{{comparePrice}}</span>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-`;
+  // ✅ Backend API port (đổi đúng port BE của bạn)
+  // Ví dụ bạn đang chạy Swagger ở http://localhost:5135 thì để 5135
+  const API_BASE = "http://localhost:5135";
+  const API_URL = `${API_BASE}/api/ProductsCustomer?status=AVAILABLE`;
 
-    function formatVND(amount) {
-        if (!amount) return '';
-        return Number(amount).toLocaleString('vi-VN') + '₫';
+  const formatVNDPerDay = (x) => {
+    if (x == null || x === "") return "";
+    const n = Number(x);
+    if (Number.isNaN(n)) return "";
+    return n.toLocaleString("vi-VN") + "₫/ngày";
+  };
+
+  const setText = (el, text) => {
+    if (el) el.textContent = text ?? "";
+  };
+
+  const setLink = (el, href, title) => {
+    if (!el) return;
+    el.setAttribute("href", href || "#");
+    if (title != null) el.setAttribute("title", title);
+  };
+
+  const setImage = (imgEl, url, alt) => {
+    if (!imgEl) return;
+
+    const fallback =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC";
+
+    const u = (url && String(url).trim()) ? url : fallback;
+
+    // Theme dùng lazyload -> set cả data-src và src cho chắc ăn
+    imgEl.setAttribute("data-src", u);
+    imgEl.setAttribute("src", u);
+    imgEl.setAttribute("alt", alt ?? "");
+  };
+
+  // Nếu bạn CHƯA có trang detail, cứ để "#"
+  // Nếu bạn có detail theo id: return `../product-detail.html?id=${id}`;
+  const buildDetailHref = (p) => "#";
+
+  try {
+    const res = await fetch(API_URL, {
+      headers: { accept: "application/json" }
+    });
+
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+
+    const items = await res.json();
+
+    // Xóa hết nội dung hiện có (đảm bảo không còn dữ liệu mẫu)
+    row.innerHTML = "";
+
+    if (!Array.isArray(items) || items.length === 0) {
+      row.innerHTML = `<div class="col-12">Không có sản phẩm.</div>`;
+      return;
     }
 
-    function getImage(product, idx = 0) {
-        if (product.productImages && product.productImages.length > idx) {
-            return product.productImages[idx].imageUrl;
-        }
-        return 'https://via.placeholder.com/300x400?text=No+Image';
-    }
+    items.forEach((p) => {
+      const card = tpl.content.firstElementChild.cloneNode(true);
 
-    function getVariantId(product) {
-        if (product.productVariants && product.productVariants.length > 0) {
-            return product.productVariants[0].id;
-        }
-        return '';
-    }
+      const href = buildDetailHref(p);
+      const name = p?.name ?? "";
+      const categoryName = (p?.categoryName && p.categoryName !== "???") ? p.categoryName : "";
+      const thumb = p?.thumbnailUrl ?? "";
 
-    function getSlug(product) {
-        if (product.slug) return product.slug;
-        if (product.name) return product.name.toLowerCase().replace(/ /g, '-');
-        return '';
-    }
+      // Link (cả ảnh và tên đều có class be-link)
+      card.querySelectorAll(".be-link").forEach((a) => setLink(a, href, name));
 
-    function getComparePrice(product) {
-        if (product.comparePrice) return formatVND(product.comparePrice);
-        if (product.productVariants && product.productVariants.length > 0) {
-            let max = Math.max(...product.productVariants.map(v => v.pricePerDay || 0));
-            return max > (product.price || 0) ? formatVND(max) : '';
-        }
-        return '';
-    }
+      // Name / vendor / price
+      setText(card.querySelector(".be-name"), name);
+      setText(card.querySelector(".be-vendor"), categoryName);
+      setText(card.querySelector(".be-price"), formatVNDPerDay(p?.minPricePerDay));
 
-    function getDiscount(product) {
-        let price = product.price || 0;
-        let compare = product.comparePrice || 0;
-        if (!compare && product.productVariants && product.productVariants.length > 0) {
-            compare = Math.max(...product.productVariants.map(v => v.pricePerDay || 0));
-        }
-        if (compare > price && price > 0) {
-            return '-' + Math.round(100 * (compare - price) / compare) + '%';
-        }
-        return '';
-    }
+      // Images
+      setImage(card.querySelector(".be-img1"), thumb, name);
+      setImage(card.querySelector(".be-img2"), thumb, name);
 
-    function getBadgeNew(product) {
-        if (product.createdAt) {
-            const created = new Date(product.createdAt);
-            const now = new Date();
-            const diff = (now - created) / (1000 * 60 * 60 * 24);
-            if (diff < 30) return 'Hàng mới';
-        }
-        return '';
-    }
+      // variantId (nếu sau này bạn trả được variantId từ API)
+      // const vInput = card.querySelector('input[name="variantId"]');
+      // if (vInput) vInput.value = p?.variantId ?? "";
 
-    function getBadgeBest(product) {
-        if (product.totalSold && product.totalSold > 100) return 'Bán chạy';
-        return '';
-    }
-
-    productsContainer.innerHTML = '';
-
-    fetch(API_URL)
-        .then(res => res.json())
-        .then(json => {
-            const products = json.data || [];
-            let html = '';
-            products.forEach(product => {
-                let card = productTemplate
-                    .replace(/{{id}}/g, product.id)
-                    .replace(/{{name}}/g, product.name || '')
-                    .replace(/{{slug}}/g, getSlug(product))
-                    .replace(/{{image1}}/g, getImage(product, 0))
-                    .replace(/{{image2}}/g, getImage(product, 1))
-                    .replace(/{{variantId}}/g, getVariantId(product))
-                    .replace(/{{price}}/g, formatVND(product.price))
-                    .replace(/{{comparePrice}}/g, getComparePrice(product))
-                    .replace(/{{discount}}/g, getDiscount(product))
-                    .replace(/{{badgeNew}}/g, getBadgeNew(product))
-                    .replace(/{{badgeBest}}/g, getBadgeBest(product));
-                html += card;
-            });
-            productsContainer.innerHTML = html;
-        })
-        .catch(() => {
-            productsContainer.innerHTML = '<div style="padding:2rem">Không thể tải sản phẩm.</div>';
-        });
+      row.appendChild(card);
+    });
+  } catch (err) {
+    console.error(err);
+    row.innerHTML = `<div class="col-12">Không tải được sản phẩm (kiểm tra API URL/CORS).</div>`;
+  }
 });
