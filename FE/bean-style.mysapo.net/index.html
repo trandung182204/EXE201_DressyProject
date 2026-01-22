@@ -9496,7 +9496,7 @@ var ajaxCart = (function(module, $) {
 								<div class="count_btn_style quantity_wanted_p">
 									<div class=" soluong1 clearfix">
 										<div class="input_number_product">
-											<a class="btn_num num_1 button button_qty" href="javascript:;" onClick="var result = document.getElementById('quantity-detail'); var qtyqv = result.value; if( !isNaN( qtyqv ) &amp;&amp; qtyqv &gt; 1 ) result.value--;return false;">-</a>
+											<a class="btn_num num_1 button button_qty" href="javascript:;" onClick="var result = document.getElementById('quantity-detail'); var qtyqv = result.value; if( !isNaN( qtyqv ) && qtyqv > 1 ) result.value--;return false;">-</a>
 											<input type="text" id="quantity-detail" name="quantity" value="1" maxlength="2" class="form-control prd_quantity" onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;" onchange="if(this.value == 0)this.value=1;">
 											<a class="btn_num num_2 button button_qty" href="javascript:;" onClick="var result = document.getElementById('quantity-detail'); var qtyqv = result.value; if( !isNaN( qtyqv )) result.value++;return false;">+</a>
 										</div>
