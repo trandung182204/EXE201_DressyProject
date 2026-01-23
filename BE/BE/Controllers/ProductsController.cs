@@ -54,13 +54,13 @@ namespace BE.Controllers
         }
 
         [HttpPut("{id}/status")]
-public async Task<IActionResult> UpdateStatus(long id, [FromBody] UpdateProductStatusDto dto)
-{
-    var updated = await _service.UpdateStatusAsync(id, dto.Status);
-    if (!updated)
-        return NotFound(new { success = false, message = "Not found" });
+        public async Task<IActionResult> UpdateStatus(long id, [FromBody] UpdateProductStatusDto dto)
+        {
+            var updated = await _service.UpdateStatusAsync(id, dto.Status);
+            if (!updated)
+                return NotFound(new { success = false, message = "Not found" });
 
-    return Ok(new { success = true, message = "Status updated" });
-}
+            return Ok(new { success = true, message = "Status updated" });
+        }
     }
 }
