@@ -281,7 +281,33 @@ namespace BE.Services.Implementations
             return true;
         }
 
+        public async Task<IEnumerable<ProductListItemDto>> GetProductsByProviderAsync(long providerId)
+        {
+            return await _context.Products
+                .Where(p => p.ProviderId == providerId)
+                .OrderByDescending(p => p.CreatedAt)
+                .Select(p => new ProductListItemDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
 
+                    CategoryName = p.Category != null
+                        ? p.Category.Name
+                        : null,
+
+                    ThumbnailUrl = p.ProductImages
+                        .Select(i => i.ImageUrl)
+                        .FirstOrDefault(),
+
+                    MinPricePerDay = p.ProductVariants
+                        .Where(v => v.Status == true)
+                        .Select(v => (decimal?)v.PricePerDay)
+                        .Min(),
+
+                    Status = p.Status
+                })
+                .ToListAsync();
+        }
 
     }
 }

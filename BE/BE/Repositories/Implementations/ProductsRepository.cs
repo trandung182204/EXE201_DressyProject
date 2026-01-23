@@ -66,5 +66,12 @@ namespace BE.Repositories.Implementations
                     p.ProviderBranchId == branchId);
         }
 
+        public List<Products> GetByProviderId(long providerId)
+        {
+            return _context.Products
+                .Where(p => p.ProviderId == providerId)
+                .ToList();
+        }
+
     }
 }

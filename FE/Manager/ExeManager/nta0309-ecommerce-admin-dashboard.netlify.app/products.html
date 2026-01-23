@@ -148,9 +148,9 @@
                                                 <div class="row">
                                                     <div class="col-xxl-4 col-lg-6 col-md-6 col-12">
                                                         <!-- Single Product -->
-                                                        <div
+                                                        <!-- <div
                                                             class="sherah-product-card sherah-product-card__v2  sherah-default-bg sherah-border mg-top-30">
-                                                            <!-- Card Image -->
+                                                            
                                                             <div class="sherah-product-card__img">
                                                                 <img src="img/product-img1.png">
                                                                 <div class="sherah-product-card__buttons">
@@ -202,7 +202,7 @@
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                            <!-- Card Content -->
+                                                            
                                                             <div
                                                                 class="sherah-product-card__content sherah-dflex-column sherah-flex-gap-5">
                                                                 <h4 class="sherah-product-card__title">
@@ -236,8 +236,11 @@
                                                                         class="sherah-btn default">Detail</a>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <!-- End Single Product -->
+                                                        </div> -->
+                                                        <div class="row" id="product-list">
+    <!-- products render here -->
+</div>
+
                                                     </div>
                                                 </div>
                                                 <div class="row mg-top-40">
@@ -325,6 +328,88 @@
 
         loadLayout();
     </script>
+    <script>
+    async function loadProviderProducts() {
+        const token = localStorage.getItem("access_token");
+
+        if (!token) {
+            alert("Bạn chưa đăng nhập");
+            window.location.href = "login.html";
+            return;
+        }
+
+        try {
+            const res = await fetch("http://localhost:8080/api/provider/products", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!res.ok) {
+                throw new Error("Không thể tải sản phẩm");
+            }
+
+            const products = await res.json();
+            renderProducts(products);
+
+        } catch (err) {
+            console.error(err);
+            alert("Lỗi khi tải danh sách sản phẩm");
+        }
+    }
+
+    function renderProducts(products) {
+        const container = document.getElementById("product-list");
+        container.innerHTML = "";
+
+        if (!products || products.length === 0) {
+            container.innerHTML = "<p>Chưa có sản phẩm nào</p>";
+            return;
+        }
+
+        products.forEach(p => {
+            container.innerHTML += `
+            <div class="col-xxl-4 col-lg-6 col-md-6 col-12">
+                <div class="sherah-product-card sherah-product-card__v2 sherah-default-bg sherah-border mg-top-30">
+                    <div class="sherah-product-card__img">
+                        <img src="${p.thumbnail || 'img/product-img1.png'}">
+                    </div>
+
+                    <div class="sherah-product-card__content sherah-dflex-column sherah-flex-gap-5">
+                        <h4 class="sherah-product-card__title">
+                            <a href="product-detail.html?id=${p.id}" class="sherah-pcolor">
+                                ${p.name}
+                            </a>
+                        </h4>
+
+                        <div class="sherah-product__bottom">
+                            <div class="sherah-product__bottom--single">
+                                <h5 class="sherah-product-card__price">
+                                    ${p.productType}
+                                </h5>
+                                <div class="sherah-product-card__meta">
+                                    <span>Status: <b>${p.status}</b></span>
+                                </div>
+                            </div>
+
+                            <a href="product-detail.html?id=${p.id}" class="sherah-btn default">
+                                Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadProviderProducts();
+    });
+</script>
+
 
 </body>
 
