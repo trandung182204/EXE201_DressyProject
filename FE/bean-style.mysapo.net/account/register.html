@@ -3767,29 +3767,29 @@
 		</div>
 	</div>
 
-	<script defer
-		src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-		integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-		data-cf-beacon='{"version":"2024.11.0","token":"6c92bbc133584e029f09e826272d3606","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
-		crossorigin="anonymous"></script>
+	<!-- Import shared Auth utility -->
+	<script src="../../shared/auth.js"></script>
 
 	<script>
-		// ====== CONFIG ======
-		const API_BASE = "http://localhost:5135/api"; // đổi port nếu BE bạn khác
+		// ============================================
+		// REGISTER HANDLER - Sử dụng Auth utility
+		// ============================================
 
-		function showMsg(text) {
-			// cái div đỏ đầu tiên trong form register
+		function showMsg(text, isError = true) {
 			const el = document.querySelector("#customer_register .form-signup");
-			if (el) el.textContent = text || "";
-		}
-
-		function toAbsoluteUrl(redirectUrl) {
-			if (!redirectUrl) return "/";
-			if (/^https?:\/\//i.test(redirectUrl)) return redirectUrl;
-			return `${window.location.origin}/${redirectUrl.replace(/^\/+/, "")}`;
+			if (el) {
+				el.textContent = text || "";
+				el.style.color = isError ? "#dc3545" : "#28a745";
+			}
 		}
 
 		document.addEventListener("DOMContentLoaded", () => {
+			// Nếu đã đăng nhập => redirect về dashboard
+			if (Auth.isLoggedIn()) {
+				Auth.redirectToDashboard();
+				return;
+			}
+
 			const form = document.getElementById("customer_register");
 			if (!form) return;
 
@@ -3802,6 +3802,7 @@
 				const email = document.getElementById("email")?.value?.trim() || "";
 				const password = document.getElementById("password")?.value || "";
 				const phone = form.querySelector('input[name="PhoneNumber"]')?.value?.trim() || "";
+				const role = document.getElementById("role")?.value?.toLowerCase() || "customer";
 
 				const fullName = (lastName + " " + firstName).trim();
 
@@ -3811,7 +3812,9 @@
 				}
 
 				try {
-					const res = await fetch(`${API_BASE}/auth/register`, {
+					showMsg("Đang đăng ký...", false);
+
+					const res = await fetch(`${Auth.getApiBase()}/auth/register`, {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
 						body: JSON.stringify({
@@ -3819,19 +3822,26 @@
 							password,
 							fullName,
 							phone,
-							role: document.getElementById("role")?.value || "customer" // trang này mặc định đăng ký customer
+							role
 						}),
 					});
 
 					const data = await res.json().catch(() => ({}));
 					if (!res.ok) throw new Error(data.message || `HTTP ${res.status}`);
 
-					// Register trả token -> coi như auto login
-					localStorage.setItem("token", data.token);
-					localStorage.setItem("role", data.role);
-					localStorage.setItem("email", data.email);
+					// ✅ Lưu auth data bằng Auth utility (tự normalize role)
+					Auth.save({
+						token: data.token,
+						userId: data.userId,
+						email: data.email,
+						role: data.role,
+						providerId: data.providerId
+					});
 
-					window.location.href = toAbsoluteUrl(data.redirectUrl);
+					// ✅ Redirect CÙNG ORIGIN dựa trên role
+					const redirectPath = Auth.getRedirectPath(data.role);
+					window.location.href = redirectPath;
+
 				} catch (err) {
 					showMsg(err.message || "Đăng ký thất bại.");
 				}

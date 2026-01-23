@@ -26,3 +26,16 @@ public class AuthResponse
     public string RedirectUrl { get; set; } = null!;
     public long? ProviderId { get; set; }
 }
+
+/// <summary>
+/// Response DTO for GET /api/auth/me endpoint
+/// </summary>
+public class UserProfileResponse
+{
+    public long UserId { get; set; }
+    public string Email { get; set; } = null!;
+    public string Role { get; set; } = null!;
+    public string? FullName { get; set; }
+    public long? ProviderId { get; set; }
+}
+

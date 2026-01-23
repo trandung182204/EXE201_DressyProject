@@ -3678,24 +3678,29 @@
 		</div>
 	</div>
 
+	<!-- Import shared Auth utility -->
+	<script src="../../shared/auth.js"></script>
+
 	<script>
-		// ====== CONFIG ======
-		const API_BASE = "http://localhost:5135/api"; // đổi port nếu BE bạn khác
+		// ============================================
+		// LOGIN HANDLER - Sử dụng Auth utility
+		// ============================================
 
-		function showMsg(text) {
+		function showMsg(text, isError = true) {
 			const el = document.querySelector("#customer_login .form-signup");
-			if (el) el.textContent = text || "";
-		}
-
-		function toAbsoluteUrl(redirectUrl) {
-			if (!redirectUrl) return "/";
-			// nếu BE trả URL đầy đủ
-			if (/^https?:\/\//i.test(redirectUrl)) return redirectUrl;
-			// nếu BE trả kiểu "FE/...."
-			return `${window.location.origin}/${redirectUrl.replace(/^\/+/, "")}`;
+			if (el) {
+				el.textContent = text || "";
+				el.style.color = isError ? "#dc3545" : "#28a745";
+			}
 		}
 
 		document.addEventListener("DOMContentLoaded", () => {
+			// Nếu đã đăng nhập => redirect về dashboard
+			if (Auth.isLoggedIn()) {
+				Auth.redirectToDashboard();
+				return;
+			}
+
 			const form = document.getElementById("customer_login");
 			if (!form) return;
 
@@ -3712,7 +3717,9 @@
 				}
 
 				try {
-					const res = await fetch(`${API_BASE}/auth/login`, {
+					showMsg("Đang đăng nhập...", false);
+
+					const res = await fetch(`${Auth.getApiBase()}/auth/login`, {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
 						body: JSON.stringify({ email, password }),
@@ -3721,13 +3728,19 @@
 					const data = await res.json().catch(() => ({}));
 					if (!res.ok) throw new Error(data.message || `HTTP ${res.status}`);
 
-					// Lưu token + info
-					localStorage.setItem("token", data.token);
-					localStorage.setItem("role", data.role);
-					localStorage.setItem("email", data.email);
+					// ✅ Lưu auth data bằng Auth utility (tự normalize role)
+					Auth.save({
+						token: data.token,
+						userId: data.userId,
+						email: data.email,
+						role: data.role,
+						providerId: data.providerId
+					});
 
-					// Redirect theo BE trả về
-					window.location.href = toAbsoluteUrl(data.redirectUrl);
+					// ✅ Redirect CÙNG ORIGIN dựa trên role (không dùng redirectUrl từ BE)
+					const redirectPath = Auth.getRedirectPath(data.role);
+					window.location.href = redirectPath;
+
 				} catch (err) {
 					showMsg(err.message || "Đăng nhập thất bại.");
 				}

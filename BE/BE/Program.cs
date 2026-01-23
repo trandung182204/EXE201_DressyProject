@@ -52,14 +52,21 @@ builder.Services.AddControllers()
             System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
-// CORS (giữ đúng policy bạn đang dùng)
+// CORS - Allow multiple origins for development + production
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://127.0.0.1:5500")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://127.0.0.1:5500",
+            "http://localhost:5500",
+            "http://127.0.0.1:5501",  // backup port
+            "http://localhost:5501"
+            // TODO: Thêm production URL khi deploy
+            // "https://your-production-domain.com"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 

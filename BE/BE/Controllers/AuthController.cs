@@ -1,6 +1,11 @@
 using BE.DTOs;
 using BE.Services;
+using BE.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace BE.Controllers;
 
@@ -9,10 +14,12 @@ namespace BE.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _auth;
+    private readonly ApplicationDbContext _db;
 
-    public AuthController(IAuthService auth)
+    public AuthController(IAuthService auth, ApplicationDbContext db)
     {
         _auth = auth;
+        _db = db;
     }
 
     [HttpPost("register")]
@@ -40,4 +47,56 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = ex.Message });
         }
     }
+
+    /// <summary>
+    /// Get current user profile from JWT token
+    /// </summary>
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<ActionResult<UserProfileResponse>> GetProfile()
+    {
+        try
+        {
+            // Extract claims from JWT
+            var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)
+                              ?? User.FindFirst(ClaimTypes.NameIdentifier);
+            var emailClaim = User.FindFirst(JwtRegisteredClaimNames.Email)
+                             ?? User.FindFirst(ClaimTypes.Email);
+            var roleClaim = User.FindFirst(ClaimTypes.Role);
+            var providerIdClaim = User.FindFirst("providerId");
+
+            if (userIdClaim == null || !long.TryParse(userIdClaim.Value, out var userId))
+            {
+                return Unauthorized(new { message = "Invalid token: missing user ID" });
+            }
+
+            // Query DB for fullName
+            var user = await _db.Users
+                .AsNoTracking()
+                .Where(u => u.Id == userId)
+                .Select(u => new { u.FullName })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            var response = new UserProfileResponse
+            {
+                UserId = userId,
+                Email = emailClaim?.Value ?? "",
+                Role = roleClaim?.Value ?? "customer",
+                FullName = user.FullName,
+                ProviderId = long.TryParse(providerIdClaim?.Value, out var pid) ? pid : null
+            };
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = ex.Message });
+        }
+    }
 }
+
