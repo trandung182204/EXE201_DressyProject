@@ -1,0 +1,17 @@
+HTTrack3.49-2+htsswf+htsjava launched on Thu, 22 Jan 2026 22:16:05 at https://wpdemo.redq.io/sites/dress-rental/html/ +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar
+(winhttrack -qwC2%Ps2u1%s%uN0%I0p3DaK0H0%kf2A25000%f#f -F "Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)" -%F "<!-- Mirrored from %s%s by HTTrack Website Copier/3.x [XR&CO'2014], %s -->" -%l "en, *" https://wpdemo.redq.io/sites/dress-rental/html/ -O1 "C:\Users\dungb\Downloads\dress-rental-template" +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+22:16:38	Error: 	"Not Found" (404) at link https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/owl.video.play.png (from https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/elements.css)
+22:16:38	Error: 	"Not Found" (404) at link https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/fonts/flexslider-icon.eot (from https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/elements.css)
+22:16:38	Error: 	"Not Found" (404) at link https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/fonts/flexslider-icon.eot? (from https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/elements.css)
+22:16:38	Error: 	"Not Found" (404) at link https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/fonts/flexslider-icon.woff (from https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/elements.css)
+22:16:38	Error: 	"Not Found" (404) at link https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/fonts/flexslider-icon.ttf (from https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/elements.css)
+22:16:38	Error: 	"Not Found" (404) at link https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/fonts/flexslider-icon.svg (from https://wpdemo.redq.io/sites/dress-rental/assets/dist/style/elements.css)
+
+HTTrack Website Copier/3.49-2 mirror complete in 33 seconds : 134 links scanned, 127 files written (7668043 bytes overall) [5497309 bytes received at 166585 bytes/sec], 2746162 bytes transferred using HTTP compression in 27 files, ratio 19%, 67.0 requests per connection
+(6 errors, 0 warnings, 0 messages)
