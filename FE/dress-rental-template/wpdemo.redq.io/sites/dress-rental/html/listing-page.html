@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from wpdemo.redq.io/sites/dress-rental/html/listing-page.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 22 Jan 2026 15:16:28 GMT -->
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> Dress rental </title>
+	<link
+		href="https://fonts.googleapis.com/css?family=Abril+Fatface|Forum|Open+Sans:400,600|Roboto:100,300,400,500,700"
+		rel="stylesheet">
+	<link rel="stylesheet" href="../assets/dist/style/elements.css">
+	<link rel="stylesheet" href="../assets/dist/style/header.css">
+	<link rel="stylesheet" href="../assets/dist/style/footer.css">
+	<link rel="stylesheet" href="../assets/dist/style/blog.css">
+</head>
+
+<body>
+
+	<!-- ==========================-->
+	<!-- LOADER-->
+	<!-- ==========================-->
+	<div id="gl-circle-loader-wrapper">
+		<div id="gl-circle-loader-center">
+			<div class="gl-circle-load">
+				<img src="../assets/dist/img/ploading.gif" alt="Page Loader">
+			</div>
+		</div>
+	</div>
+
+
+	<!-- ==========================-->
+	<!-- SEARCH MODAL-->
+	<!-- ==========================-->
+
+
+
+	<div id="header-placeholder"></div>
+
+	<script>
+		fetch('header.html')
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.text();
+			})
+			.then(data => {
+				document.getElementById('header-placeholder').innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Lỗi khi tải header:', error);
+			});
+	</script>
+
+
+	<div class="container">
+		<ol class="breadcrumb underline">
+			<li><a href="index.html">Trang chủ</a></li>
+			<li>Váy</li>
+		</ol><!-- /.breadcrumb -->
+	</div><!-- /.container -->
+
+
+	<div class="filter-list base-padd">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="filters">
+						<div class="filter-header">
+							<span class="font-22-for-reg-2">Bộ lọc</span>
+							<a href="#" class="font-20-for-reg-0">Xóa tất cả</a>
+						</div>
+						<div class="rq-picker">
+							<div id="houston-component"></div>
+						</div>
+						<div class="range dropdown">
+							<header>
+								<span class="font-20-for-reg-0">Khoảng giá</span>
+								<i class="fa fa-angle-down" aria-hidden="true"></i>
+							</header>
+							<input type="text" id="range_id" value="" />
+						</div>
+
+
+						<div class="category dropdown">
+							<header>
+								<span class="font-20-for-reg-0">Chọn danh mục</span>
+								<i class="fa fa-angle-down" aria-hidden="true"></i>
+							</header>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="cat-one">
+									<label for="cat-one">Váy / Đầm</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="cat-two">
+									<label for="cat-two">Giày dép</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="cat-three">
+									<label for="cat-three">Phụ kiện</label>
+								</span>
+							</div>
+						</div>
+						<div class="collection dropdown">
+							<header>
+								<span class="font-20-for-reg-0">Chọn bộ sưu tập</span>
+								<i class="fa fa-angle-down" aria-hidden="true"></i>
+							</header>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="coll-one">
+									<label for="coll-one">Váy / Đầm</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="coll-two">
+									<label for="coll-two">Giày dép</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="coll-three">
+									<label for="coll-three">Phụ kiện</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="coll-four">
+									<label for="coll-four">Phụ kiện</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="coll-five">
+									<label for="coll-five">Phụ kiện</label>
+								</span>
+							</div>
+						</div>
+						<div class="size dropdown rq-collupse">
+							<header>
+								<span class="font-20-for-reg-0">Chọn kích thước (Size)</span>
+								<i class="fa fa-angle-down open" aria-hidden="true"></i>
+							</header>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="size-one">
+									<label for="size-one">XXS (Siêu nhỏ)</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="size-two">
+									<label for="size-two">XS (Rất nhỏ)</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="size-three">
+									<label for="size-three">S (Nhỏ)</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="size-four">
+									<label for="size-four">M (Trung bình)</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="size-five">
+									<label for="size-five">L (Lớn)</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="size-six">
+									<label for="size-six">XL (Rất lớn)</label>
+								</span>
+							</div>
+						</div>
+						<div class="category dropdown">
+							<header>
+								<span class="font-20-for-reg-0">Chọn màu sắc</span>
+								<i class="fa fa-angle-down" aria-hidden="true"></i>
+							</header>
+							<div class="color-chooser">
+								<span style="background: #D0021B"></span>
+								<span style="background: #F5A623"></span>
+								<span style="background: #F8E71C"></span>
+								<span style="background: #F43030"></span>
+								<span style="background: #D8D8D8"></span>
+								<span style="background: #25479B"></span>
+								<span style="background: #000000"></span>
+								<span style="background: #7ED321"></span>
+								<span style="background: #8B572A"></span>
+								<span style="background: #5F9FE8"></span>
+								<span style="background: #846E6E"></span>
+								<span style="background: #F5AEAE"></span>
+								<span style="background: #50E3C2"></span>
+								<span style="background: #A3CEFF"></span>
+								<span style="background: #EAD7C3"></span>
+							</div>
+						</div>
+						<div class="brand dropdown rq-collupse">
+							<header>
+								<span class="font-20-for-reg-0">Chọn thương hiệu</span>
+								<i class="fa fa-angle-down open" aria-hidden="true"></i>
+							</header>
+							<div class="search">
+								<input type="text" class="rq-search" placeholder="tìm kiếm...">
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="brand-one">
+									<label for="brand-one">RichMan</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="brand-two">
+									<label for="brand-two">Blue</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="brand-three">
+									<label for="brand-three">Flamingo</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="brand-four">
+									<label for="brand-four">Medium</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="brand-five">
+									<label for="brand-five">Gucci</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="brand-six">
+									<label for="brand-six">Niken</label>
+								</span>
+							</div>
+						</div>
+						<div class="occasion dropdown rq-collupse">
+							<header>
+								<span class="font-20-for-reg-0">Chọn dịp / Sự kiện</span>
+								<i class="fa fa-angle-down open" aria-hidden="true"></i>
+							</header>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="occa-one">
+									<label for="occa-one">Tiệc cưới</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="occa-two">
+									<label for="occa-two">Cổ điển</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="occa-three">
+									<label for="occa-three">Họp trang trọng</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="occa-four">
+									<label for="occa-four">Dạ hội (Black tie)</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="occa-five">
+									<label for="occa-five">Tiệc sinh nhật</label>
+								</span>
+							</div>
+						</div>
+						<div class="pattern dropdown ">
+							<header>
+								<span class="font-20-for-reg-0">Chọn họa tiết</span>
+								<i class="fa fa-angle-down" aria-hidden="true"></i>
+							</header>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="patt-one">
+									<label for="patt-one">Tiệc cưới</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="patt-two">
+									<label for="patt-two">Cổ điển</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="patt-three">
+									<label for="patt-three">Họp trang trọng</label>
+								</span>
+							</div>
+							<div>
+								<span class="rq-checkbox">
+									<input type="checkbox" id="patt-four">
+									<label for="patt-four">Dạ hội (Black tie)</label>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div><!-- /.col-sm-3 -->
+
+				<div class="col-sm-9">
+					<div class="product-display">
+						<h4 class="font-25-for-reg-0">váy <span>(432)</span></h4>
+						<div class="view">
+							<div class="col-sm-5">
+								<span class="short">Sắp xếp theo : </span>
+								<select class="rq-rental-select2">
+									<option value="AL">Phù hợp nhất</option>
+									<option value="AL">Tên (A-Z)</option>
+									<option value="WY">Ngày đăng</option>
+									<option value="WY">Thân thiện môi trường (Green)</option>
+								</select>
+							</div>
+							<div class="col-sm-4">
+								<div class="text-center">
+									<nav aria-label="Page navigation">
+										<ul class="pagination">
+											<li>
+												<a href="#" aria-label="Trang trước">
+													<i class="fa fa-angle-left" aria-hidden="true"></i>
+												</a>
+											</li>
+											<li><a class="active" href="#">1</a></li>
+											<li><a href="#">2</a></li>
+											<li><a href="#">3</a></li>
+											<li><a href="#">...</a></li>
+											<li><a href="#">9</a></li>
+											<li>
+												<a href="#" class="active" aria-label="Trang sau">
+													<i class="fa fa-angle-right" aria-hidden="true"></i>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="text-right filters">
+									<a href="listing-page-list.html" title="Xem danh sách"><i class="rq-257"
+											aria-hidden="true"></i></a>
+									<a href="listing-page2.html" title="Xem lưới nhỏ"><i class="rq-639"
+											aria-hidden="true"></i></a>
+									<a href="listing-page.html" title="Xem lưới lớn"><i class="rq-638 active"
+											aria-hidden="true"></i></a>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+    <div class="col-sm-4 col-def">
+        <div class="product-list">
+            <figure>
+                <a href="../assets/dist/img/products-list/grid-b1.jpg" data-lightbox="roadtrip">
+                    <img class="img-responsive" src="../assets/dist/img/products-list/grid1.jpg" alt="grid1" />
+                </a>
+                <figcaption>
+                    <a href="#" class="left"><i class="fa fa-gift" aria-hidden="true"></i></a>
+                    <a href="#" class="right"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                    <div class="quick-view">
+                        <a href="#" data-toggle="modal" data-target="#rqModalOne" data-whatever="@mdo">Xem nhanh</a>
+                        <div class="modal fade rq-modal" id="rqModalOne" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <img src="../assets/dist/img/cross.png" alt="">
+                                    </button>
+                                    <div class="modal-body">
+                                        <div class="list-view">
+                                            <div class="row">
+                                                <div class="col-sm-5">
+                                                    <div class="modal-carousel owl-carousel owl-theme">
+                                                        <div class="item"><figure><img class="img-responsive" src="../assets/dist/img/products-list/list3.jpg" alt="list"></figure></div>
+                                                        <div class="item"><figure><img class="img-responsive" src="../assets/dist/img/products-list/list2.jpg" alt="list"></figure></div>
+                                                        <div class="item"><figure><img class="img-responsive" src="../assets/dist/img/products-list/list1.jpg" alt="list"></figure></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-7">
+                                                    <div class="product-info">
+                                                        <h4 class="font-20-for-reg-0">Váy Dạ Hội Diva</h4>
+                                                        <h4 class="font-16-for-reg-0">Thương hiệu : <span>Blue Flamingo</span></h4>
+                                                        <h5 class="font-16-for-reg-0">$50 <del>$99 thuê</del> <b> Giảm 50% /</b> <span>$999 giá gốc</span></h5>
+                                                        <p class="font-16-for-reg-0">Đây là văn bản mô tả giả định về sản phẩm in ấn và sắp chữ. Lorem Ipsum đã là văn bản giả chuẩn của ngành.</p>
+                                                        <div class="delivery-date"><div id="houston-component-11"></div></div>
+                                                        <div class="btn-group">
+                                                            <div class="size">
+                                                                <select class="rq-rental-select2">
+                                                                    <option value="AL">Kích thước</option>
+                                                                    <option value="AL">38</option>
+                                                                    <option value="WY">39</option>
+                                                                    <option value="WY">40</option>
+                                                                    <option value="WY">41</option>
+                                                                    <option value="WY">42</option>
+                                                                    <option value="WY">43</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="color">
+                                                                <select class="rq-rental-select2">
+                                                                    <option value="AL">Màu sắc</option>
+                                                                    <option value="AL">Đỏ</option>
+                                                                    <option value="WY">Hồng</option>
+                                                                    <option value="WY">Xanh lá</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <button class="shopping-bag">Thêm vào giỏ <i class="fa fa-shopping-bag" aria-hidden="true"></i></button>
+                                                        <div class="remove">
+                                                            <a href="#" class="left rq-custom"><i class="fa fa-gift active"></i> Bỏ danh sách muốn thuê</a>
+                                                            <a href="#"><i class="fa fa-heart-o active"></i> Bỏ yêu thích</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </figcaption>
+            </figure>
+            <div class="description">
+                <a href="booking.html" class="font-18-for-reg-0">Váy Dạ Hội Diva</a>
+                <p>Blue Flamingo</p>
+                <h5>$99 thuê / <span>$999 giá gốc</span></h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-def">
+        <div class="product-list">
+            <figure>
+                <a href="../assets/dist/img/products-list/grid-b2.jpg" data-lightbox="roadtrip">
+                    <img class="img-responsive" src="../assets/dist/img/products-list/grid2.jpg" alt="grid1" />
+                </a>
+                <figcaption>
+                    <a href="#" class="left"><i class="fa fa-gift" aria-hidden="true"></i></a>
+                    <a href="#" class="right"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                    <div class="quick-view">
+                        <a href="#" data-toggle="modal" data-target="#rqModal2" data-whatever="@mdo">Xem nhanh</a>
+                        <div class="modal fade rq-modal" id="rqModal2" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="../assets/dist/img/cross.png" alt=""></button>
+                                    <div class="modal-body">
+                                        <div class="list-view">
+                                            <div class="row">
+                                                <div class="col-sm-5">
+                                                    <div class="modal-carousel owl-carousel owl-theme">
+                                                        <div class="item"><figure><img class="img-responsive" src="../assets/dist/img/products-list/list3.jpg" alt="list"></figure></div>
+                                                        <div class="item"><figure><img class="img-responsive" src="../assets/dist/img/products-list/list2.jpg" alt="list"></figure></div>
+                                                        <div class="item"><figure><img class="img-responsive" src="../assets/dist/img/products-list/list1.jpg" alt="list"></figure></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-7">
+                                                    <div class="product-info">
+                                                        <h4 class="font-20-for-reg-0">Váy Dạ Hội Diva</h4>
+                                                        <h4 class="font-16-for-reg-0">Thương hiệu : <span>Blue Flamingo</span></h4>
+                                                        <h5 class="font-16-for-reg-0">$50 <del>$99 thuê</del> <b> Giảm 50% /</b> <span>$999 giá gốc</span></h5>
+                                                        <p class="font-16-for-reg-0">Mô tả chi tiết về sản phẩm...</p>
+                                                        <div class="delivery-date"><div id="houston-component-12"></div></div>
+                                                        <div class="btn-group">
+                                                            <div class="size">
+                                                                <select class="rq-rental-select2">
+                                                                    <option value="AL">Kích thước</option>
+                                                                    <option value="AL">38</option>
+                                                                    <option value="WY">39</option>
+                                                                    <option value="WY">43</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="color">
+                                                                <select class="rq-rental-select2">
+                                                                    <option value="AL">Màu sắc</option>
+                                                                    <option value="AL">Đỏ</option>
+                                                                    <option value="WY">Hồng</option>
+                                                                    <option value="WY">Xanh lá</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <button class="shopping-bag">Thêm vào giỏ <i class="fa fa-shopping-bag" aria-hidden="true"></i></button>
+                                                        <div class="remove">
+                                                            <a href="#" class="left rq-custom"><i class="fa fa-gift active"></i> Bỏ danh sách muốn thuê</a>
+                                                            <a href="#"><i class="fa fa-heart-o active"></i> Bỏ yêu thích</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </figcaption>
+            </figure>
+            <div class="description">
+                <a href="booking.html" class="font-18-for-reg-0">Váy Dạ Hội Diva</a>
+                <p>Blue Flamingo</p>
+                <h5>$99 thuê / <span>$999 giá gốc</span></h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-def">
+        <div class="product-list">
+            <figure>
+                <a href="../assets/dist/img/products-list/grid-b3.jpg" data-lightbox="roadtrip">
+                    <img class="img-responsive" src="../assets/dist/img/products-list/grid3.jpg" alt="grid1" />
+                </a>
+                <figcaption>
+                    <a href="#" class="left"><i class="fa fa-gift" aria-hidden="true"></i></a>
+                    <a href="#" class="right"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                    <div class="quick-view">
+                        <a href="#" data-toggle="modal" data-target="#rqModal3" data-whatever="@mdo">Xem nhanh</a>
+                        <div class="modal fade rq-modal" id="rqModal3" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="../assets/dist/img/cross.png" alt=""></button>
+                                    <div class="modal-body">
+                                        <div class="list-view">
+                                            <div class="row">
+                                                <div class="col-sm-5">
+                                                    <div class="modal-carousel owl-carousel owl-theme">
+                                                        <div class="item"><figure><img class="img-responsive" src="../assets/dist/img/products-list/list3.jpg" alt="list"></figure></div>
+                                                        <div class="item"><figure><img class="img-responsive" src="../assets/dist/img/products-list/list2.jpg" alt="list"></figure></div>
+                                                        <div class="item"><figure><img class="img-responsive" src="../assets/dist/img/products-list/list1.jpg" alt="list"></figure></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-7">
+                                                    <div class="product-info">
+                                                        <h4 class="font-20-for-reg-0">Váy Dạ Hội Diva</h4>
+                                                        <h4 class="font-16-for-reg-0">Thương hiệu : <span>Blue Flamingo</span></h4>
+                                                        <h5 class="font-16-for-reg-0">$50 <del>$99 thuê</del> <b> Giảm 50% /</b> <span>$999 giá gốc</span></h5>
+                                                        <p class="font-16-for-reg-0">Mô tả chi tiết về sản phẩm...</p>
+                                                        <div class="delivery-date"><div id="houston-component-13"></div></div>
+                                                        <div class="btn-group">
+                                                            <div class="size">
+                                                                <select class="rq-rental-select2">
+                                                                    <option value="AL">Kích thước</option>
+                                                                    <option value="AL">38</option>
+                                                                    <option value="WY">43</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="color">
+                                                                <select class="rq-rental-select2">
+                                                                    <option value="AL">Màu sắc</option>
+                                                                    <option value="AL">Đỏ</option>
+                                                                    <option value="WY">Hồng</option>
+                                                                    <option value="WY">Xanh lá</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <button class="shopping-bag">Thêm vào giỏ <i class="fa fa-shopping-bag" aria-hidden="true"></i></button>
+                                                        <div class="remove">
+                                                            <a href="#" class="left rq-custom"><i class="fa fa-gift active"></i> Bỏ danh sách muốn thuê</a>
+                                                            <a href="#"><i class="fa fa-heart-o active"></i> Bỏ yêu thích</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </figcaption>
+            </figure>
+            <div class="description">
+                <a href="booking.html" class="font-18-for-reg-0">Váy Dạ Hội Diva</a>
+                <p>Blue Flamingo</p>
+                <h5>$99 thuê / <span>$999 giá gốc</span></h5>
+            </div>
+        </div>
+    </div>
+    
+    </div>	
+					</div><!-- /.product-display -->
+					<div class="row mrg-top">
+						<div class="col-xs-4">
+							<a class="pages-on" href="#">1-9 of 432</a>
+						</div>
+						<div class="col-xs-8">
+							<nav aria-label="Page navigation">
+								<ul class="pagination">
+									<li>
+										<a href="#" aria-label="Previous">
+											<i class="fa fa-angle-left" aria-hidden="true"></i>
+										</a>
+									</li>
+									<li><a class="active" href="#">1</a></li>
+									<li><a href="#">2</a></li>
+									<li><a href="#">3</a></li>
+									<li><a href="#">...</a></li>
+									<li><a href="#">9</a></li>
+									<li>
+										<a href="#" class="active" aria-label="Next">
+											<i class="fa fa-angle-right" aria-hidden="true"></i>
+										</a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+					</div><!-- /.row -->
+				</div><!-- /.col-sm-9 -->
+			</div><!-- /.row -->
+		</div><!-- /.container -->
+	</div><!-- /.filter-list -->
+
+
+
+	<div id="go-to-top">
+		<a href="#stickynav"><i class="fa fa-angle-up"></i></a>
+	</div>
+
+
+
+	<div id="footer-placeholder"></div>
+	<script>
+		fetch('footer.html')
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.text();
+			})
+			.then(data => {
+				document.getElementById('footer-placeholder').innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Lỗi khi tải header:', error);
+			});
+	</script>
+
+
+
+	<script src="../assets/dist/js/vendor/jquery-3.2.0.min.js"></script>
+	<script src="../assets/dist/js/vendor/bootstrap.min.js"></script>
+	<script src="../assets/dist/js/vendor/countUp.js"></script>
+	<script src="../assets/dist/js/vendor/owl.carousel.min.js"></script>
+	<script src="../assets/dist/js/vendor/ion.rangeSlider.min.js"></script>
+	<script src="../assets/dist/js/vendor/dateRangePicker.js"></script>
+	<script src="../assets/dist/js/vendor/jquery.flexslider-min.js"></script>
+	<script src="../assets/dist/js/vendor/jquery.nicescroll.min.js"></script>
+	<script src="../assets/dist/js/vendor/select2.min.js"></script>
+	<script src="../assets/dist/js/vendor/lightbox.min.js"></script>
+	<script src="../assets/dist/js/vendor/jquery.smooth-scroll.js"></script>
+	<script src="../assets/dist/js/custom.js"></script>
+</body>
+
+<!-- Mirrored from wpdemo.redq.io/sites/dress-rental/html/listing-page.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 22 Jan 2026 15:16:31 GMT -->
+
+</html>

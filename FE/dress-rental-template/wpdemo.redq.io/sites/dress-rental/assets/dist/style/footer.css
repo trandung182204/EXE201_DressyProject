@@ -1,0 +1,197 @@
+.footer {
+  background: #F4EDE5;
+  padding: 80px 0 35px;
+}
+.footer .rq-container {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+@media only screen and  (min-width: 1401px) and (max-width: 1500px), only screen and  (min-width: 1200px) and (max-width: 1400px), only screen and  (min-width: 992px) and (max-width: 1199px), only screen and (min-width: 768px) and (max-width: 991px), only screen and (min-width: 481px) and (max-width: 767px), only screen and (max-width: 480px) {
+  .footer .rq-container {
+    width: 100%;
+    padding: 0 15px;
+  }
+}
+@media only screen and (min-width: 481px) and (max-width: 767px), only screen and (max-width: 480px) {
+  .footer .rq-container {
+    display: block;
+    text-align: center;
+  }
+}
+.footer .rq-container > div {
+  margin-right: 65px;
+}
+@media only screen and  (min-width: 1200px) and (max-width: 1400px) {
+  .footer .rq-container > div {
+    margin-right: 30px;
+  }
+}
+@media only screen and (min-width: 481px) and (max-width: 767px), only screen and (max-width: 480px) {
+  .footer .rq-container > div {
+    margin: 0;
+  }
+}
+@media only screen and  (min-width: 992px) and (max-width: 1199px), only screen and (min-width: 768px) and (max-width: 991px) {
+  .footer .rq-container > div {
+    margin-right: 30px;
+  }
+  .footer .rq-container > div.item2 {
+    display: none;
+  }
+  .footer .rq-container > div.item3 {
+    display: none;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .footer .rq-container > div.item4 {
+    display: none;
+  }
+}
+@media only screen and (min-width: 481px) and (max-width: 767px), only screen and (max-width: 480px) {
+  .footer .rq-container > div.item5 {
+    width: 130px;
+    margin: 0 auto;
+  }
+}
+.footer .rq-container > div.item1 {
+  width: 315px;
+}
+@media only screen and (min-width: 481px) and (max-width: 767px), only screen and (max-width: 480px) {
+  .footer .rq-container > div.item1 {
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+.footer .rq-container > div.item1 p {
+  margin-top: 40px;
+  border-bottom: 1px solid #D1C7BA;
+  padding-bottom: 35px;
+}
+.footer .rq-container > div.item1 .get-touch ul li {
+  display: inline-block;
+}
+.footer .rq-container > div.item1 .get-touch ul li a {
+  color: #958d80;
+}
+.footer .rq-container > div.item1 .get-touch ul li a:hover {
+  color: #392606;
+}
+.footer .rq-container > div.item1 .get-touch ul li a i {
+  font-size: 17px;
+  display: inline-block;
+  margin-right: 8px;
+}
+.footer .rq-container > div h3.font-18-pla-reg-2 {
+  margin-bottom: 40px;
+}
+@media only screen and (min-width: 481px) and (max-width: 767px), only screen and (max-width: 480px) {
+  .footer .rq-container > div h3.font-18-pla-reg-2 {
+    margin-bottom: 15px;
+    margin-top: 25px;
+  }
+}
+.footer .rq-container > div .contact li {
+  position: relative;
+  padding-left: 25px;
+}
+.footer .rq-container > div .contact li:before {
+  position: absolute;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: 20px;
+  left: 0;
+  top: 0;
+}
+.footer .rq-container > div .contact li.map-marker:before {
+  content: "\f041";
+}
+.footer .rq-container > div .contact li.phone:before {
+  content: "\f095";
+}
+.footer .rq-container > div .contact li.mobile:before {
+  content: "\f10b";
+  font-size: 24px;
+}
+.footer .rq-container > div .contact li.envelope:before {
+  content: "\f003";
+  font-size: 16px;
+  top: 2px;
+}
+.footer .rq-container > div.item6 {
+  width: 275px;
+}
+@media only screen and (min-width: 481px) and (max-width: 767px), only screen and (max-width: 480px) {
+  .footer .rq-container > div.item6 {
+    margin: 0 auto;
+  }
+}
+.footer .rq-container > div.item6 .form-group {
+  position: relative;
+  border-bottom: 1px solid #D1C7BA;
+  padding-bottom: 35px;
+}
+.footer .rq-container > div.item6 .form-group input {
+  width: 100%;
+  height: 45px;
+  background: #D1C7BA;
+  font-style: italic;
+  border-radius: 2px;
+  box-shadow: none;
+  font-size: 13px;
+  font-family: 'Playfair Display', serif;
+  outline: 0;
+}
+.footer .rq-container > div.item6 .form-group input:focus {
+  outline: 0;
+  border: 1px solid transparent;
+}
+.footer .rq-container > div.item6 .form-group input::-webkit-input-placeholder {
+  color: #392606;
+}
+.footer .rq-container > div.item6 .form-group .btn {
+  position: absolute;
+  width: 52px;
+  height: 45px;
+  top: 0;
+  right: 0;
+  background: #392606;
+  border-radius: 0 3px 3px 0;
+  color: #958d80;
+  font-size: 30px;
+  outline: 0;
+}
+.footer .rq-container > div.item6 .form-group .btn i {
+  position: absolute;
+  top: 4px;
+  right: 16px;
+}
+.footer .rq-container > div.item6 .payment a {
+  display: inline-block;
+  margin-right: 10px;
+}
+.footer .rq-container > div.item6 .payment a i {
+  font-size: 30px;
+  margin-right: 10px;
+}
+.footer .get-touch {
+  position: relative;
+  top: 15px;
+}
+.footer .payment {
+  margin-top: 30px;
+}
+.bottom-bar {
+  background: #EAD7C3;
+  height: 35px;
+}
+.bottom-bar p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  text-align: center;
+  padding-top: 10px;
+}
+.bottom-bar p a {
+  font-family: 'Playfair Display', serif;
+  color: #392606;
+}

@@ -15,5 +15,7 @@ namespace BE.Repositories.Interfaces
         Task<IEnumerable<Products>> GetByBranchAsync(long branchId);
         Task<Products?> GetByBranchAndIdAsync(long branchId, long productId);
 
+        List<Products> GetByProviderId(long providerId);
+
     }
 }
