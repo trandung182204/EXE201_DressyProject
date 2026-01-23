@@ -52,7 +52,7 @@ public class AuthService : IAuthService
                 Email = email,
                 FullName = req.FullName,
                 Phone = req.Phone,
-                Status = "active",
+                Status = "ACTIVE",
             };
             user.PasswordHash = _hasher.HashPassword(user, req.Password);
 
@@ -131,7 +131,7 @@ public class AuthService : IAuthService
         if (user == null) throw new Exception("Sai email hoặc mật khẩu.");
 
         if (!string.IsNullOrEmpty(user.Status) &&
-            !user.Status.Equals("active", StringComparison.OrdinalIgnoreCase))
+            !user.Status.Equals("ACTIVE", StringComparison.OrdinalIgnoreCase))
         {
             throw new Exception("Tài khoản đang bị khóa hoặc không hoạt động.");
         }
@@ -216,17 +216,17 @@ public class AuthService : IAuthService
         if (!int.TryParse(expMinStr, out var expMin)) expMin = 120;
 
         var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new(ClaimTypes.Role, role),
-        };
+{
+    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // ✅ chuẩn
+    new Claim(ClaimTypes.Email, user.Email),                  // ✅ chuẩn
+    new Claim(ClaimTypes.Role, role),                         // ✅ chuẩn
+};
 
-        // ✅ nhét providerId vào claim nếu có
         if (providerId.HasValue)
         {
             claims.Add(new Claim("providerId", providerId.Value.ToString()));
         }
+
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
         var creds = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
@@ -243,18 +243,16 @@ public class AuthService : IAuthService
     }
 
     private string MapRedirect(string role)
-{
-    role = (role ?? "customer").Trim().ToLower();
-
-    return role switch
     {
-        "admin" => "http://127.0.0.1:5500/EXE201_DressyProject/FE/Admin/admin-dashboard/index.html",
+        role = (role ?? "customer").Trim().ToLower();
 
-        "provider" => "http://127.0.0.1:5500/FE/Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html",
+        return role switch
+        {
+            "admin" => "/EXE201_DressyProject/FE/Admin/admin-dashboard/index.html",
+            "provider" => "/FE/Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html",
+            "customer" => "/EXE201_DressyProject/FE/bean-style.mysapo.net/index.html",
+            _ => "/EXE201_DressyProject/FE/bean-style.mysapo.net/index.html"
+        };
+    }
 
-        "customer" => "http://127.0.0.1:5500/EXE201_DressyProject/FE/bean-style.mysapo.net/index.html",
-
-        _ => "http://127.0.0.1:5500/EXE201_DressyProject/FE/bean-style.mysapo.net/index.html"
-    };
-}
 }
