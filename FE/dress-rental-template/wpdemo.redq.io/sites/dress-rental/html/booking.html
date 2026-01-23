@@ -1,943 +1,814 @@
 <!DOCTYPE html>
-<html lang="en">     
-  
+<html lang="en">
+
 <!-- Mirrored from wpdemo.redq.io/sites/dress-rental/html/booking.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 22 Jan 2026 15:16:36 GMT -->
+
 <head>
-    <meta charset="UTF-8"> 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Dress rental </title>
-    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Forum|Open+Sans:400,600|Roboto:100,300,400,500,700" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/dist/style/elements.css">
-    <link rel="stylesheet" href="../assets/dist/style/header.css">
-    <link rel="stylesheet" href="../assets/dist/style/footer.css">
-    <link rel="stylesheet" href="../assets/dist/style/blog.css">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> Dress rental </title>
+	<link
+		href="https://fonts.googleapis.com/css?family=Abril+Fatface|Forum|Open+Sans:400,600|Roboto:100,300,400,500,700"
+		rel="stylesheet">
+	<link rel="stylesheet" href="../assets/dist/style/elements.css">
+	<link rel="stylesheet" href="../assets/dist/style/header.css">
+	<link rel="stylesheet" href="../assets/dist/style/footer.css">
+	<link rel="stylesheet" href="../assets/dist/style/blog.css">
 </head>
+
 <body>
- 
-<!-- ==========================-->
-<!-- LOADER-->
-<!-- ==========================-->
-<div id="gl-circle-loader-wrapper">
-  <div id="gl-circle-loader-center">
-    <div class="gl-circle-load">
-      <img src="../assets/dist/img/ploading.gif" alt="Page Loader">
-    </div>
-  </div>
-</div>
 
- 
-<!-- ==========================-->
-<!-- SEARCH MODAL-->
-<!-- ==========================-->
-<div class="header-search open-search"> 
-  <div class="container">
-      <div class="row">
-          <div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
-              <div class="navbar-search">
-                  <form class="search-global"> 
-                      <input class="search-global__input" type="text" placeholder="Type to search" autocomplete="off" name="s" value="" />
-                      <button class="search-global__btn"><i class="icon stroke icon-Search"></i>
-                      </button>
-                      <div class="search-global__note">Begin typing your search above and press return to search.</div>
-                  </form>
-              </div>
-          </div>
-      </div>
-  </div>
-  <button class="search-close close" type="button"><i class="fa fa-times"></i></button>
-</div>
-
-<div class="top-bar" id="top_bar"> 
-	<div class="container">
-		<p class="font-14-ope-reg-0 text-center margin-0">…Enjoy 20% off when you sign up to become a member...</p>
-		<i class="ion-ios-close-empty"></i>
-	</div><!-- /.container -->
-</div><!-- /.top-bar -->  
-<header class="main-nav" id="stickynav">
-<nav class="navbar navbar-default">
-	<!-- Brand and toggle get grouped for better mobile display -->
-	<div class="navbar-header">
-		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-		data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-			<span class="sr-only">Toggle navigation</span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-		</button>
-		 <a class="navbar-brand font-36-pla-reg-2" href="index-2.html"><img src="../assets/dist/img/logo.png" alt="logo" /></a>
-	</div>
-
-	<!-- Collect the nav links, forms, and other content for toggling -->
-	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-		<ul class="nav navbar-nav">
-			<li class="active"><a href="index-2.html" >Home</a></li>
-			<li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">COLLECTIONS</a>
-          <ul class="dropdown-menu number2">
-            <li><a href="listing-page-list.html">List View</a></li>
-            <li><a href="listing-page2.html">Grid View</a></li>
-            <li><a href="listing-page.html">Grid View 2</a></li>
-          </ul>
-        </li>
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">DESIGNER </a>
-				<ul class="dropdown-menu">
-					<li class="rq-mega-sks">
-						<div class="row">
-							<div class="col-sm-3">
-								<a href="#">Aidan Mattox</a>
-								<a href="#">Alberta Feretti</a>
-								<a href="#">Alex Perry</a> 
-								<a href="#">Alexander McQueen</a>
-								<a href="#">Alice + Olivia</a>
-								<a href="#">Alice by Temperley</a>
-								<a href="#">Amanda Uprichard</a>
-								<a href="#">Amanda Wakeley</a>
-							</div>
-							
-							
-							<div class="col-sm-3">
-								<a href="#">Aidan Mattox</a>
-								<a href="#">Alberta Feretti</a>
-								<a href="#">Alex Perry</a> 
-								<a href="#">Alexander McQueen</a>
-								<a href="#">Alice + Olivia</a>
-								<a href="#">Alice by Temperley</a>
-								<a href="#">Amanda Uprichard</a>
-								<a href="#">Amanda Wakeley</a>
-							</div>
-							<div class="col-sm-6">
-								<figure>
-									<img src="../assets/dist/img/content/4.jpg" alt="1" class="img-responsive">
-								</figure>
-							</div>
-						</div>
-					</li>
-				</ul>
-			</li>
-			<li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Our Blog</a>
-          <ul class="dropdown-menu number2">
-            <li><a href="blog-listing.html">Blog Listing</a></li>
-            <li><a href="post-single.html">Post Single</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages</a>
-          <ul class="dropdown-menu number2">
-            <li><a href="cart.html">Cart Page</a></li>
-          </ul>
-        </li>
-        <li><a href="about-us.html" >ABOUT</a></li>
-				<li><a href="service.html" >CONTACT</a></li>
-		</ul>
-		
-		
-	</div><!-- /.navbar-collapse -->
-
-</nav>
-<form class="navbar-form dr-search">
-	<div class="form-group">
-		<a href="#" class="rq_btn_header_search"><i class="ion-ios-search"></i></a>
-	</div>
-</form>
-
-<ul class="nav navbar-nav dr-cart">
-	<li>
-		<a href="#" class="rq-shopping-cart-items-list login">LOGIN</a>
-		<div class="rq-shopping-cart-inner-div ex-fix">
-		  <h4>Login Form</h4>
-		  <div class="rq-login">
-			  <form>
-				  <div class="form-group">
-				    <input type="email" class="form-control"  placeholder="Email address">
-				  </div>
-				  <div class="form-group">
-				    <input type="password" class="form-control"  placeholder="Password">
-				  </div>
-				  <div class="form-group">
-				    <button type="submit">Login</button>
-				  </div>
-				  <div class="form-group">
-				  	<p class="or">Or</p>
-				  </div>
-				  <div class="form-inner">
-				  	<span>Login With</span>
-				  	<a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-				  	<a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-				  	<a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
-				  </div><!-- /.form-inner -->
-				</form>
-			</div><!-- /.rq-login -->	
-		</div><!-- /.rq-shopping-cart-inner-div -->
-	</li>
-	<li>
-		<a href="#" class="rq-shopping-cart-items-list wishlist">Wishlist <i class="fa fa-shopping-basket" aria-hidden="true"></i></a>
-		<div class="rq-shopping-cart-inner-div">
-		  <h4>Items Recently added</h4>
-		  <ul>
-		    <li>
-		      <div class="wrapper">
-		        <a href="#" class="wrapper-img"> <img src="../assets/dist/img/content/1.jpg" alt="1"/> </a>
-		        <a href="#" class="product-title">White Beard T-Shirt</a>
-		        <p>1 x <small> $49.00</small></p>
-		        <a href="#" class="subtraction"><i class="ion-ios-close-empty"></i></a>
-		      </div><!-- /.wrapper -->
-		    </li>
-		     <li class="last">
-		      <div class="wrapper">
-		        <a href="#" class="wrapper-img"> <img src="../assets/dist/img/content/7.jpg" alt="1"/> </a>
-		        <a href="#" class="product-title">Mercedes Ben C-Class</a>
-		        <p>1 x <small> $65.00</small></p>
-		        <a href="#" class="subtraction"><i class="ion-ios-close-empty"></i></a>
-		      </div><!-- /.wrapper -->
-		    </li>
-		  </ul>
-		</div><!-- /.rq-shopping-cart-inner-div -->
-	</li>
-	<li>
-		<a href="#" class="rq-shopping-cart-items-list">Cart <i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
-		<div class="rq-shopping-cart-inner-div">
-		  <h4>Items Recently added</h4>
-		  <ul>
-		    <li>
-		      <div class="wrapper">
-		        <a href="#" class="wrapper-img"> <img src="../assets/dist/img/content/1.jpg" alt="1"/> </a>
-		        <a href="#" class="product-title">White Beard T-Shirt</a>
-		        <p>1 x <small> $49.00</small></p>
-		        <a href="#" class="subtraction"><i class="ion-ios-close-empty"></i></a>
-		      </div><!-- /.wrapper -->
-		    </li>
-		     <li>
-		      <div class="wrapper">
-		        <a href="#" class="wrapper-img"> <img src="../assets/dist/img/content/7.jpg" alt="1"/> </a>
-		        <a href="#" class="product-title">Mercedes Ben C-Class</a>
-		        <p>1 x <small> $65.00</small></p>
-		        <a href="#" class="subtraction"><i class="ion-ios-close-empty"></i></a>
-		      </div><!-- /.wrapper -->
-		    </li>
-		  </ul>
-		  <div class="subtotal">
-		    <strong>Subtotal:</strong>
-		    <strong>$114.00</strong>
-		  </div><!-- /.subtotal -->
-		  <div class="view-cart">
-		    <a href="cart.html">View Cart</a>
-		  </div><!-- /.subtotal -->
-		</div><!-- /.rq-shopping-cart-inner-div -->
-	</li>
-</ul>
-</header><!-- /.End header -->
-
-
-
-<div class="container">
-  <ol class="breadcrumb underline"> 
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Dresses</a></li>
-    <li>LONG DIVA DRESS</li>
-  </ol><!-- /.breadcrumb --> 
-</div><!-- /.container -->  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="product-details base-padd"> 
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-5 rq-custom-5">
-				<div class="flexslider product_details_slider"> 
-				  <ul class="slides">
-				    <li data-thumb="../assets/dist/img/product-details/1_1.jpg">
-				      <img src="../assets/dist/img/product-details/1.jpg" class="img-responsive" alt="1" />
-				    </li>
-				    <li data-thumb="../assets/dist/img/product-details/1_2.jpg">
-				      <img src="../assets/dist/img/product-details/1.jpg"  alt="1"/>
-				    </li>
-				    <li data-thumb="../assets/dist/img/product-details/1_3.jpg">
-				      <img src="../assets/dist/img/product-details/1.jpg"  alt="1"/>
-				    </li>
-				  </ul>
-				  <div class="customer-photo ">
-				  	<p>Customer Photos</p>
-				  	<a href="#"><img src="../assets/dist/img/product-details/1_1.jpg" alt="1"></a>
-				  	<a href="#"><img src="../assets/dist/img/product-details/1_2.jpg" alt="1"></a>
-				  	<a href="#"><img src="../assets/dist/img/product-details/1_3.jpg" alt="1"></a>
-				  </div><!-- /.customer-photo  -->
-				</div><!-- /.product_details_slider -->
-			</div><!-- /.col-sm-5 -->
-			<div class="col-sm-7">
-				<div class="rq-inner">
-					<a href="#" class="font-30-for-reg-0">Long Diva Dress</a>
-					<h3 class="font-18-for-reg-0">Brand : <span>Blue Flamingo</span></h3>
-					<a href="#" class="rating" >
-						<i class="fa fa-star" aria-hidden="true"></i>
-						<i class="fa fa-star" aria-hidden="true"></i>
-						<i class="fa fa-star" aria-hidden="true"></i>
-						<i class="fa fa-star" aria-hidden="true"></i>
-						<i class="fa fa-star-o ash" aria-hidden="true"></i>
-						<span class="ash">(29)</span>
-					</a><!-- /.rating -->
-					<h4>$50 <del> $99 rent </del> <span> 50% off /</span> <small> $999 retail </small></h4>
-					<div class="select-box">
-
-					<select class="rq-rental-select2">
-							<option value="AL">Color</option>
-							<option value="AL">Red</option>
-							<option value="WY">Pink</option>
-							<option value="WY">Green</option>
-						</select>
-						<select class="rq-rental-select2">
-							<option value="AL">Size</option>
-							<option value="AL">38</option>
-							<option value="WY">39</option>
-							<option value="WY">40</option>
-							<option value="WY">41</option>
-							<option value="WY">42</option>
-							<option value="WY">43</option>
-						</select>
-					
-						
-					</div>
-
-					<div class="row ex-padd">
-						<div class="col-sm-7">
-							<span class="font-18-for-reg-1" >Rent for:</span>
-							<span class="rq-radiobox">
-								<input type="radio" name="checkout-login-method" id="checkout-login1" value="guest" checked/>
-								<label for="checkout-login1">4 Day</label>
-							</span><!-- /.rq-radiobox -->
-							<span class="rq-radiobox">
-								<input type="radio" name="checkout-login-method" id="checkout-login2" value="guest" checked/>
-								<label for="checkout-login2">8 Day</label>
-							</span><!-- /.rq-radiobox -->
-						</div><!-- /.col-sm-7 -->
-						<div class="col-sm-5">
-						</div><!-- /.col-sm-5 -->
-					</div><!-- /.row -->
-					
-					<div class="row">
-						<div class="col-lg-7 col-md-8 col-sm-8">
-							<div class="rq-picker rq-picker2">
-								<div id="houston-component"></div><!-- date-picker -->
-							</div><!-- /.rq-picker -->
-						</div>
-					</div>
-
-					<div class="row rq-margin">
-						<div class="col-sm-6">
-							<a href="cart.html" class="reserve">Reserve now</a>	
-							<button class="wishlist">Add to wishlist</button>	
-						</div><!-- /.col-sm-6 -->
-						<div class="col-sm-6">
-							<div class="social-icon">
-								<a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-								<a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-								<a href="#"><i class="fa fa-dribbble" aria-hidden="true"></i></a>
-								<a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-							</div>	
-						</div><!-- /.col-sm-6 -->
-					</div><!-- /.row -->
-
-					<div class="panel-group rq-accordion" id="accordion" role="tablist" aria-multiselectable="true">
-					  <div class="panel panel-default">
-					    <div class="panel-heading" role="tab" id="headingOne">
-					      <h4 class="panel-title">
-					        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-					          Size and fit
-					          <i class="fa fa-angle-up pull-right" aria-hidden="true"></i>
-					        </a>
-
-					      </h4>
-					    </div>
-					    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-
-					      <div class="panel-body">
-					        Lorem Ipsum is simply dummy text of the printing and type setting industry. Itting industry. Lorem Ipsum is simply dummy text of the printing and type setting industry. Lorem Ipsum is simply dummy text of the printing and type setting industry.
-					      </div>
-					    </div>
-					  </div>
-					  <div class="panel panel-default">
-					    <div class="panel-heading" role="tab" id="headingTwo">
-					      <h4 class="panel-title">
-					        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-					          Dsigner notes
-					          <i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
-					        </a>
-					      </h4>
-					    </div>
-					    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-					      <div class="panel-body">
-					        Lorem Ipsum is simply dummy text of the printing and type setting industry. Itting industry. Lorem Ipsum is simply dummy text of the printing and type setting industry. Lorem Ipsum is simply dummy text of the printing and type setting industry.
-					      </div>
-					    </div>
-					  </div>
-					  <div class="panel panel-default">
-					    <div class="panel-heading" role="tab" id="headingThree">
-					      <h4 class="panel-title">
-					        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-					          Product details
-					          <i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
-					        </a>
-					      </h4>
-					    </div>
-					    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-					      <div class="panel-body">
-					       Lorem Ipsum is simply dummy text of the printing and type setting industry. Itting industry. Lorem Ipsum is simply dummy text of the printing and type setting industry. Lorem Ipsum is simply dummy text of the printing and type setting industry.
-					      </div>
-					    </div>
-					  </div>
-					</div><!-- /.accordion -->
-
-				</div><!-- /.rq-inner -->
-			</div><!-- /.col-lg-7 -->
-		</div><!-- /.row
- -->		
-	</div>	<!-- /.container -->
-	<div class="container complete-look">
-		<h4 class="font-30-for-reg-3">Complete the look</h4>
-		<div class="row">
-			<div class="col-sm-4">
-				<div class="inner">
-					<img src="../assets/dist/img/complete-look/1.jpg" alt="">
-					<div class="hover">
-						<a class="font-18-for-reg-1" href="#">Quick View</a>
-					</div><!-- /.hover -->
-				</div><!-- /.inner -->
-			</div><!-- /.col-sm-4 -->
-			<div class="col-sm-4">
-				<div class="inner">
-					<img src="../assets/dist/img/complete-look/2.jpg" alt="">
-					<div class="hover">
-						<a class="font-18-for-reg-1" href="#">Quick View</a>
-					</div><!-- /.hover -->
-				</div><!-- /.inner -->
-			</div><!-- /.col-sm-4 -->
-			<div class="col-sm-4">
-				<div class="inner">
-					<img src="../assets/dist/img/complete-look/3.jpg" alt="">
-					<div class="hover">
-						<a class="font-18-for-reg-1" href="#">Quick View</a>
-					</div><!-- /.hover -->
-				</div><!-- /.inner -->
-			</div><!-- /.col-sm-4 -->
-		</div><!-- /.row -->
-	</div><!-- /.container -->
-</div><!-- /.product-details -->	
-
-
-
-<div class="favorites base-padd">
-<h2>OUR FAVOURITES</h2>
-	<div class="container">
-		<div class="owl-favorites owl-carousel owl-theme">
-	    <div class="item">
-	    	<figure> 
-	    		<img src="../assets/dist/img/favorites/1.png" alt="">
-	    		<a href="booking.html">View</a>
-	    	</figure>
-	    	<h3 class="font-20-for-reg-0">LACE</h3>	
-	    	<p class="font-16-for-reg-0">Black & White</p>
-	    	<div class="elements">
-		    	<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO WISHLIST</span>
-		    		<a href="#" ><img src="../assets/dist/img/favorites/wish.png" alt=""></a>	
-		    	</div><!-- /.tool-tip -->
-	    	
-	    		<span class="font-25-for-reg-0">$99</span>
-	    		<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO FAVORITE</span>
-		    		<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-		    	</div><!-- /.tool-tip -->
-	    		
-	    	</div><!-- /.elements -->
-	    </div><!-- /.item -->
-
-			<div class="item">
-	    	<figure>
-	    		<img src="../assets/dist/img/favorites/2.png" alt="">
-	    		<a href="booking.html">View</a>
-	    	</figure>
-	    	<h3 class="font-20-for-reg-0">PARTY</h3>	
-	    	<p class="font-16-for-reg-0">SASSA’s Collection</p>
-	    	<div class="elements">
-		    	<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO WISHLIST</span>
-		    		<a href="#" ><img src="../assets/dist/img/favorites/wish.png" alt=""></a>	
-		    	</div><!-- /.tool-tip -->
-	    	
-	    		<span class="font-25-for-reg-0">$99</span>
-	    		<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO FAVORITE</span>
-		    		<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-		    	</div><!-- /.tool-tip -->
-	    		
-	    	</div><!-- /.elements -->
-	    </div><!-- /.item -->
-
-	    <div class="item">
-	    	<figure>
-	    		<img src="../assets/dist/img/favorites/2.png" alt="">
-	    		<a href="booking.html">View</a>
-	    	</figure>
-	    	<h3 class="font-20-for-reg-0">GRACE</h3>	
-	    	<p class="font-16-for-reg-0">Black & White</p>
-	    	<div class="elements">
-		    	<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO WISHLIST</span>
-		    		<a href="#" ><img src="../assets/dist/img/favorites/wish.png" alt=""></a>	
-		    	</div><!-- /.tool-tip -->
-	    	
-	    		<span class="font-25-for-reg-0">$99</span>
-	    		<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO FAVORITE</span>
-		    		<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-		    	</div><!-- /.tool-tip -->
-	    		
-	    	</div><!-- /.elements -->
-	    </div><!-- /.item -->
-
-	    <div class="item">
-	    	<figure>
-	    		<img src="../assets/dist/img/favorites/4.png" alt="">
-	    		<a href="booking.html">View</a>
-	    	</figure>
-	    	<h3 class="font-20-for-reg-0">PINK</h3>	
-	    	<p class="font-16-for-reg-0">Black & White</p>
-	    	<div class="elements">
-		    	<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO WISHLIST</span>
-		    		<a href="#" ><img src="../assets/dist/img/favorites/wish.png" alt=""></a>	
-		    	</div><!-- /.tool-tip -->
-	    	
-	    		<span class="font-25-for-reg-0">$99</span>
-	    		<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO FAVORITE</span>
-		    		<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-		    	</div><!-- /.tool-tip -->
-	    		
-	    	</div><!-- /.elements -->
-	    </div><!-- /.item -->
-
-	    <div class="item">
-	    	<figure>
-	    		<img src="../assets/dist/img/favorites/5.png" alt="">
-	    		<a href="booking.html">View</a>
-	    	</figure>
-	    	<h3 class="font-20-for-reg-0">WHITE</h3>	
-	    	<p class="font-16-for-reg-0">SASSA’s Collection</p>
-	    	<div class="elements">
-		    	<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO WISHLIST</span>
-		    		<a href="#" ><img src="../assets/dist/img/favorites/wish.png" alt=""></a>	
-		    	</div><!-- /.tool-tip -->
-	    	
-	    		<span class="font-25-for-reg-0">$99</span>
-	    		<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO FAVORITE</span>
-		    		<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-		    	</div><!-- /.tool-tip -->
-	    		
-	    	</div><!-- /.elements -->
-	    </div><!-- /.item -->
-
-	    <div class="item">
-	    	<figure>
-	    		<img src="../assets/dist/img/favorites/1.png" alt="">
-	    		<a href="booking.html">View</a>
-	    	</figure>
-	    	<h3 class="font-20-for-reg-0">LACE</h3>	
-	    	<p class="font-16-for-reg-0">Black & White</p>
-	    	<div class="elements">
-		    	<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO WISHLIST</span>
-		    		<a href="#" ><img src="../assets/dist/img/favorites/wish.png" alt=""></a>	
-		    	</div><!-- /.tool-tip -->
-	    	
-	    		<span class="font-25-for-reg-0">$99</span>
-	    		<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO FAVORITE</span>
-		    		<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-		    	</div><!-- /.tool-tip -->
-	    		
-	    	</div><!-- /.elements -->
-	    </div><!-- /.item -->
-
-			<div class="item">
-	    	<figure>
-	    		<img src="../assets/dist/img/favorites/2.png" alt="">
-	    		<a href="booking.html">View</a>
-	    	</figure>
-	    	<h3 class="font-20-for-reg-0">PARTY</h3>	
-	    	<p class="font-16-for-reg-0">SASSA’s Collection</p>
-	    	<div class="elements">
-		    	<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO WISHLIST</span>
-		    		<a href="#" ><img src="../assets/dist/img/favorites/wish.png" alt=""></a>	
-		    	</div><!-- /.tool-tip -->
-	    	
-	    		<span class="font-25-for-reg-0">$99</span>
-	    		<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO FAVORITE</span>
-		    		<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-		    	</div><!-- /.tool-tip -->
-	    		
-	    	</div><!-- /.elements -->
-	    </div><!-- /.item -->
-
-	    <div class="item">
-	    	<figure>
-	    		<img src="../assets/dist/img/favorites/1.png" alt="">
-	    		<a href="booking.html">View</a>
-	    	</figure>
-	    	<h3 class="font-20-for-reg-0">GRACE</h3>	
-	    	<p class="font-16-for-reg-0">Black & White</p>
-	    	<div class="elements">
-		    	<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO WISHLIST</span>
-		    		<a href="#" ><img src="../assets/dist/img/favorites/wish.png" alt=""></a>	
-		    	</div><!-- /.tool-tip -->
-	    	
-	    		<span class="font-25-for-reg-0">$99</span>
-	    		<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO FAVORITE</span>
-		    		<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-		    	</div><!-- /.tool-tip -->
-	    		
-	    	</div><!-- /.elements -->
-	    </div><!-- /.item -->
-
-	    <div class="item">
-	    	<figure>
-	    		<img src="../assets/dist/img/favorites/4.png" alt="">
-	    		<a href="booking.html">View</a>
-	    	</figure>
-	    	<h3 class="font-20-for-reg-0">PINK</h3>	
-	    	<p class="font-16-for-reg-0">Black & White</p>
-	    	<div class="elements">
-		    	<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO WISHLIST</span>
-		    		<a href="#" ><img src="../assets/dist/img/favorites/wish.png" alt=""></a>	
-		    	</div><!-- /.tool-tip -->
-	    	
-	    		<span class="font-25-for-reg-0">$99</span>
-	    		<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO FAVORITE</span>
-		    		<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-		    	</div><!-- /.tool-tip -->
-	    		
-	    	</div><!-- /.elements -->
-	    </div><!-- /.item -->
-
-	    <div class="item">
-	    	<figure>
-	    		<img src="../assets/dist/img/favorites/5.png" alt="">
-	    		<a href="booking.html">View</a>
-	    	</figure>
-	    	<h3 class="font-20-for-reg-0">WHITE</h3>	
-	    	<p class="font-16-for-reg-0">SASSA’s Collection</p>
-	    	<div class="elements">
-		    	<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO WISHLIST</span>
-		    		<a href="#" ><img src="../assets/dist/img/favorites/wish.png" alt=""></a>	
-		    	</div><!-- /.tool-tip -->
-	    	
-	    		<span class="font-25-for-reg-0">$99</span>
-	    		<div class="tool-tip">
-		    		<span class="tooltiptext">ADD TO FAVORITE</span>
-		    		<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-		    	</div><!-- /.tool-tip -->
-	    		
-	    	</div><!-- /.elements -->
-	    </div><!-- /.item -->
-
-    </div><!-- /.owl-favorites -->
-	</div><!-- /.container -->
-</div><!-- /.favorites -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-  
-
-
-
- 
- 
-
-
- 
- 
-
-
-<div class="review base-padd">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-4 col-sm-5">
-				<div class="inner-review">
-					<div class="review-top">
-						<span>192</span>
-						<h3 class="font-36-for-reg-3">Reviews</h3>
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star ash" aria-hidden="true"></i></a>
-						<p>4 out of 5 stars</p>
-					</div><!-- /.review-top -->		
-					<div class="bar1">
-						<span class="left">(129)</span>
-						<span class="right">5 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
-						<div class="complete" style="width: 85%;"></div>
-					</div><!-- /.bar1 -->
-
-					<div class="bar1">
-						<span class="left">(70)</span>
-						<span class="right">4 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
-						<div class="complete" style="width: 70%;"></div>
-					</div><!-- /.bar1 -->
-
-					<div class="bar1">
-						<span class="left">(25)</span>
-						<span class="right">3 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
-						<div class="complete" style="width: 35%;"></div>
-					</div><!-- /.bar1 -->
-
-					<div class="bar1">
-						<span class="left">(0)</span>
-						<span class="right">2 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
-						<div class="complete" style="width: 1%;"></div>
-					</div><!-- /.bar1 -->
-
-					<div class="bar1">
-						<span class="left">(1)</span>
-						<span class="right">1 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
-						<div class="complete" style="width: 15%;"></div>
-					</div><!-- /.bar1 -->
-					<div class="rate">
-						<p class="font-18-for-reg-1">Rate this item</p>
-						<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-						<button type="button" class="review-inner" data-toggle="modal" data-target="#rq_modal1" data-whatever="@mdo">Write a review</button>
-
-
-
-					<div class="modal fade rq-modal-2" id="rq_modal1" tabindex="-1" role="dialog" aria-labelledby="rq_modal">
-					  <div class="modal-dialog" role="document">
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="../assets/dist/img/cross.png" alt="cross"></button>
-					        <h4 class="modal-title" id="rq_modal">Write a Review</h4>
-					      </div>
-					      <div class="modal-body">
-					        <form>
-					       	 	<div class="inline">
-					            <label class="control-label">Rate out of five:</label>
-					            <div class="stars">
-					            	<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-					            	<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-					            	<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-					            	<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-					            	<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-					            </div><!-- stars -->
-					          </div><!-- /.inline -->
-					          <div class="inline">
-					            <label class="control-label">Size worn:</label>
-					            <input type="text" class="form-control" />
-					          </div><!-- /.inline -->
-					          <div class="inline">
-					            <label class="control-label">Age:</label>
-					            <input type="text" class="form-control" />
-					          </div><!-- /.inline -->
-					          <div class="inline">
-					            <label class="control-label">Rent for:</label>
-					            <input type="text" class="form-control" />
-					          </div><!-- /.inline -->
-					          <div class="row">
-					          	<div class="col-sm-6">
-					          		<div class="form-group">
-							            <label class="control-label">Full Name</label>
-							            <input type="text" class="form-control" />
-							          </div><!-- /.form-group -->	
-					          	</div><!-- /.col-sm-6 -->	
-					          	<div class="col-sm-6">
-					          		<div class="form-group">
-							            <label class="control-label">Email Address</label>
-							            <input type="text" class="form-control" />
-							          </div><!-- /.form-group -->		
-					          	</div><!-- /.col-sm-6 -->	
-					          </div><!-- /.row -->
-					          <div class="form-group">
-					            <label class="control-label">Message:</label>
-					            <textarea class="form-control"></textarea>
-					          </div><!-- /.form-group -->
-					          <div class="form-group">
-					            <button type="button" class="btn">Submit</button>
-					          </div><!-- /.form-group -->
-					        </form>
-					      </div>
-					      <div class="modal-footer">
-					      </div>
-					    </div>
-					  </div>
-					</div>
-
-
-
-
-
-					</div><!-- /.rate -->
-				</div><!-- /.inner-review -->
-			</div><!-- /.col-sm-4 -->
-			<div class="col-sm-5 col-sm-offset-2 col-md-offset-3 custom-offset-3">
-				<h4 class="font-30-for-reg-0">Customer photos</h4>
-				<div class="customer-carousel owl-carousel owl-theme">
-					<div class="item">
-						<figure><img src="../assets/dist/img/customer-photo/1.jpg" alt=""></figure>
-					</div><!-- /.item -->
-					<div class="item">
-						<figure><img src="../assets/dist/img/customer-photo/2.jpg" alt=""></figure>
-					</div><!-- /.item -->
-					<div class="item">
-						<figure><img src="../assets/dist/img/customer-photo/3.jpg" alt=""></figure>
-					</div><!-- /.item -->
-					<div class="item">
-						<figure><img src="../assets/dist/img/customer-photo/1.jpg" alt=""></figure>
-					</div><!-- /.item -->
-					<div class="item">
-						<figure><img src="../assets/dist/img/customer-photo/2.jpg" alt=""></figure>
-					</div><!-- /.item -->
-					<div class="item">
-						<figure><img src="../assets/dist/img/customer-photo/3.jpg" alt=""></figure>
-					</div><!-- /.item -->
-				</div><!-- owl-carousel customer-carousel	 -->
-
-			</div><!-- /.col-sm-5 -->
+	<!-- ==========================-->
+	<!-- LOADER-->
+	<!-- ==========================-->
+	<div id="gl-circle-loader-wrapper">
+		<div id="gl-circle-loader-center">
+			<div class="gl-circle-load">
+				<img src="../assets/dist/img/ploading.gif" alt="Page Loader">
+			</div>
 		</div>
+	</div>
+
+
+	<!-- ==========================-->
+	<!-- SEARCH MODAL-->
+	<!-- ==========================-->
+	<div class="header-search open-search">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+					<div class="navbar-search">
+						<form class="search-global">
+							<input class="search-global__input" type="text" placeholder="Type to search"
+								autocomplete="off" name="s" value="" />
+							<button class="search-global__btn"><i class="icon stroke icon-Search"></i>
+							</button>
+							<div class="search-global__note">Begin typing your search above and press return to search.
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<button class="search-close close" type="button"><i class="fa fa-times"></i></button>
+	</div>
+
+	
+
+
+	<div id="header-placeholder"></div>
+
+	<script>
+		fetch('header.html')
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.text();
+			})
+			.then(data => {
+				document.getElementById('header-placeholder').innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Lỗi khi tải header:', error);
+			});
+	</script>
+
+
+
+	<div class="container">
+		<ol class="breadcrumb underline">
+			<li><a href="#">Home</a></li>
+			<li><a href="#">Dresses</a></li>
+			<li>LONG DIVA DRESS</li>
+		</ol><!-- /.breadcrumb -->
 	</div><!-- /.container -->
-</div><!-- /.review -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<div class="product-details base-padd">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-5 rq-custom-5">
+					<div class="flexslider product_details_slider">
+						<ul class="slides">
+							<li data-thumb="../assets/dist/img/product-details/1_1.jpg">
+								<img src="../assets/dist/img/product-details/1.jpg" class="img-responsive" alt="1" />
+							</li>
+							<li data-thumb="../assets/dist/img/product-details/1_2.jpg">
+								<img src="../assets/dist/img/product-details/1.jpg" alt="1" />
+							</li>
+							<li data-thumb="../assets/dist/img/product-details/1_3.jpg">
+								<img src="../assets/dist/img/product-details/1.jpg" alt="1" />
+							</li>
+						</ul>
+						<div class="customer-photo ">
+							<p>Customer Photos</p>
+							<a href="#"><img src="../assets/dist/img/product-details/1_1.jpg" alt="1"></a>
+							<a href="#"><img src="../assets/dist/img/product-details/1_2.jpg" alt="1"></a>
+							<a href="#"><img src="../assets/dist/img/product-details/1_3.jpg" alt="1"></a>
+						</div><!-- /.customer-photo  -->
+					</div><!-- /.product_details_slider -->
+				</div><!-- /.col-sm-5 -->
+				<div class="col-sm-7">
+					<div class="rq-inner">
+						<a href="#" class="font-30-for-reg-0">Long Diva Dress</a>
+						<h3 class="font-18-for-reg-0">Brand : <span>Blue Flamingo</span></h3>
+						<a href="#" class="rating">
+							<i class="fa fa-star" aria-hidden="true"></i>
+							<i class="fa fa-star" aria-hidden="true"></i>
+							<i class="fa fa-star" aria-hidden="true"></i>
+							<i class="fa fa-star" aria-hidden="true"></i>
+							<i class="fa fa-star-o ash" aria-hidden="true"></i>
+							<span class="ash">(29)</span>
+						</a><!-- /.rating -->
+						<h4>$50 <del> $99 rent </del> <span> 50% off /</span> <small> $999 retail </small></h4>
+						<div class="select-box">
+
+							<select class="rq-rental-select2">
+								<option value="AL">Color</option>
+								<option value="AL">Red</option>
+								<option value="WY">Pink</option>
+								<option value="WY">Green</option>
+							</select>
+							<select class="rq-rental-select2">
+								<option value="AL">Size</option>
+								<option value="AL">38</option>
+								<option value="WY">39</option>
+								<option value="WY">40</option>
+								<option value="WY">41</option>
+								<option value="WY">42</option>
+								<option value="WY">43</option>
+							</select>
+
+
+						</div>
+
+						<div class="row ex-padd">
+							<div class="col-sm-7">
+								<span class="font-18-for-reg-1">Rent for:</span>
+								<span class="rq-radiobox">
+									<input type="radio" name="checkout-login-method" id="checkout-login1" value="guest"
+										checked />
+									<label for="checkout-login1">4 Day</label>
+								</span><!-- /.rq-radiobox -->
+								<span class="rq-radiobox">
+									<input type="radio" name="checkout-login-method" id="checkout-login2" value="guest"
+										checked />
+									<label for="checkout-login2">8 Day</label>
+								</span><!-- /.rq-radiobox -->
+							</div><!-- /.col-sm-7 -->
+							<div class="col-sm-5">
+							</div><!-- /.col-sm-5 -->
+						</div><!-- /.row -->
+
+						<div class="row">
+							<div class="col-lg-7 col-md-8 col-sm-8">
+								<div class="rq-picker rq-picker2">
+									<div id="houston-component"></div><!-- date-picker -->
+								</div><!-- /.rq-picker -->
+							</div>
+						</div>
+
+						<div class="row rq-margin">
+							<div class="col-sm-6">
+								<a href="cart.html" class="reserve">Reserve now</a>
+								<button class="wishlist">Add to wishlist</button>
+							</div><!-- /.col-sm-6 -->
+							<div class="col-sm-6">
+								<div class="social-icon">
+									<a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+									<a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+									<a href="#"><i class="fa fa-dribbble" aria-hidden="true"></i></a>
+									<a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+								</div>
+							</div><!-- /.col-sm-6 -->
+						</div><!-- /.row -->
+
+						<div class="panel-group rq-accordion" id="accordion" role="tablist" aria-multiselectable="true">
+							<div class="panel panel-default">
+								<div class="panel-heading" role="tab" id="headingOne">
+									<h4 class="panel-title">
+										<a role="button" data-toggle="collapse" data-parent="#accordion"
+											href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+											Size and fit
+											<i class="fa fa-angle-up pull-right" aria-hidden="true"></i>
+										</a>
+
+									</h4>
+								</div>
+								<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+									aria-labelledby="headingOne">
+
+									<div class="panel-body">
+										Lorem Ipsum is simply dummy text of the printing and type setting industry.
+										Itting industry. Lorem Ipsum is simply dummy text of the printing and type
+										setting industry. Lorem Ipsum is simply dummy text of the printing and type
+										setting industry.
+									</div>
+								</div>
+							</div>
+							<div class="panel panel-default">
+								<div class="panel-heading" role="tab" id="headingTwo">
+									<h4 class="panel-title">
+										<a class="collapsed" role="button" data-toggle="collapse"
+											data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
+											aria-controls="collapseTwo">
+											Dsigner notes
+											<i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
+										</a>
+									</h4>
+								</div>
+								<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel"
+									aria-labelledby="headingTwo">
+									<div class="panel-body">
+										Lorem Ipsum is simply dummy text of the printing and type setting industry.
+										Itting industry. Lorem Ipsum is simply dummy text of the printing and type
+										setting industry. Lorem Ipsum is simply dummy text of the printing and type
+										setting industry.
+									</div>
+								</div>
+							</div>
+							<div class="panel panel-default">
+								<div class="panel-heading" role="tab" id="headingThree">
+									<h4 class="panel-title">
+										<a class="collapsed" role="button" data-toggle="collapse"
+											data-parent="#accordion" href="#collapseThree" aria-expanded="false"
+											aria-controls="collapseThree">
+											Product details
+											<i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
+										</a>
+									</h4>
+								</div>
+								<div id="collapseThree" class="panel-collapse collapse" role="tabpanel"
+									aria-labelledby="headingThree">
+									<div class="panel-body">
+										Lorem Ipsum is simply dummy text of the printing and type setting industry.
+										Itting industry. Lorem Ipsum is simply dummy text of the printing and type
+										setting industry. Lorem Ipsum is simply dummy text of the printing and type
+										setting industry.
+									</div>
+								</div>
+							</div>
+						</div><!-- /.accordion -->
+
+					</div><!-- /.rq-inner -->
+				</div><!-- /.col-lg-7 -->
+			</div><!-- /.row
+ -->
+		</div> <!-- /.container -->
+		<div class="container complete-look">
+			<h4 class="font-30-for-reg-3">Complete the look</h4>
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="inner">
+						<img src="../assets/dist/img/complete-look/1.jpg" alt="">
+						<div class="hover">
+							<a class="font-18-for-reg-1" href="#">Quick View</a>
+						</div><!-- /.hover -->
+					</div><!-- /.inner -->
+				</div><!-- /.col-sm-4 -->
+				<div class="col-sm-4">
+					<div class="inner">
+						<img src="../assets/dist/img/complete-look/2.jpg" alt="">
+						<div class="hover">
+							<a class="font-18-for-reg-1" href="#">Quick View</a>
+						</div><!-- /.hover -->
+					</div><!-- /.inner -->
+				</div><!-- /.col-sm-4 -->
+				<div class="col-sm-4">
+					<div class="inner">
+						<img src="../assets/dist/img/complete-look/3.jpg" alt="">
+						<div class="hover">
+							<a class="font-18-for-reg-1" href="#">Quick View</a>
+						</div><!-- /.hover -->
+					</div><!-- /.inner -->
+				</div><!-- /.col-sm-4 -->
+			</div><!-- /.row -->
+		</div><!-- /.container -->
+	</div><!-- /.product-details -->
+
+
+
+	<div class="favorites base-padd">
+		<h2>OUR FAVOURITES</h2>
+		<div class="container">
+			<div class="owl-favorites owl-carousel owl-theme">
+				<div class="item">
+					<figure>
+						<img src="../assets/dist/img/favorites/1.png" alt="">
+						<a href="booking.html">View</a>
+					</figure>
+					<h3 class="font-20-for-reg-0">LACE</h3>
+					<p class="font-16-for-reg-0">Black & White</p>
+					<div class="elements">
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO WISHLIST</span>
+							<a href="#"><img src="../assets/dist/img/favorites/wish.png" alt=""></a>
+						</div><!-- /.tool-tip -->
+
+						<span class="font-25-for-reg-0">$99</span>
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO FAVORITE</span>
+							<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+						</div><!-- /.tool-tip -->
+
+					</div><!-- /.elements -->
+				</div><!-- /.item -->
+
+				<div class="item">
+					<figure>
+						<img src="../assets/dist/img/favorites/2.png" alt="">
+						<a href="booking.html">View</a>
+					</figure>
+					<h3 class="font-20-for-reg-0">PARTY</h3>
+					<p class="font-16-for-reg-0">SASSA’s Collection</p>
+					<div class="elements">
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO WISHLIST</span>
+							<a href="#"><img src="../assets/dist/img/favorites/wish.png" alt=""></a>
+						</div><!-- /.tool-tip -->
+
+						<span class="font-25-for-reg-0">$99</span>
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO FAVORITE</span>
+							<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+						</div><!-- /.tool-tip -->
+
+					</div><!-- /.elements -->
+				</div><!-- /.item -->
+
+				<div class="item">
+					<figure>
+						<img src="../assets/dist/img/favorites/2.png" alt="">
+						<a href="booking.html">View</a>
+					</figure>
+					<h3 class="font-20-for-reg-0">GRACE</h3>
+					<p class="font-16-for-reg-0">Black & White</p>
+					<div class="elements">
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO WISHLIST</span>
+							<a href="#"><img src="../assets/dist/img/favorites/wish.png" alt=""></a>
+						</div><!-- /.tool-tip -->
+
+						<span class="font-25-for-reg-0">$99</span>
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO FAVORITE</span>
+							<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+						</div><!-- /.tool-tip -->
+
+					</div><!-- /.elements -->
+				</div><!-- /.item -->
+
+				<div class="item">
+					<figure>
+						<img src="../assets/dist/img/favorites/4.png" alt="">
+						<a href="booking.html">View</a>
+					</figure>
+					<h3 class="font-20-for-reg-0">PINK</h3>
+					<p class="font-16-for-reg-0">Black & White</p>
+					<div class="elements">
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO WISHLIST</span>
+							<a href="#"><img src="../assets/dist/img/favorites/wish.png" alt=""></a>
+						</div><!-- /.tool-tip -->
+
+						<span class="font-25-for-reg-0">$99</span>
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO FAVORITE</span>
+							<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+						</div><!-- /.tool-tip -->
+
+					</div><!-- /.elements -->
+				</div><!-- /.item -->
+
+				<div class="item">
+					<figure>
+						<img src="../assets/dist/img/favorites/5.png" alt="">
+						<a href="booking.html">View</a>
+					</figure>
+					<h3 class="font-20-for-reg-0">WHITE</h3>
+					<p class="font-16-for-reg-0">SASSA’s Collection</p>
+					<div class="elements">
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO WISHLIST</span>
+							<a href="#"><img src="../assets/dist/img/favorites/wish.png" alt=""></a>
+						</div><!-- /.tool-tip -->
+
+						<span class="font-25-for-reg-0">$99</span>
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO FAVORITE</span>
+							<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+						</div><!-- /.tool-tip -->
+
+					</div><!-- /.elements -->
+				</div><!-- /.item -->
+
+				<div class="item">
+					<figure>
+						<img src="../assets/dist/img/favorites/1.png" alt="">
+						<a href="booking.html">View</a>
+					</figure>
+					<h3 class="font-20-for-reg-0">LACE</h3>
+					<p class="font-16-for-reg-0">Black & White</p>
+					<div class="elements">
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO WISHLIST</span>
+							<a href="#"><img src="../assets/dist/img/favorites/wish.png" alt=""></a>
+						</div><!-- /.tool-tip -->
+
+						<span class="font-25-for-reg-0">$99</span>
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO FAVORITE</span>
+							<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+						</div><!-- /.tool-tip -->
+
+					</div><!-- /.elements -->
+				</div><!-- /.item -->
+
+				<div class="item">
+					<figure>
+						<img src="../assets/dist/img/favorites/2.png" alt="">
+						<a href="booking.html">View</a>
+					</figure>
+					<h3 class="font-20-for-reg-0">PARTY</h3>
+					<p class="font-16-for-reg-0">SASSA’s Collection</p>
+					<div class="elements">
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO WISHLIST</span>
+							<a href="#"><img src="../assets/dist/img/favorites/wish.png" alt=""></a>
+						</div><!-- /.tool-tip -->
+
+						<span class="font-25-for-reg-0">$99</span>
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO FAVORITE</span>
+							<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+						</div><!-- /.tool-tip -->
+
+					</div><!-- /.elements -->
+				</div><!-- /.item -->
+
+				<div class="item">
+					<figure>
+						<img src="../assets/dist/img/favorites/1.png" alt="">
+						<a href="booking.html">View</a>
+					</figure>
+					<h3 class="font-20-for-reg-0">GRACE</h3>
+					<p class="font-16-for-reg-0">Black & White</p>
+					<div class="elements">
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO WISHLIST</span>
+							<a href="#"><img src="../assets/dist/img/favorites/wish.png" alt=""></a>
+						</div><!-- /.tool-tip -->
+
+						<span class="font-25-for-reg-0">$99</span>
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO FAVORITE</span>
+							<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+						</div><!-- /.tool-tip -->
+
+					</div><!-- /.elements -->
+				</div><!-- /.item -->
+
+				<div class="item">
+					<figure>
+						<img src="../assets/dist/img/favorites/4.png" alt="">
+						<a href="booking.html">View</a>
+					</figure>
+					<h3 class="font-20-for-reg-0">PINK</h3>
+					<p class="font-16-for-reg-0">Black & White</p>
+					<div class="elements">
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO WISHLIST</span>
+							<a href="#"><img src="../assets/dist/img/favorites/wish.png" alt=""></a>
+						</div><!-- /.tool-tip -->
+
+						<span class="font-25-for-reg-0">$99</span>
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO FAVORITE</span>
+							<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+						</div><!-- /.tool-tip -->
+
+					</div><!-- /.elements -->
+				</div><!-- /.item -->
+
+				<div class="item">
+					<figure>
+						<img src="../assets/dist/img/favorites/5.png" alt="">
+						<a href="booking.html">View</a>
+					</figure>
+					<h3 class="font-20-for-reg-0">WHITE</h3>
+					<p class="font-16-for-reg-0">SASSA’s Collection</p>
+					<div class="elements">
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO WISHLIST</span>
+							<a href="#"><img src="../assets/dist/img/favorites/wish.png" alt=""></a>
+						</div><!-- /.tool-tip -->
+
+						<span class="font-25-for-reg-0">$99</span>
+						<div class="tool-tip">
+							<span class="tooltiptext">ADD TO FAVORITE</span>
+							<a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+						</div><!-- /.tool-tip -->
+
+					</div><!-- /.elements -->
+				</div><!-- /.item -->
+
+			</div><!-- /.owl-favorites -->
+		</div><!-- /.container -->
+	</div><!-- /.favorites -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<div class="review base-padd">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-5">
+					<div class="inner-review">
+						<div class="review-top">
+							<span>192</span>
+							<h3 class="font-36-for-reg-3">Reviews</h3>
+							<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+							<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+							<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+							<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+							<a href="#"><i class="fa fa-star ash" aria-hidden="true"></i></a>
+							<p>4 out of 5 stars</p>
+						</div><!-- /.review-top -->
+						<div class="bar1">
+							<span class="left">(129)</span>
+							<span class="right">5 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
+							<div class="complete" style="width: 85%;"></div>
+						</div><!-- /.bar1 -->
+
+						<div class="bar1">
+							<span class="left">(70)</span>
+							<span class="right">4 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
+							<div class="complete" style="width: 70%;"></div>
+						</div><!-- /.bar1 -->
+
+						<div class="bar1">
+							<span class="left">(25)</span>
+							<span class="right">3 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
+							<div class="complete" style="width: 35%;"></div>
+						</div><!-- /.bar1 -->
+
+						<div class="bar1">
+							<span class="left">(0)</span>
+							<span class="right">2 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
+							<div class="complete" style="width: 1%;"></div>
+						</div><!-- /.bar1 -->
+
+						<div class="bar1">
+							<span class="left">(1)</span>
+							<span class="right">1 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
+							<div class="complete" style="width: 15%;"></div>
+						</div><!-- /.bar1 -->
+						<div class="rate">
+							<p class="font-18-for-reg-1">Rate this item</p>
+							<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+							<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+							<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+							<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+							<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+							<button type="button" class="review-inner" data-toggle="modal" data-target="#rq_modal1"
+								data-whatever="@mdo">Write a review</button>
+
+
+
+							<div class="modal fade rq-modal-2" id="rq_modal1" tabindex="-1" role="dialog"
+								aria-labelledby="rq_modal">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal"
+												aria-label="Close"><img src="../assets/dist/img/cross.png"
+													alt="cross"></button>
+											<h4 class="modal-title" id="rq_modal">Write a Review</h4>
+										</div>
+										<div class="modal-body">
+											<form>
+												<div class="inline">
+													<label class="control-label">Rate out of five:</label>
+													<div class="stars">
+														<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+														<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+														<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+														<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+														<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+													</div><!-- stars -->
+												</div><!-- /.inline -->
+												<div class="inline">
+													<label class="control-label">Size worn:</label>
+													<input type="text" class="form-control" />
+												</div><!-- /.inline -->
+												<div class="inline">
+													<label class="control-label">Age:</label>
+													<input type="text" class="form-control" />
+												</div><!-- /.inline -->
+												<div class="inline">
+													<label class="control-label">Rent for:</label>
+													<input type="text" class="form-control" />
+												</div><!-- /.inline -->
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="control-label">Full Name</label>
+															<input type="text" class="form-control" />
+														</div><!-- /.form-group -->
+													</div><!-- /.col-sm-6 -->
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="control-label">Email Address</label>
+															<input type="text" class="form-control" />
+														</div><!-- /.form-group -->
+													</div><!-- /.col-sm-6 -->
+												</div><!-- /.row -->
+												<div class="form-group">
+													<label class="control-label">Message:</label>
+													<textarea class="form-control"></textarea>
+												</div><!-- /.form-group -->
+												<div class="form-group">
+													<button type="button" class="btn">Submit</button>
+												</div><!-- /.form-group -->
+											</form>
+										</div>
+										<div class="modal-footer">
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+
+
+
+						</div><!-- /.rate -->
+					</div><!-- /.inner-review -->
+				</div><!-- /.col-sm-4 -->
+				<div class="col-sm-5 col-sm-offset-2 col-md-offset-3 custom-offset-3">
+					<h4 class="font-30-for-reg-0">Customer photos</h4>
+					<div class="customer-carousel owl-carousel owl-theme">
+						<div class="item">
+							<figure><img src="../assets/dist/img/customer-photo/1.jpg" alt=""></figure>
+						</div><!-- /.item -->
+						<div class="item">
+							<figure><img src="../assets/dist/img/customer-photo/2.jpg" alt=""></figure>
+						</div><!-- /.item -->
+						<div class="item">
+							<figure><img src="../assets/dist/img/customer-photo/3.jpg" alt=""></figure>
+						</div><!-- /.item -->
+						<div class="item">
+							<figure><img src="../assets/dist/img/customer-photo/1.jpg" alt=""></figure>
+						</div><!-- /.item -->
+						<div class="item">
+							<figure><img src="../assets/dist/img/customer-photo/2.jpg" alt=""></figure>
+						</div><!-- /.item -->
+						<div class="item">
+							<figure><img src="../assets/dist/img/customer-photo/3.jpg" alt=""></figure>
+						</div><!-- /.item -->
+					</div><!-- owl-carousel customer-carousel	 -->
+
+				</div><!-- /.col-sm-5 -->
+			</div>
+		</div><!-- /.container -->
+	</div><!-- /.review -->
 
 
 
 	<div class="top-review">
 		<div class="container">
-		<h4 class="font-30-pla-reg-2">TOP REVIEWS</h4>
-		<div class="wrapper">
-			<div class="reviews">
-			<div class="customer-details">
-				<h4 class="font-22-for-reg-2">SARA JONES</h4>
-				<p class="font-14-for-reg-2">Size worn : <span>XL</span></p>
-				<p class="font-14-for-reg-2">Rented for : <span>Wedding Party</span></p>
-				<p class="font-14-for-reg-2">Age : <span>25</span></p>
-			</div><!-- /.customer-details -->
-			<div class="contents">
-				<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-				<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-				<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-				<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-				<a href="#"><i class="fa fa-star ash" aria-hidden="true"></i></a>
-				<span class="font-14-for-reg-2">30 November, 2016</span>
-				<h3 class="font-25-for-reg-0">Compliments all night!</h3>
-				<p class="font-16-for-reg-0">This dress is not for the faint of heart- you will show cleavage. I had to use fashion tape (I knew I was going to have to). I was complimented on the color and the dress itself several times during the wedding I attended. I felt beautiful in it!</p>
-			</div><!-- /.content -->
-			<div class="photo"><img src="../assets/dist/img/top-reviews/1.jpg" alt=""></div><!-- /.photo -->
-				
-			</div><!-- /.reviews -->
-		</div><!-- wrapper -->
+			<h4 class="font-30-pla-reg-2">TOP REVIEWS</h4>
+			<div class="wrapper">
+				<div class="reviews">
+					<div class="customer-details">
+						<h4 class="font-22-for-reg-2">SARA JONES</h4>
+						<p class="font-14-for-reg-2">Size worn : <span>XL</span></p>
+						<p class="font-14-for-reg-2">Rented for : <span>Wedding Party</span></p>
+						<p class="font-14-for-reg-2">Age : <span>25</span></p>
+					</div><!-- /.customer-details -->
+					<div class="contents">
+						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-star ash" aria-hidden="true"></i></a>
+						<span class="font-14-for-reg-2">30 November, 2016</span>
+						<h3 class="font-25-for-reg-0">Compliments all night!</h3>
+						<p class="font-16-for-reg-0">This dress is not for the faint of heart- you will show cleavage. I
+							had to use fashion tape (I knew I was going to have to). I was complimented on the color and
+							the dress itself several times during the wedding I attended. I felt beautiful in it!</p>
+					</div><!-- /.content -->
+					<div class="photo"><img src="../assets/dist/img/top-reviews/1.jpg" alt=""></div><!-- /.photo -->
 
-		<div class="wrapper">
-			<div class="reviews">
-			<div class="customer-details">
-				<h4 class="font-22-for-reg-2">SARA JONES</h4>
-				<p class="font-14-for-reg-2">Size worn : <span>XL</span></p>
-				<p class="font-14-for-reg-2">Rented for : <span>Wedding Party</span></p>
-				<p class="font-14-for-reg-2">Age : <span>25</span></p>
-			</div><!-- /.customer-details -->
-			<div class="contents">
-				<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-				<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-				<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-				<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-				<a href="#"><i class="fa fa-star ash" aria-hidden="true"></i></a>
-				<span class="font-14-for-reg-2">30 November, 2016</span>
-				<h3 class="font-25-for-reg-0">Compliments all night!</h3>
-				<p class="font-16-for-reg-0">This dress is not for the faint of heart- you will show cleavage. I had to use fashion tape (I knew I was going to have to). I was complimented on the color and the dress itself several times during the wedding I attended. I felt beautiful in it!</p>
-			</div><!-- /.content -->
-			<div class="photo"><img src="../assets/dist/img/top-reviews/2.jpg" alt=""></div><!-- /.photo -->
-				
-			</div><!-- /.reviews -->
-		</div><!-- wrapper -->
-		<nav aria-label="Page navigation">
-		  <ul class="pagination">
-		    <li>
-		      <a href="#" aria-label="Previous">
-		        <i class="fa fa-angle-left" aria-hidden="true"></i>
-		      </a>
-		    </li>
-		    <li><a class="active" href="#">1</a></li>
-		    <li><a href="#">2</a></li>
-		    <li><a href="#">3</a></li>
-		    <li><a href="#">...</a></li>
-		    <li><a href="#">9</a></li>
-		    <li>
-		      <a href="#" class="active" aria-label="Next">
-		        <i class="fa fa-angle-right" aria-hidden="true"></i>
-		      </a>
-		    </li>
-		  </ul>
-		</nav>	
+				</div><!-- /.reviews -->
+			</div><!-- wrapper -->
+
+			<div class="wrapper">
+				<div class="reviews">
+					<div class="customer-details">
+						<h4 class="font-22-for-reg-2">SARA JONES</h4>
+						<p class="font-14-for-reg-2">Size worn : <span>XL</span></p>
+						<p class="font-14-for-reg-2">Rented for : <span>Wedding Party</span></p>
+						<p class="font-14-for-reg-2">Age : <span>25</span></p>
+					</div><!-- /.customer-details -->
+					<div class="contents">
+						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-star ash" aria-hidden="true"></i></a>
+						<span class="font-14-for-reg-2">30 November, 2016</span>
+						<h3 class="font-25-for-reg-0">Compliments all night!</h3>
+						<p class="font-16-for-reg-0">This dress is not for the faint of heart- you will show cleavage. I
+							had to use fashion tape (I knew I was going to have to). I was complimented on the color and
+							the dress itself several times during the wedding I attended. I felt beautiful in it!</p>
+					</div><!-- /.content -->
+					<div class="photo"><img src="../assets/dist/img/top-reviews/2.jpg" alt=""></div><!-- /.photo -->
+
+				</div><!-- /.reviews -->
+			</div><!-- wrapper -->
+			<nav aria-label="Page navigation">
+				<ul class="pagination">
+					<li>
+						<a href="#" aria-label="Previous">
+							<i class="fa fa-angle-left" aria-hidden="true"></i>
+						</a>
+					</li>
+					<li><a class="active" href="#">1</a></li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li><a href="#">...</a></li>
+					<li><a href="#">9</a></li>
+					<li>
+						<a href="#" class="active" aria-label="Next">
+							<i class="fa fa-angle-right" aria-hidden="true"></i>
+						</a>
+					</li>
+				</ul>
+			</nav>
 		</div><!-- /.container -->
 	</div><!-- /.top-review -->
 
@@ -958,13 +829,6 @@
 
 
 
- 
-
-
-
-
-
- 
 
 
 
@@ -972,105 +836,49 @@
 
 
 
- 
-
-  
-
-<footer class="main-footer">
-	<div class="footer"> 
-		<div class="rq-container"> 
-			<div class="item1">
-				<a href="index-2.html" class="font-36-pla-reg-2"><img src="../assets/dist/img/logo.png" alt="logo" /></a>
-				<p>The very best thing about placing an order with Glam Corner is the option to add a “backup dress” for $15. Basically, this means you are delivered two dresses and just leave the tag on the one you don’t decide to wear. For me, this took a lot of the stress out of my first renting experience.</p>
-				<div class="get-touch">
-					<ul class="list-unstyled">
-						<li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-						<li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-						<li><a href="#"><i class="fa fa-youtube-play" aria-hidden="true"></i></a></li>
-						<li><a href="#"><i class="fa fa-dribbble" aria-hidden="true"></i></a></li>
-						<li><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
-					</ul>
-				</div><!-- /.get-touch -->
-			</div><!-- /.item1 -->
-			<div class="item2">
-				<h3 class="font-18-pla-reg-2">GET HELP</h3>
-				<ul class="list-unstyled">
-					<li><a href="#">How it works</a></li>
-					<li><a href="#">Delivery & Return</a></li>
-					<li><a href="#">FAQs</a></li> 
-					<li><a href="#">Terms & Conditions</a></li> 
-					<li><a href="#">Size & Fits</a></li>
-				</ul>
-			</div><!-- /.item2 -->
-			<div class="item3">
-				<h3 class="font-18-pla-reg-2">SERVICES</h3>
-				<ul class="list-unstyled">
-					<li><a href="#">Booking</a></li>
-					<li><a href="#">Renting</a></li>
-					<li><a href="#">Retail</a></li>
-					<li><a href="#">Listing</a></li>
-				</ul>
-			</div><!-- /.item3 -->
-			<div class="item4">
-				<h3 class="font-18-pla-reg-2">COMPANY</h3>
-				<ul class="list-unstyled">
-					<li><a href="#">About Us</a></li>
-					<li><a href="#">Book Your Dress</a></li>
-					<li><a href="#">Recent Posts</a></li>
-					<li><a href="#">Gallery</a></li>
-				</ul>
-			</div><!-- /.item4 -->
-			<div class="item5">
-				<h3 class="font-18-pla-reg-2">CONTACT </h3>
-				<ul class="list-unstyled contact">
-					<li class="map-marker"><p>Road 3, West side</p>
-						<p>Texas, USA</p></li>
-					<li class="phone"><p>+6789870352</p></li>
-					<li class="mobile"><p>+67800017338829</p></li>
-					<li class="envelope"><p>rnb@rnb.com</p></li>
-				</ul>
-			</div><!-- /.item5 -->
-			<div class="item6">
-				<h3 class="font-18-pla-reg-2">NEWSLETTER</h3>
-				<p>Sign up for latest updates and offer.</p>
-				<form>
-	        <div class="form-group">
-	          <input type="text" class="form-control" placeholder="Enter email address...">
-	          <button type="submit" class="btn"><i class="ion-ios-arrow-thin-right"></i></button>
-	        </div>
-	        
-	      </form>
-				<div class="payment">
-					<a href="#"><i class="fa fa-cc-mastercard" aria-hidden="true"></i></a>
-					<a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i></a>
-					<a href="#"><i class="fa fa-cc-paypal" aria-hidden="true"></i></a>
-				</div><!-- /.payment -->
-			</div><!-- /.item6 -->
-		</div><!-- /.rq-container -->
-	</div><!-- /.footer -->	
-	<div class="bottom-bar">
-		<p>Copyright 2016 &copy; <a href="#">DRESS RENTAL</a></p>
-	</div><!-- /.bottom-bar -->
-</footer>
 
 
 
 
 
 
-  <script src="../assets/dist/js/vendor/jquery-3.2.0.min.js"></script>
-  <script src="../assets/dist/js/vendor/bootstrap.min.js"></script>
-  <script src="../assets/dist/js/vendor/countUp.js"></script>
-  <script src="../assets/dist/js/vendor/owl.carousel.min.js"></script> 
-  <script src="../assets/dist/js/vendor/ion.rangeSlider.min.js"></script>
-  <script src="../assets/dist/js/vendor/dateRangePicker.js"></script>
-  <script src="../assets/dist/js/vendor/jquery.flexslider-min.js"></script>
-  <script src="../assets/dist/js/vendor/jquery.nicescroll.min.js"></script>
-  <script src="../assets/dist/js/vendor/select2.min.js"></script>
-  <script src="../assets/dist/js/vendor/lightbox.min.js"></script>
-  <script src="../assets/dist/js/vendor/jquery.smooth-scroll.js"></script>
-  <script src="../assets/dist/js/custom.js"></script>
+
+
+
+
+
+	<div id="footer-placeholder"></div>
+	<script>
+		fetch('footer.html')
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.text();
+			})
+			.then(data => {
+				document.getElementById('footer-placeholder').innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Lỗi khi tải header:', error);
+			});
+	</script>
+
+
+	<script src="../assets/dist/js/vendor/jquery-3.2.0.min.js"></script>
+	<script src="../assets/dist/js/vendor/bootstrap.min.js"></script>
+	<script src="../assets/dist/js/vendor/countUp.js"></script>
+	<script src="../assets/dist/js/vendor/owl.carousel.min.js"></script>
+	<script src="../assets/dist/js/vendor/ion.rangeSlider.min.js"></script>
+	<script src="../assets/dist/js/vendor/dateRangePicker.js"></script>
+	<script src="../assets/dist/js/vendor/jquery.flexslider-min.js"></script>
+	<script src="../assets/dist/js/vendor/jquery.nicescroll.min.js"></script>
+	<script src="../assets/dist/js/vendor/select2.min.js"></script>
+	<script src="../assets/dist/js/vendor/lightbox.min.js"></script>
+	<script src="../assets/dist/js/vendor/jquery.smooth-scroll.js"></script>
+	<script src="../assets/dist/js/custom.js"></script>
 </body>
 
 <!-- Mirrored from wpdemo.redq.io/sites/dress-rental/html/booking.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 22 Jan 2026 15:16:38 GMT -->
+
 </html>
