@@ -19,5 +19,7 @@ namespace BE.Services.Interfaces
         Task<Products?> UpdateInBranchAsync(long branchId, long productId, UpdateProductDto dto);
         Task<bool> DeleteInBranchAsync(long branchId, long productId);
 
+        Task<IEnumerable<ProductListItemDto>> GetProductsByProviderAsync(long providerId);
+
     }
 }
