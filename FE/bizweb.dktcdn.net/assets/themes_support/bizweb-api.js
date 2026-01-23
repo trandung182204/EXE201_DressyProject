@@ -1,1 +1,0 @@
-﻿window.Bizweb || (window.Bizweb = {});
