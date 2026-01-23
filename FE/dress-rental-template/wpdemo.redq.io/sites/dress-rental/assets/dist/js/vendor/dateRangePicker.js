@@ -41407,8 +41407,8 @@ if (typeof(element19) !== 'undefined' && element19 != null) {
 		var defaultProps = {
 		  startDateId: _constants.START_DATE,
 		  endDateId: _constants.END_DATE,
-		  startDatePlaceholderText: 'Start Date',
-		  endDatePlaceholderText: 'End Date',
+		  startDatePlaceholderText: 'Ngày thuê',
+		  endDatePlaceholderText: 'Ngày trả',
 		  onStartDateFocus: function () {
 		    function onStartDateFocus() {}
 	
