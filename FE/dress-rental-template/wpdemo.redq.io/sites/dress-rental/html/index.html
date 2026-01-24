@@ -46,6 +46,7 @@
 			})
 			.then(data => {
 				document.getElementById('header-placeholder').innerHTML = data;
+				if (typeof renderAuthHeader === "function") renderAuthHeader();
 			})
 			.catch(error => {
 				console.error('Lỗi khi tải header:', error);
@@ -716,7 +717,7 @@
 	<script src="../assets/dist/js/vendor/lightbox.min.js"></script>
 	<script src="../assets/dist/js/vendor/jquery.smooth-scroll.js"></script>
 	<script src="../assets/dist/js/custom.js"></script>
-
+    <script src="../assets/dist/js/auth-header.js"></script>
 </body>
 
 <!-- Mirrored from wpdemo.redq.io/sites/dress-rental/html/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 22 Jan 2026 15:16:20 GMT -->

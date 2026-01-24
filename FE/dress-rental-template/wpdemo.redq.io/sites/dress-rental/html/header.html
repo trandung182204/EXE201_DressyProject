@@ -48,31 +48,19 @@
 </form>
 
 <ul class="nav navbar-nav dr-cart">
-    <li>
-        <a href="#" class="rq-shopping-cart-items-list login">ĐĂNG NHẬP</a>
-        <div class="rq-shopping-cart-inner-div ex-fix">
-          <h4>Đăng nhập</h4>
-          <div class="rq-login">
-              <form>
-                  <div class="form-group">
-                    <input type="email" class="form-control"  placeholder="Địa chỉ Email">
-                  </div>
-                  <div class="form-group">
-                    <input type="password" class="form-control"  placeholder="Mật khẩu">
-                  </div>
-                  <div class="form-group">
-                    <button type="submit">Đăng nhập</button>
-                  </div>
-                  <div class="form-group">
-                    <p class="or">Hoặc</p>
-                  </div>
-                  <div class="form-inner">
-                    <span>Đăng nhập bằng</span>
-                    <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                    <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                    <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
-                  </div></form>
-            </div></div></li>
+<li id="auth-area">
+  <a href="javascript:void(0)" class="rq-shopping-cart-items-list login" id="auth-label">
+    ĐĂNG NHẬP
+  </a>
+
+  <div class="rq-shopping-cart-inner-div rq-auth-menu" id="auth-menu">
+    <h4 id="auth-title">TÀI KHOẢN</h4>
+    <ul class="rq-auth-list" id="auth-list">
+      <li><a href="login.html">Đăng nhập</a></li>
+      <li><a href="register.html">Đăng ký</a></li>
+    </ul>
+  </div>
+</li>
     <li>
         <a href="#" class="rq-shopping-cart-items-list wishlist">Yêu thích <i class="fa fa-shopping-basket" aria-hidden="true"></i></a>
         <div class="rq-shopping-cart-inner-div">

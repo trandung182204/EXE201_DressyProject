@@ -138,7 +138,7 @@
                                                                                     cy="24" r="24"
                                                                                     transform="translate(-14.293 -11.5)"
                                                                                     fill="#6176fe"></circle>
-                                                                        
+
                                                                                 <g id="Group_57" data-name="Group 57"
                                                                                     transform="translate(5.343 7.675)">
                                                                                     <g id="Group_56"
@@ -241,7 +241,8 @@
                                                                     <div class="sherah-paymentm__content">
                                                                         <h4 class="sherah-notifications__title">Thank
                                                                             you !you made your fast sell
-                                                                            <span>$120</span></h4>
+                                                                            <span>$120</span>
+                                                                        </h4>
                                                                         <p
                                                                             class="sherah-paymentm__text sherah-paymentm__text--notify">
                                                                             6 hours ago</p>
@@ -266,8 +267,10 @@
                                                     <div
                                                         class="sherah-header__author--info sherah-dflex sherah-dflex__base">
                                                         <h4
-                                                            class="sherah-header__author--title  sherah-dflex sherah-dflex__column">
-                                                            Anthony <span class="sherah-header__author--text">USA</span>
+                                                            class="sherah-header__author--title sherah-dflex sherah-dflex__column">
+                                                            <span id="auth-username">Admin</span>
+                                                            <span class="sherah-header__author--text"
+                                                                id="auth-role">Vietnam</span>
                                                         </h4>
                                                         <svg class="sherah-default__fill sherah-default__arrow"
                                                             xmlns="http://www.w3.org/2000/svg" width="10.621"
@@ -407,8 +410,8 @@
                                                                                 fill="#fff" />
                                                                         </svg>
                                                                     </div>
-                                                                    <h4 class="sherah-dropdown-card-name"><a
-                                                                            href="#">Logout</a></h4>
+                                                                    <h4 class="sherah-dropdown-card-name"><a href="#"
+                                                                            id="btn-logout">Logout</a></h4>
                                                                 </div>
                                                             </li>
                                                         </ul>
@@ -429,9 +432,9 @@
         <!-- End Header -->
 
         <!-- sherah Dashboard -->
-        
+
         <!-- End Dashboard Inner -->
-        
+
         <!-- End sherah Dashboard -->
 
     </div>
@@ -474,6 +477,106 @@
 
         });
     </script>
+
+    <script>
+        // ====== CONFIG: sửa lại path login nếu bạn đang dùng khác ======
+        const LOGIN_URL = "http://127.0.0.1:5500/EXE201_DressyProject/FE/login.html";
+
+        // Bạn có thể đang lưu theo key khác, nên mình check nhiều kiểu:
+        function readAuth() {
+            const token =
+                localStorage.getItem("accessToken") ||
+                localStorage.getItem("token") ||
+                sessionStorage.getItem("accessToken") ||
+                sessionStorage.getItem("token");
+
+            let user = null;
+            const rawUser =
+                localStorage.getItem("user") ||
+                localStorage.getItem("currentUser") ||
+                sessionStorage.getItem("user") ||
+                sessionStorage.getItem("currentUser");
+
+            if (rawUser) {
+                try { user = JSON.parse(rawUser); } catch (e) { user = null; }
+            }
+
+            // fallback: nếu bạn lưu rời rạc
+            const username =
+                (user && (user.fullName || user.name || user.username)) ||
+                localStorage.getItem("username") ||
+                sessionStorage.getItem("username") ||
+                "User";
+
+            const role =
+                (user && (user.role || user.roleName)) ||
+                localStorage.getItem("role") ||
+                sessionStorage.getItem("role") ||
+                "";
+
+            return { token, username, role };
+        }
+
+        function requireLoginOrRedirect() {
+            const { token } = readAuth();
+            if (!token) {
+                window.location.href = LOGIN_URL;
+                return false;
+            }
+            return true;
+        }
+
+        const { role } = readAuth();
+        if (role && role.toLowerCase() !== "provider") {
+            window.location.href = LOGIN_URL;
+            return;
+        }
+
+        function renderUserToHeader() {
+            const { username, role } = readAuth();
+
+            const elName = document.getElementById("auth-username");
+            const elRole = document.getElementById("auth-role");
+
+            if (elName) elName.textContent = username;
+
+            // bạn muốn show role cho đẹp: "Admin" / "Provider"
+            if (elRole) elRole.textContent = role ? role : "";
+        }
+
+        function bindLogout() {
+            const btn = document.getElementById("btn-logout");
+            if (!btn) return;
+
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                // clear auth
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                localStorage.removeItem("currentUser");
+                localStorage.removeItem("username");
+                localStorage.removeItem("role");
+
+                sessionStorage.removeItem("accessToken");
+                sessionStorage.removeItem("token");
+                sessionStorage.removeItem("user");
+                sessionStorage.removeItem("currentUser");
+                sessionStorage.removeItem("username");
+                sessionStorage.removeItem("role");
+
+                window.location.href = LOGIN_URL;
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!requireLoginOrRedirect()) return;
+            renderUserToHeader();
+            bindLogout();
+        });
+    </script>
+   <script src="auth-header.js"></script>
 
 </body>
 
