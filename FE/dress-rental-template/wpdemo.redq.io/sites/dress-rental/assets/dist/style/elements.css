@@ -321,12 +321,13 @@ th {
 
 @font-face {
   font-family: "Ionicons";
-  src: url("../fonts/ionicons.woff") format("woff"),
-    url("../fonts/ionicons.ttf") format("truetype"),
-    url("../fonts/ionicons.woff2") format("woff2");
+  src: 
+       url("../../style/fonts/ionicons.woff") format("woff"),
+       url("../../style/fonts/ionicons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
+
 
 .glyphicon {
   position: relative;
@@ -8305,9 +8306,9 @@ button.close {
  */
 @font-face {
   font-family: "Ionicons";
-  src: url("../fonts/ionicons.woff") format("woff"),
-    url("../fonts/ionicons.ttf") format("truetype"),
-    url("../fonts/ionicons.woff2") format("woff2");
+  src: 
+       url("../../style/fonts/ionicons.woff") format("woff"),
+       url("../../style/fonts/ionicons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -11359,9 +11360,9 @@ button.close {
 */
 @font-face {
   font-family: "Ionicons";
-  src: url("../fonts/ionicons.woff") format("woff"),
-    url("../fonts/ionicons.ttf") format("truetype"),
-    url("../fonts/ionicons.woff2") format("woff2");
+  src: 
+       url("../../style/fonts/ionicons.woff") format("woff"),
+       url("../../style/fonts/ionicons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -16151,9 +16152,9 @@ body.lb-disable-scrolling {
 
 @font-face {
   font-family: "Ionicons";
-  src: url("../fonts/ionicons.woff") format("woff"),
-    url("../fonts/ionicons.ttf") format("truetype"),
-    url("../fonts/ionicons.woff2") format("woff2");
+  src: 
+       url("../../style/fonts/ionicons.woff") format("woff"),
+       url("../../style/fonts/ionicons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -16523,9 +16524,9 @@ i[class*=" rq-"] {
 
 @font-face {
   font-family: "Ionicons";
-  src: url("../fonts/ionicons.woff") format("woff"),
-    url("../fonts/ionicons.ttf") format("truetype"),
-    url("../fonts/ionicons.woff2") format("woff2");
+  src: 
+       url("../../style/fonts/ionicons.woff") format("woff"),
+       url("../../style/fonts/ionicons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
