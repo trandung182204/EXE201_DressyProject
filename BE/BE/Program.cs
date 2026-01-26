@@ -63,8 +63,6 @@ builder.Services.AddCors(options =>
             "http://localhost:5500",
             "http://127.0.0.1:5501",  // backup port
             "http://localhost:5501"
-            // TODO: Thêm production URL khi deploy
-            // "https://your-production-domain.com"
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
@@ -75,7 +73,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
-        opt.IncludeErrorDetails = true; // ✅ để thấy lỗi validate token
+        opt.IncludeErrorDetails = true;
+
         opt.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -89,35 +88,75 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
             ),
 
-            // ✅ Với token mới bạn sẽ có ClaimTypes.NameIdentifier
+            // ✅ map claim
             NameClaimType = ClaimTypes.NameIdentifier,
             RoleClaimType = ClaimTypes.Role,
 
             ClockSkew = TimeSpan.Zero
         };
 
-        // ✅ debug xem fail vì gì (issuer/aud/signature/exp...)
+        // ✅ DEBUG JWT: xem Authorization header, token parse, claims, lỗi validate
         opt.Events = new JwtBearerEvents
         {
+            OnMessageReceived = context =>
+            {
+                var auth = context.Request.Headers["Authorization"].ToString();
+
+                Console.WriteLine("==================================================");
+                Console.WriteLine("[JWT] OnMessageReceived");
+                Console.WriteLine($"Path: {context.HttpContext.Request.Method} {context.HttpContext.Request.Path}");
+                Console.WriteLine($"Authorization header RAW: {auth}");
+
+                // Token mà JwtBearer sẽ dùng (sau khi parse "Bearer ...")
+                Console.WriteLine($"context.Token BEFORE: {context.Token}");
+
+                // Một số trường hợp Postman/Proxy chèn thêm header kỳ lạ
+                var proxyAuth = context.Request.Headers["Proxy-Authorization"].ToString();
+                if (!string.IsNullOrWhiteSpace(proxyAuth))
+                    Console.WriteLine($"Proxy-Authorization RAW: {proxyAuth}");
+
+                return Task.CompletedTask;
+            },
+
+            OnTokenValidated = context =>
+            {
+                Console.WriteLine("[JWT] OnTokenValidated: ✅ VALID");
+
+                var claims = context.Principal?.Claims
+                    .Select(c => $"{c.Type} = {c.Value}")
+                    .ToList() ?? new List<string>();
+
+                Console.WriteLine("Claims:");
+                foreach (var c in claims) Console.WriteLine("  " + c);
+
+                return Task.CompletedTask;
+            },
+
             OnAuthenticationFailed = context =>
             {
-                // luôn OK vì là ASCII
+                Console.WriteLine("[JWT] OnAuthenticationFailed: ❌ FAILED");
+                Console.WriteLine(context.Exception.ToString());
+
+                // Giữ header ngắn gọn để bạn vẫn nhìn thấy trên Postman
                 context.Response.Headers["jwt-error"] = context.Exception.GetType().Name;
 
-                // sanitize để không có CR/LF (0x0D/0x0A) và control chars
-                var msg = context.Exception.Message ?? "";
-                msg = msg.Replace("\r", " ").Replace("\n", " ").Trim();
+                var msg = (context.Exception.Message ?? "")
+                    .Replace("\r", " ")
+                    .Replace("\n", " ")
+                    .Trim();
 
-                // (tuỳ chọn) giới hạn độ dài để header không quá dài
                 if (msg.Length > 200) msg = msg.Substring(0, 200);
-
                 context.Response.Headers["jwt-error-message"] = msg;
+
                 return Task.CompletedTask;
             },
 
             OnChallenge = context =>
             {
-                // Challenge cũng có thể chứa text dài -> sanitize tương tự
+                Console.WriteLine("[JWT] OnChallenge");
+                Console.WriteLine($"Error: {context.Error}");
+                Console.WriteLine($"ErrorDescription: {context.ErrorDescription}");
+
                 if (!string.IsNullOrEmpty(context.Error))
                     context.Response.Headers["jwt-error"] = context.Error.Replace("\r", " ").Replace("\n", " ").Trim();
 
@@ -131,8 +170,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 return Task.CompletedTask;
             }
         };
-
-
     });
 
 builder.Services.AddAuthorization();

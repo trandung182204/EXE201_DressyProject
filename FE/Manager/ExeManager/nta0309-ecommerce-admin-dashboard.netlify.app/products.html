@@ -199,17 +199,43 @@
     </script>
 
     <script>
-        // ✅ đổi lại cho đúng cổng backend của bạn (bạn đang dùng 8080)
         const API_BASE = "http://localhost:5135";
+        const LOGIN_URL =
+            "http://127.0.0.1:5500/FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html";
 
         let allProducts = [];
 
+        // ✅ Lấy token từ localStorage và "làm sạch" để luôn ra đúng JWT dạng a.b.c
         function getToken() {
-            return localStorage.getItem("access_token");
+            let raw = localStorage.getItem("token") || "";
+
+            // bỏ khoảng trắng / xuống dòng (hay dính khi copy/paste hoặc response có newline)
+            raw = raw.replace(/\s+/g, "").trim();
+
+            // bỏ "Bearer"
+            if (raw.toLowerCase().startsWith("bearer")) {
+                raw = raw.slice(6);
+                raw = raw.replace(/\s+/g, "").trim();
+            }
+
+            // bỏ dấu nháy nếu bị stringify
+            raw = raw.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "");
+
+            // ✅ extract đúng JWT: header.payload.signature
+            const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
+            return m ? m[1] : "";
+        }
+
+        function isValidJwt(t) {
+            return !!t && t.split(".").length === 3;
+        }
+
+        function goLogin() {
+            localStorage.setItem("redirect_after_login", window.location.href);
+            window.location.href = LOGIN_URL;
         }
 
         function normalizeProducts(payload) {
-            // payload có thể là array hoặc object {data: array}
             if (Array.isArray(payload)) return payload;
             if (payload && Array.isArray(payload.data)) return payload.data;
             if (payload && payload.success && Array.isArray(payload.data)) return payload.data;
@@ -217,7 +243,7 @@
         }
 
         function safeText(v) {
-            return (v === null || v === undefined) ? "" : String(v);
+            return v === null || v === undefined ? "" : String(v);
         }
 
         function formatMoney(v) {
@@ -229,9 +255,12 @@
 
         async function loadProviderProducts() {
             const token = getToken();
-            if (!token) {
-                alert("Bạn chưa đăng nhập");
-                window.location.href = "login.html";
+
+            // ✅ token không đúng format JWT => bắt login lại
+            if (!isValidJwt(token)) {
+                alert("Token không hợp lệ / bị lỗi. Vui lòng đăng nhập lại.");
+                localStorage.removeItem("token");
+                goLogin();
                 return;
             }
 
@@ -242,22 +271,24 @@
             resultCount.textContent = "Loading...";
 
             try {
+                // ✅ debug nhanh (xong xoá)
+                console.log("JWT parts:", token.split(".").length);
+
                 const res = await fetch(`${API_BASE}/api/provider/products`, {
                     method: "GET",
                     headers: {
-                        "Authorization": "Bearer " + token,
-                        "Content-Type": "application/json"
-                    }
+                        Authorization: `Bearer ${token}`,
+                        Accept: "application/json",
+                    },
                 });
 
                 if (res.status === 401) {
                     const text = await res.text();
                     alert("401 Unauthorized: " + text);
-                    localStorage.removeItem("access_token");
-                    window.location.href = "login.html";
+                    localStorage.removeItem("token");
+                    goLogin();
                     return;
                 }
-
 
                 if (!res.ok) {
                     const text = await res.text();
@@ -266,11 +297,12 @@
 
                 const payload = await res.json();
                 allProducts = normalizeProducts(payload);
-
                 renderProducts(allProducts);
             } catch (err) {
                 console.error(err);
-                container.innerHTML = `<div class="col-12"><p style="color:red;">Lỗi: ${safeText(err.message)}</p></div>`;
+                container.innerHTML = `<div class="col-12"><p style="color:red;">Lỗi: ${safeText(
+                    err.message
+                )}</p></div>`;
                 resultCount.textContent = "0 results";
             }
         }
@@ -288,8 +320,7 @@
 
             resultCount.textContent = `Showing 1–${products.length} of ${products.length} results`;
 
-            products.forEach(p => {
-                // ✅ Ưu tiên field theo DTO backend (thumbnailUrl, minPricePerDay, categoryName)
+            products.forEach((p) => {
                 const id = p.id ?? p.productId ?? "";
                 const name = p.name ?? "Unnamed";
                 const category = p.categoryName ?? "";
@@ -298,34 +329,33 @@
                 const status = p.status ?? "";
 
                 container.innerHTML += `
-          <div class="col-xxl-4 col-lg-6 col-md-6 col-12">
-            <div class="sherah-product-card sherah-product-card__v2 sherah-default-bg sherah-border mg-top-30">
-              <div class="sherah-product-card__img">
-                <img src="${thumb}" alt="${safeText(name)}" onerror="this.src='img/product-img1.png'">
-              </div>
+        <div class="col-xxl-4 col-lg-6 col-md-6 col-12">
+          <div class="sherah-product-card sherah-product-card__v2 sherah-default-bg sherah-border mg-top-30">
+            <div class="sherah-product-card__img">
+              <img src="${thumb}" alt="${safeText(name)}" onerror="this.src='img/product-img1.png'">
+            </div>
 
-              <div class="sherah-product-card__content sherah-dflex-column sherah-flex-gap-5">
-                <h4 class="sherah-product-card__title">
-                  <a href="product-detail.html?id=${id}" class="sherah-pcolor">${safeText(name)}</a>
-                </h4>
+            <div class="sherah-product-card__content sherah-dflex-column sherah-flex-gap-5">
+              <h4 class="sherah-product-card__title">
+                <a href="product-detail.html?id=${id}" class="sherah-pcolor">${safeText(name)}</a>
+              </h4>
 
-                <div class="sherah-product__bottom">
-                  <div class="sherah-product__bottom--single">
-                    <h5 class="sherah-product-card__price">
-                      ${price !== null ? formatMoney(price) + " / ngày" : ""}
-                    </h5>
-                    <div class="sherah-product-card__meta">
-                      ${category ? `<span>Category: <b>${safeText(category)}</b></span><br>` : ""}
-                      <span>Status: <b>${safeText(status)}</b></span>
-                    </div>
+              <div class="sherah-product__bottom">
+                <div class="sherah-product__bottom--single">
+                  <h5 class="sherah-product-card__price">
+                    ${price !== null ? formatMoney(price) + " / ngày" : ""}
+                  </h5>
+                  <div class="sherah-product-card__meta">
+                    ${category ? `<span>Loại: <b>${safeText(category)}</b></span><br>` : ""}                
                   </div>
-
-                  <a href="product-detail.html?id=${id}" class="sherah-btn default">Detail</a>
                 </div>
+
+                <a href="product-detail.html?id=${id}" class="sherah-btn default">Detail</a>
               </div>
             </div>
           </div>
-        `;
+        </div>
+      `;
             });
         }
 
@@ -337,10 +367,11 @@
                 const q = input.value.trim().toLowerCase();
                 if (!q) return renderProducts(allProducts);
 
-                const filtered = allProducts.filter(p =>
-                    (p.name || "").toLowerCase().includes(q) ||
-                    (p.categoryName || "").toLowerCase().includes(q) ||
-                    (p.status || "").toLowerCase().includes(q)
+                const filtered = allProducts.filter(
+                    (p) =>
+                        (p.name || "").toLowerCase().includes(q) ||
+                        (p.categoryName || "").toLowerCase().includes(q) ||
+                        (p.status || "").toLowerCase().includes(q)
                 );
 
                 renderProducts(filtered);
@@ -352,6 +383,9 @@
             loadProviderProducts();
         });
     </script>
+
+
+
 </body>
 
 </html>

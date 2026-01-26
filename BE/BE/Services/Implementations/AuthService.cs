@@ -251,7 +251,7 @@ public class AuthService : IAuthService
         return role switch
         {
             "admin" => "http://127.0.0.1:5500/EXE201_DressyProject/FE/Admin/admin-dashboard/index.html",
-            "provider" => "http://127.0.0.1:5500/EXE201_DressyProject/FE/Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html",
+            "provider" => "http://127.0.0.1:5500/FE/Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html",
             "customer" => "http://127.0.0.1:5500/EXE201_DressyProject/FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/index.html",
             _ => "http://127.0.0.1:5500/EXE201_DressyProject/FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/index.html"
         };
