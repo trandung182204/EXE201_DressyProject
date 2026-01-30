@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BE.Models;
-using Microsoft.Data.SqlClient;
 using BE.Services.Interfaces;
 using BE.Repositories.Interfaces;
 using BE.DTOs;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using Npgsql;
 
 namespace BE.Services.Implementations
 {
@@ -20,7 +20,7 @@ namespace BE.Services.Implementations
             IConfiguration configuration)
         {
             _repo = repo;
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
 
         public async Task<IEnumerable<Bookings>> GetAllAsync()
@@ -42,16 +42,16 @@ namespace BE.Services.Implementations
         {
             var list = new List<BookingListDto>();
 
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(@"
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await using var cmd = new NpgsqlCommand(@"
                 SELECT
-                    b.id AS BookingId,
-                    u.full_name AS CustomerName,
-                    b.created_at AS CreatedAt,
-                    ISNULL(p.status, 'UNPAID') AS PaymentStatus,
-                    b.total_price AS TotalPrice,
-                    ISNULL(p.payment_method, '') AS PaymentMethod,
-                    b.status AS BookingStatus
+                    b.id AS booking_id,
+                    u.full_name AS customer_name,
+                    b.created_at AS created_at,
+                    COALESCE(p.status, 'UNPAID') AS payment_status,
+                    b.total_price AS total_price,
+                    COALESCE(p.payment_method, '') AS payment_method,
+                    b.status AS booking_status
                 FROM bookings b
                 JOIN users u ON u.id = b.customer_id
                 LEFT JOIN payments p ON p.booking_id = b.id
@@ -59,7 +59,7 @@ namespace BE.Services.Implementations
             ", conn);
 
             await conn.OpenAsync();
-            using var rd = await cmd.ExecuteReaderAsync();
+            await using var rd = await cmd.ExecuteReaderAsync();
 
             while (await rd.ReadAsync())
             {
