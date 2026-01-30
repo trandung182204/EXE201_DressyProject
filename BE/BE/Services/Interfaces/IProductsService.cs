@@ -16,6 +16,7 @@ namespace BE.Services.Interfaces
         Task<IEnumerable<ProductListItemDto>> GetProductsByProviderAsync(long providerId);
         Task<Products> AddForProviderAsync(long providerId, CreateProviderProductDto dto);
         Task<ProductDetailDto?> GetProductDetailByProviderAsync(long providerId, long productId);
+        Task<bool> DeleteByProviderAsync(long providerId, long productId);
 
     }
 }

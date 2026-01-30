@@ -8061,6 +8061,32 @@ blockquote {
 .sherah-print-template {
 	background: #fff;
 }
+.sherah-product-card,
+.sherah-product-card * {
+  font-family: 'Roboto', sans-serif !important;
+  font-size: 16px !important;     /* nhỏ như title */
+  font-weight: 600 !important;    /* đậm như giá */
+  line-height: 1.4;
+  color: #111;
+}
+/* Giữ màu cho giá */
+.sherah-product-card__price {
+  color: #FF0000 !important;
+}
+.sherah-product-card__title {
+  min-height: 44px;
+  overflow: hidden;
+  
+}
+
+.sherah-product-card__title a {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: #000000 !important;
+}
+
 /*======================================
 	End Utilities CSS
 ========================================*/

@@ -24,6 +24,27 @@
     <link rel="stylesheet" href="css/jquery-ui.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Khóa chiều cao khung ảnh của product */
+        .sherah-product-card__img {
+            width: 100%;
+            height: 220px;
+            /* đổi theo kích thước bạn muốn */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Ảnh luôn fill khung, không méo */
+        .sherah-product-card__img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* cắt bớt để full khung */
+            display: block;
+        }
+    </style>
 </head>
 
 <body id="sherah-dark-light">
@@ -56,11 +77,10 @@
                                         <div class="sherah-product-sidebar sherah-default-bg mg-top-30">
                                             <h4 class="sherah-product-sidebar__title sherah-border-btm">Product
                                                 Categories</h4>
-                                            <ul class="sherah-product-sidebar__list">
-                                                <li><a href="#"><span><i
-                                                                class="fa-solid fa-chevron-right"></i>All</span></a>
-                                                </li>
+                                            <ul class="sherah-product-sidebar__list" id="categoryList">
+                                                <!-- JS sẽ render -->
                                             </ul>
+
                                         </div>
 
                                         <div class="sherah-product-sidebar sherah-default-bg mg-top-30">
@@ -77,23 +97,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="sherah-product-sidebar sherah-default-bg mg-top-30">
-                                            <h4 class="sherah-product-sidebar__title sherah-border-btm">Product Brands
-                                            </h4>
-                                            <ul class="sherah-product-sidebar__list">
-                                                <li><a href="#"><span><i
-                                                                class="fa-solid fa-chevron-right"></i>All</span></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-
-                                        <div class="sherah-product-sidebar sherah-default-bg mg-top-30">
-                                            <h4 class="sherah-product-sidebar__title sherah-border-btm">Size</h4>
-                                            <ul class="sherah-product-sidebar__size">
-                                                <li><a class="sherah-border" href="#">All</a></li>
-                                            </ul>
                                         </div>
                                     </div>
 
@@ -127,16 +130,9 @@
 
                                                 <div class="row mg-top-40">
                                                     <div class="sherah-pagination">
-                                                        <ul class="sherah-pagination__list">
-                                                            <li class="sherah-pagination__button"><a href="#"><i
-                                                                        class="fas fa-angle-left"></i></a></li>
-                                                            <li class="active"><a href="#">01</a></li>
-                                                            <li><a href="#">02</a></li>
-                                                            <li><a href="#">03</a></li>
-                                                            <li class="sherah-pagination__button"><a href="#"><i
-                                                                        class="fas fa-angle-right"></i></a></li>
-                                                        </ul>
+                                                        <ul class="sherah-pagination__list" id="pagination"></ul>
                                                     </div>
+
                                                 </div>
 
                                             </div>
@@ -157,6 +153,16 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery-migrate.js"></script>
     <script src="js/jquery-ui.min.js"></script>
+    <script>
+        console.log("jQuery:", !!window.jQuery, "version:", window.jQuery?.fn?.jquery);
+        console.log("jQuery UI slider:", typeof window.jQuery?.fn?.slider);
+    </script>
+    <script>
+
+        window.__JQ_UI__ = window.jQuery;
+        console.log("Saved __JQ_UI__ slider:", typeof window.__JQ_UI__?.fn?.slider);
+    </script>
+
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/charts.js"></script>
@@ -166,34 +172,20 @@
     <script src="js/jvector-map.js"></script>
     <script src="js/main.js"></script>
 
-    <script>
-        // Slider UI (giữ lại)
-        var dt = $.noConflict(true);
-        var jq = $.noConflict();
-        jq(function () {
-            jq("#slider-range").slider({
-                range: true,
-                min: 0,
-                max: 500,
-                values: [100, 300],
-                slide: function (event, ui) {
-                    jq("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-                }
-            });
-            jq("#amount").val("$" + jq("#slider-range").slider("values", 0) + " - $" + jq("#slider-range").slider("values", 1));
-        });
-    </script>
 
     <script>
         async function loadLayout() {
-            const headerRes = await fetch("header.html");
-            document.getElementById("header-container").innerHTML = await headerRes.text();
+            try {
+                const headerRes = await fetch("header.html");
+                document.getElementById("header-container").innerHTML = await headerRes.text();
 
-            const dashRes = await fetch("dashboard.html");
-            document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+                const dashRes = await fetch("dashboard.html");
+                document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
-            // template init
-            if (typeof initSherahLayout === "function") initSherahLayout();
+                if (typeof initSherahLayout === "function") initSherahLayout();
+            } catch (e) {
+                console.error("loadLayout error:", e);
+            }
         }
         loadLayout();
     </script>
@@ -205,23 +197,15 @@
 
         let allProducts = [];
 
-        // ✅ Lấy token từ localStorage và "làm sạch" để luôn ra đúng JWT dạng a.b.c
+
         function getToken() {
             let raw = localStorage.getItem("token") || "";
-
-            // bỏ khoảng trắng / xuống dòng (hay dính khi copy/paste hoặc response có newline)
             raw = raw.replace(/\s+/g, "").trim();
-
-            // bỏ "Bearer"
             if (raw.toLowerCase().startsWith("bearer")) {
                 raw = raw.slice(6);
                 raw = raw.replace(/\s+/g, "").trim();
             }
-
-            // bỏ dấu nháy nếu bị stringify
             raw = raw.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "");
-
-            // ✅ extract đúng JWT: header.payload.signature
             const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
             return m ? m[1] : "";
         }
@@ -252,11 +236,23 @@
             if (Number.isNaN(n)) return safeText(v);
             return n.toLocaleString("vi-VN") + " ₫";
         }
+        let paging = {
+            page: 1,
+            pageSize: 9,
+            total: 0,
+            totalPages: 1
+        };
 
+        let filteredProductsCache = [];
+
+        let filters = {
+            q: "",
+            categoryId: null,     // null = all
+            minPrice: 0,
+            maxPrice: Number.MAX_SAFE_INTEGER
+        };
         async function loadProviderProducts() {
             const token = getToken();
-
-            // ✅ token không đúng format JWT => bắt login lại
             if (!isValidJwt(token)) {
                 alert("Token không hợp lệ / bị lỗi. Vui lòng đăng nhập lại.");
                 localStorage.removeItem("token");
@@ -271,7 +267,6 @@
             resultCount.textContent = "Loading...";
 
             try {
-                // ✅ debug nhanh (xong xoá)
                 console.log("JWT parts:", token.split(".").length);
 
                 const res = await fetch(`${API_BASE}/api/provider/products`, {
@@ -297,7 +292,11 @@
 
                 const payload = await res.json();
                 allProducts = normalizeProducts(payload);
-                renderProducts(allProducts);
+                renderCategorySidebar(allProducts);
+                initPriceSlider(allProducts);
+
+                applyFilters();
+
             } catch (err) {
                 console.error(err);
                 container.innerHTML = `<div class="col-12"><p style="color:red;">Lỗi: ${safeText(
@@ -317,9 +316,6 @@
                 resultCount.textContent = "Showing 0 results";
                 return;
             }
-
-            resultCount.textContent = `Showing 1–${products.length} of ${products.length} results`;
-
             products.forEach((p) => {
                 const id = p.id ?? p.productId ?? "";
                 const name = p.name ?? "Unnamed";
@@ -329,33 +325,56 @@
                 const status = p.status ?? "";
 
                 container.innerHTML += `
-        <div class="col-xxl-4 col-lg-6 col-md-6 col-12">
-          <div class="sherah-product-card sherah-product-card__v2 sherah-default-bg sherah-border mg-top-30">
-            <div class="sherah-product-card__img">
-              <img src="${thumb}" alt="${safeText(name)}" onerror="this.src='img/product-img1.png'">
-            </div>
-
-            <div class="sherah-product-card__content sherah-dflex-column sherah-flex-gap-5">
-              <h4 class="sherah-product-card__title">
-                <a href="product-detail.html?id=${id}" class="sherah-pcolor">${safeText(name)}</a>
-              </h4>
-
-              <div class="sherah-product__bottom">
-                <div class="sherah-product__bottom--single">
-                  <h5 class="sherah-product-card__price">
-                    ${price !== null ? formatMoney(price) + " / ngày" : ""}
-                  </h5>
-                  <div class="sherah-product-card__meta">
-                    ${category ? `<span>Loại: <b>${safeText(category)}</b></span><br>` : ""}                
-                  </div>
+            <div class="col-xxl-4 col-lg-6 col-md-6 col-12">
+            <div class="sherah-product-card sherah-product-card__v2 sherah-default-bg sherah-border mg-top-30">
+                <div class="sherah-product-card__img">
+                <img src="${thumb}" alt="${safeText(name)}" onerror="this.src='img/product-img1.png'">
                 </div>
 
-                <a href="product-detail.html?id=${id}" class="sherah-btn default">Detail</a>
-              </div>
+                <div class="sherah-product-card__content sherah-dflex-column sherah-flex-gap-5">
+                <h5 class="sherah-product-card__title">
+                    <a href="product-detail.html?id=${id}" class="sherah-pcolor">${safeText(name)}</a>
+                </h5>
+
+                <div class="sherah-product__bottom">
+                    <div class="sherah-product__bottom--single">
+                    <h5 class="sherah-product-card__price">
+                        ${price !== null ? formatMoney(price) + " / ngày" : ""}
+                    </h5>
+                    <div class="sherah-product-card__meta">
+                        ${category ? `<span>Loại: <b>${safeText(category)}</b></span><br>` : ""}                
+                    </div>
+                    </div>
+
+                
+                    
+                </div>
+                </div>
+                <div class="sherah-table__status__group">
+                    <a href="#" class="sherah-table__action sherah-color2 sherah-color3__bg--opactity">			
+                    <svg class="sherah-color3__fill" xmlns="http://www.w3.org/2000/svg" width="18.29" height="18.252" viewBox="0 0 18.29 18.252">
+                        <g id="Group_132" data-name="Group 132" transform="translate(-234.958 -37.876)">
+                            <path id="Path_481" data-name="Path 481" d="M242.545,95.779h-5.319a2.219,2.219,0,0,1-2.262-2.252c-.009-1.809,0-3.617,0-5.426q0-2.552,0-5.1a2.3,2.3,0,0,1,2.419-2.419q2.909,0,5.818,0c.531,0,.87.274.9.715a.741.741,0,0,1-.693.8c-.3.026-.594.014-.892.014q-2.534,0-5.069,0c-.7,0-.964.266-.964.976q0,5.122,0,10.245c0,.687.266.955.946.955q5.158,0,10.316,0c.665,0,.926-.265.926-.934q0-2.909,0-5.818a.765.765,0,0,1,.791-.853.744.744,0,0,1,.724.808c.007,1.023,0,2.047,0,3.07s.012,2.023-.006,3.034A2.235,2.235,0,0,1,248.5,95.73a1.83,1.83,0,0,1-.458.048Q245.293,95.782,242.545,95.779Z" transform="translate(0 -39.652)" fill="#09ad95"/>
+                            <path id="Path_482" data-name="Path 482" d="M332.715,72.644l2.678,2.677c-.05.054-.119.133-.194.207q-2.814,2.815-5.634,5.625a1.113,1.113,0,0,1-.512.284c-.788.177-1.582.331-2.376.48-.5.093-.664-.092-.564-.589.157-.781.306-1.563.473-2.341a.911.911,0,0,1,.209-.437q2.918-2.938,5.853-5.86A.334.334,0,0,1,332.715,72.644Z" transform="translate(-84.622 -32.286)" fill="#09ad95"/>
+                            <path id="Path_483" data-name="Path 483" d="M433.709,42.165l-2.716-2.715a15.815,15.815,0,0,1,1.356-1.248,1.886,1.886,0,0,1,2.579,2.662A17.589,17.589,0,0,1,433.709,42.165Z" transform="translate(-182.038)" fill="#09ad95"/>												
+                        </g>																				
+                    </svg>
+                    </a>
+                    <a href="product-detail.html?id=${id}" class="sherah-btn default">Detail</a>
+                    <a href="#" data-delete-id="${id}" class="sherah-table__action sherah-color2 sherah-color2__bg--offset">
+                        <svg class="sherah-color2__fill"  xmlns="http://www.w3.org/2000/svg" width="16.247" height="18.252" viewBox="0 0 16.247 18.252">
+                            <g id="Icon" transform="translate(-160.007 -18.718)">
+                                <path id="Path_484" data-name="Path 484" d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z" transform="translate(-9.898 -58.597)" />
+                                <path id="Path_485" data-name="Path 485" d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z" transform="translate(0 0)" />
+                                <path id="Path_486" data-name="Path 486" d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z" transform="translate(-58.483 -78.508)" />
+                                <path id="Path_487" data-name="Path 487" d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z" transform="translate(-97.561 -78.509)" />
+                            </g>
+                        </svg>
+                    </a>								
+                </div>
             </div>
-          </div>
-        </div>
-      `;
+            </div>
+        `;
             });
         }
 
@@ -364,24 +383,350 @@
             if (!input) return;
 
             input.addEventListener("input", () => {
-                const q = input.value.trim().toLowerCase();
-                if (!q) return renderProducts(allProducts);
-
-                const filtered = allProducts.filter(
-                    (p) =>
-                        (p.name || "").toLowerCase().includes(q) ||
-                        (p.categoryName || "").toLowerCase().includes(q) ||
-                        (p.status || "").toLowerCase().includes(q)
-                );
-
-                renderProducts(filtered);
+                filters.q = input.value || "";
+                applyFilters();
             });
         }
 
+
         document.addEventListener("DOMContentLoaded", () => {
             setupSearch();
+            bindDeleteClicks();
             loadProviderProducts();
         });
+
+
+        function formatMoneyVND(v) {
+            const n = Number(v || 0);
+            return n.toLocaleString("vi-VN") + " ₫";
+        }
+        function parseMoneyToNumber(text) {
+            if (!text) return null;
+            const cleaned = String(text).replace(/[^\d\-]/g, "");
+            const n = Number(cleaned);
+            return Number.isNaN(n) ? null : n;
+        }
+
+        function parseRangeInput(text) {
+            if (!text) return null;
+            const parts = String(text).split(/-|,|to/).map(s => s.trim()).filter(Boolean);
+            if (parts.length < 2) return null;
+
+            const a = parseMoneyToNumber(parts[0]);
+            const b = parseMoneyToNumber(parts[1]);
+
+            if (a == null || b == null) return null;
+            return { min: Math.min(a, b), max: Math.max(a, b) };
+        }
+
+
+        function buildCategoriesFromProducts(products) {
+            const map = new Map();
+            for (const p of products) {
+                const cid = p.categoryId ?? null;
+                const cname = p.categoryName ?? "Unknown";
+                if (cid == null) continue;
+                if (!map.has(cid)) map.set(cid, { id: cid, name: cname, count: 0 });
+                map.get(cid).count++;
+            }
+            return Array.from(map.values()).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+        }
+
+        function renderCategorySidebar(products) {
+            const ul = document.getElementById("categoryList");
+            if (!ul) return;
+
+            const cats = buildCategoriesFromProducts(products);
+
+            // All
+            let html = `
+    <li>
+      <a href="#" data-cid="">
+        <span><i class="fa-solid fa-chevron-right"></i>All</span>
+      </a>
+    </li>
+  `;
+
+            cats.forEach(c => {
+                html += `
+      <li>
+        <a href="#" data-cid="${c.id}">
+          <span><i class="fa-solid fa-chevron-right"></i>${c.name}</span>
+        </a>
+      </li>
+    `;
+            });
+
+            ul.innerHTML = html;
+            ul.querySelectorAll("a[data-cid]").forEach(a => {
+                a.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const cidRaw = a.getAttribute("data-cid");
+                    filters.categoryId = cidRaw ? Number(cidRaw) : null;
+                    applyFilters();
+                });
+            });
+        }
+
+        function initPriceSlider(products) {
+            const $ = window.__JQ_UI__;
+
+            if (!$) {
+                console.error("❌ __JQ_UI__ chưa có (jQuery bị mất)");
+                return;
+            }
+            if (typeof $.fn.slider !== "function") {
+                console.error("❌ Slider mất do xung đột jQuery instance. $.fn.slider =", typeof $.fn.slider);
+                return;
+            }
+
+            const prices = (products || [])
+                .map(p => Number(p.minPricePerDay ?? p.pricePerDay ?? 0))
+                .filter(n => !Number.isNaN(n) && n > 0);
+
+            const min = 0;
+            const max = prices.length ? Math.max(...prices) : 1000000;
+
+            filters.minPrice = min;
+            filters.maxPrice = max;
+            if ($("#slider-range").hasClass("ui-slider")) {
+                $("#slider-range").slider("destroy");
+                $("#slider-range").empty();
+            }
+
+            $("#slider-range").slider({
+                range: true,
+                min,
+                max,
+                values: [min, max],
+                slide: function (event, ui) {
+                    $("#amount").val(`${formatMoneyVND(ui.values[0])} - ${formatMoneyVND(ui.values[1])}`);
+                },
+                change: function (event, ui) {
+                    filters.minPrice = ui.values[0];
+                    filters.maxPrice = ui.values[1];
+                    applyFilters();
+                }
+            });
+
+            $("#amount").val(`${formatMoneyVND(min)} - ${formatMoneyVND(max)}`);
+            $("#amount").off("change blur keydown").on("change blur", function () {
+                const range = parseRangeInput(this.value);
+                if (!range) {
+                    const cur = $("#slider-range").slider("values");
+                    this.value = `${formatMoneyVND(cur[0])} - ${formatMoneyVND(cur[1])}`;
+                    return;
+                }
+
+                const newMin = Math.max(min, Math.min(range.min, max));
+                const newMax = Math.max(min, Math.min(range.max, max));
+
+                const v0 = Math.min(newMin, newMax);
+                const v1 = Math.max(newMin, newMax);
+
+                $("#slider-range").slider("values", [v0, v1]);
+            });
+
+            console.log("✅ Slider OK", { min, max });
+        }
+
+        function applyFilters() {
+            const q = (filters.q || "").trim().toLowerCase();
+
+            const filtered = allProducts.filter(p => {
+                if (q) {
+                    const ok =
+                        (p.name || "").toLowerCase().includes(q) ||
+                        (p.categoryName || "").toLowerCase().includes(q) ||
+                        (p.status || "").toLowerCase().includes(q);
+                    if (!ok) return false;
+                }
+
+                if (filters.categoryId != null) {
+                    if (Number(p.categoryId) !== Number(filters.categoryId)) return false;
+                }
+                const price = Number(p.minPricePerDay ?? p.pricePerDay ?? 0);
+                if (Number.isNaN(price)) return false;
+
+                if (price < filters.minPrice || price > filters.maxPrice) return false;
+
+                return true;
+            });
+
+            paging.page = 1;
+            renderPage(filtered);
+
+        }
+        function renderPage(products) {
+
+            filteredProductsCache = products || [];
+            paging.total = filteredProductsCache.length;
+            paging.totalPages = Math.max(1, Math.ceil(paging.total / paging.pageSize));
+
+            // clamp page
+            if (paging.page > paging.totalPages) paging.page = paging.totalPages;
+            if (paging.page < 1) paging.page = 1;
+
+            const start = (paging.page - 1) * paging.pageSize;
+            const end = start + paging.pageSize;
+            const pageItems = filteredProductsCache.slice(start, end);
+
+            renderProducts(pageItems);
+            updateResultCount(start, end);
+            renderPagination();
+        }
+
+        function updateResultCount(start, end) {
+            const resultCount = document.getElementById("resultCount");
+            const total = paging.total;
+
+            if (!resultCount) return;
+
+            if (total === 0) {
+                resultCount.textContent = "Showing 0 results";
+                return;
+            }
+
+            const from = start + 1;
+            const to = Math.min(end, total);
+            resultCount.textContent = `Showing ${from}–${to} of ${total} results`;
+        }
+        function renderPagination() {
+            const ul = document.getElementById("pagination");
+            if (!ul) return;
+
+            const totalPages = paging.totalPages;
+            const page = paging.page;
+
+            // helper tạo <li>
+            const liBtn = (label, targetPage, disabled = false, active = false) => {
+                const cls = [
+                    disabled ? "disabled" : "",
+                    active ? "active" : "",
+                    label === "«" || label === "»" ? "sherah-pagination__button" : ""
+                ].filter(Boolean).join(" ");
+
+                return `
+      <li class="${cls}">
+        <a href="#" data-page="${targetPage}">${label}</a>
+      </li>
+    `;
+            };
+
+            // logic hiển thị window trang (vd: 1 ... 4 5 6 ... 20)
+            const windowSize = 5;
+            let start = Math.max(1, page - Math.floor(windowSize / 2));
+            let end = Math.min(totalPages, start + windowSize - 1);
+            start = Math.max(1, end - windowSize + 1);
+
+            let html = "";
+            html += liBtn("«", page - 1, page === 1);
+
+            if (start > 1) {
+                html += liBtn("1", 1, false, page === 1);
+                if (start > 2) html += `<li class="disabled"><a href="#">...</a></li>`;
+            }
+
+            for (let i = start; i <= end; i++) {
+                html += liBtn(String(i).padStart(2, "0"), i, false, i === page);
+            }
+
+            if (end < totalPages) {
+                if (end < totalPages - 1) html += `<li class="disabled"><a href="#">...</a></li>`;
+                html += liBtn(String(totalPages).padStart(2, "0"), totalPages, false, page === totalPages);
+            }
+
+            html += liBtn("»", page + 1, page === totalPages);
+
+            ul.innerHTML = html;
+
+            // bind click
+            ul.querySelectorAll("a[data-page]").forEach(a => {
+                a.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const p = Number(a.getAttribute("data-page"));
+                    if (Number.isNaN(p)) return;
+                    if (p < 1 || p > paging.totalPages) return;
+
+                    paging.page = p;
+                    renderPage(filteredProductsCache); // ✅ chỉ đổi trang, không filter lại
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                });
+            });
+        }
+        async function deleteProduct(productId) {
+            const token = getToken();
+            if (!isValidJwt(token)) {
+                localStorage.removeItem("token");
+                goLogin();
+                return false;
+            }
+
+            const res = await fetch(`${API_BASE}/api/provider/products/${productId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+            });
+
+            if (res.status === 401) {
+                const text = await res.text();
+                alert("401 Unauthorized: " + text);
+                localStorage.removeItem("token");
+                goLogin();
+                return false;
+            }
+
+            // BE bạn trả JSON: {success, message}
+            const payload = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                throw new Error(payload?.message || "Xoá sản phẩm thất bại");
+            }
+
+            return true;
+        }
+        function bindDeleteClicks() {
+            const container = document.getElementById("product-list");
+            if (!container) return;
+
+            container.addEventListener("click", async (e) => {
+                const btn = e.target.closest("[data-delete-id]");
+                if (!btn) return;
+
+                e.preventDefault();
+
+                const id = Number(btn.getAttribute("data-delete-id"));
+                if (!id) return;
+
+                const okConfirm = confirm("Bạn chắc chắn muốn xoá sản phẩm này?");
+                if (!okConfirm) return;
+
+                try {
+                    btn.style.pointerEvents = "none";
+                    btn.style.opacity = "0.6";
+
+                    const ok = await deleteProduct(id);
+                    if (!ok) return;
+
+                    // ✅ Update local state
+                    allProducts = allProducts.filter(p => Number(p.id ?? p.productId) !== id);
+
+                    // ✅ Re-apply filter/pagination (bạn đang có applyFilters())
+                    if (typeof applyFilters === "function") applyFilters();
+
+                    alert("Deleted successfully");
+                } catch (err) {
+                    console.error(err);
+                    alert(err?.message || "Lỗi xoá sản phẩm");
+                } finally {
+                    btn.style.pointerEvents = "";
+                    btn.style.opacity = "";
+                }
+            });
+        }
+
     </script>
 
 

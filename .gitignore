@@ -16,3 +16,13 @@ obj/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Upload folders (runtime files)
+uploads/
+wwwroot/uploads/
+
+# Optional: ignore all uploaded images
+*.jpg
+*.jpeg
+*.png
+*.webp

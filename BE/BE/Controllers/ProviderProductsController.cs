@@ -83,7 +83,7 @@ namespace BE.Controllers
                     .Include(p => p.ProductVariants)
                     .FirstOrDefaultAsync(p => p.Id == product.Id);
 
-                return Ok(new { success = true, data = created, message = "Created successfully" });
+                return Ok(new { success = true, data = new { id = product.Id }, message = "Created successfully" });
             }
             catch (Exception ex)
             {
@@ -151,6 +151,33 @@ namespace BE.Controllers
 
             return Ok(new { success = true, data = detail2, message = "Fetched successfully" });
         }
+        [HttpDelete("{productId:long}")]
+        public async Task<IActionResult> DeleteMyProduct(long productId)
+        {
+            long providerId;
+            try
+            {
+                providerId = await ResolveProviderIdAsync();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { success = false, message = ex.Message });
+            }
+
+            try
+            {
+                var ok = await _productsService.DeleteByProviderAsync(providerId, productId);
+                if (!ok)
+                    return NotFound(new { success = false, message = "Không tìm thấy sản phẩm hoặc không thuộc provider này." });
+
+                return Ok(new { success = true, message = "Deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
 
     }
 }

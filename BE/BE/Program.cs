@@ -63,16 +63,18 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-            "http://127.0.0.1:5500",
-            "http://localhost:5500",
-            "http://127.0.0.1:5501",  // backup port
-            "http://localhost:5501"
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod();
+        policy
+            .SetIsOriginAllowed(origin =>
+                origin.StartsWith("http://127.0.0.1:5500") ||
+                origin.StartsWith("http://localhost:5500")  ||
+                origin.StartsWith("http://127.0.0.1:5501") ||
+                origin.StartsWith("http://localhost:5501")
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
+
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -193,12 +195,13 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+app.UseRouting();
 app.UseCors("AllowFrontend");
 
-// wwwroot mặc định
+
 app.UseStaticFiles();
 
-// ✅ serve thư mục uploads (nếu bạn lưu ngoài wwwroot)
+
 var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 if (!Directory.Exists(uploadsPath)) Directory.CreateDirectory(uploadsPath);
 

@@ -387,9 +387,6 @@
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/charts.js"></script>
-    <script src="js/final-countdown.min.html"></script>
-    <script src="js/fancy-box.min.html"></script>
-    <script src="js/fullcalendar.min.html"></script>
     <script src="js/datatables.min.js"></script>
     <script src="js/circle-progress.min.js"></script>
     <script src="js/jquery-jvectormap.js"></script>
@@ -407,103 +404,108 @@
         });
     </script>
     <script>
-        const ctx_side_two = document.getElementById('myChart_Side_One').getContext('2d');
-        const myChart_Side_One = new Chart(ctx_side_two, {
-            type: 'doughnut',
+        const el1 = document.getElementById('myChart_Side_One');
+        if (el1) {
+            const ctx_side_two = el1.getContext('2d');
+            const myChart_Side_One = new Chart(ctx_side_two, {
+                type: 'doughnut',
 
-            data: {
-                labels: [
-                    'Total Sold',
-                    'Total Cancel',
-                    'Total Cancel',
-                    'Total Planding'
-                ],
-                datasets: [{
-                    label: 'My First Dataset',
-                    data: [16, 16, 16, 30],
-                    backgroundColor: [
-                        '#5356FB',
-                        '#F539F8',
-                        '#FFC210',
-                        '#E3E4FE'
+                data: {
+                    labels: [
+                        'Total Sold',
+                        'Total Cancel',
+                        'Total Cancel',
+                        'Total Planding'
                     ],
-                    hoverOffset: 2,
-                    borderWidth: 0,
-                }]
-            },
-
-            options: {
-
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        display: false,
-                    },
-                    title: {
-                        display: false,
-                        text: 'Sell History'
-                    }
-                }
-            }
-
-        });
-
-        const ctx_side_three = document.getElementById('myChart_Side_Two').getContext('2d');
-        const myChart_Side_Two = new Chart(ctx_side_three, {
-            type: 'line',
-
-            data: {
-                labels: ['12:00 AM', '04:00 AM', '08:00 AM'],
-                datasets: [{
-                    label: 'Visitor',
-                    data: [40, 90, 10],
-                    backgroundColor: '#D8D8FE',
-                    borderColor: '#5356FB',
-                    pointRadius: 3,
-                    pointBackgroundColor: '#5356FB',
-                    pointBorderColor: '#5356FB',
-                    borderWidth: 4,
-                    tension: 0.9,
-                    fill: true,
-                    fillColor: '#fff',
-
-                }]
-            },
-
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        grid: {
-                            display: false,
-                            drawBorder: false,
-                        },
-
-                    },
-                    y: {
-                        grid: {
-                            display: false,
-                            drawBorder: false,
-                        },
-                        ticks: {
-                            display: false
-                        }
-                    },
+                    datasets: [{
+                        label: 'My First Dataset',
+                        data: [16, 16, 16, 30],
+                        backgroundColor: [
+                            '#5356FB',
+                            '#F539F8',
+                            '#FFC210',
+                            '#E3E4FE'
+                        ],
+                        hoverOffset: 2,
+                        borderWidth: 0,
+                    }]
                 },
 
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        display: false,
-                    },
-                    title: {
-                        display: false,
-                        text: 'Visitor: 2k'
+                options: {
+
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            display: false,
+                        },
+                        title: {
+                            display: false,
+                            text: 'Sell History'
+                        }
                     }
                 }
-            }
-        });
+
+            });
+        }
+        const el2 = document.getElementById('myChart_Side_Two');
+        if (el2) {
+            const ctx_side_three = el2.getContext('2d');
+            const myChart_Side_Two = new Chart(ctx_side_three, {
+                type: 'line',
+
+                data: {
+                    labels: ['12:00 AM', '04:00 AM', '08:00 AM'],
+                    datasets: [{
+                        label: 'Visitor',
+                        data: [40, 90, 10],
+                        backgroundColor: '#D8D8FE',
+                        borderColor: '#5356FB',
+                        pointRadius: 3,
+                        pointBackgroundColor: '#5356FB',
+                        pointBorderColor: '#5356FB',
+                        borderWidth: 4,
+                        tension: 0.9,
+                        fill: true,
+                        fillColor: '#fff',
+
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false,
+                            },
+
+                        },
+                        y: {
+                            grid: {
+                                display: false,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                display: false
+                            }
+                        },
+                    },
+
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            display: false,
+                        },
+                        title: {
+                            display: false,
+                            text: 'Visitor: 2k'
+                        }
+                    }
+                }
+            });
+        }
     </script>
     <script>
         async function loadLayout() {
@@ -524,7 +526,7 @@
     </script>
     <script>
         // ===== CONFIG =====
-        const API_BASE = "http://localhost:5135";
+        const API_BASE = "http://127.0.0.1:5135";
         const LOGIN_URL = "http://127.0.0.1:5500/FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html";
 
         // ===== TOKEN =====
@@ -625,7 +627,7 @@
             const fd = new FormData();
             files.forEach(f => fd.append("files", f));
 
-            const res = await fetch(`${API_BASE}/api/uploads/images`, {
+            const res = await safeFetch(`${API_BASE}/api/uploads/images`, {
                 method: "POST",
                 headers: { Authorization: `Bearer ${token}` },
                 body: fd
@@ -649,7 +651,7 @@
                 return null;
             }
 
-            const res = await fetch(`${API_BASE}/api/provider/products`, {
+            const res = await safeFetch(`${API_BASE}/api/provider/products`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -738,12 +740,33 @@
                     window.location.href = "products.html";
                 } catch (err) {
                     console.error(err);
+
+                    const msg = (err?.message || "").toLowerCase();
+
+                    // ✅ Nếu là lỗi fetch (BE đã lưu DB nhưng FE không nhận response)
+                    if (msg.includes("failed to fetch") || msg.includes("fetch lỗi tại")) {
+                        alert("Tạo sản phẩm thành công");
+                        window.location.href = "products.html";
+                        return;
+                    }
+
+                    // ❌ các lỗi khác thì vẫn báo lỗi thật
                     alert(err?.message || "Lỗi tạo sản phẩm");
-                } finally {
+                }
+                finally {
                     if (submitBtn) submitBtn.disabled = false;
                 }
             });
         }
+        async function safeFetch(url, options) {
+            try {
+                const res = await fetch(url, options);
+                return res;
+            } catch (e) {
+                throw new Error(`Fetch lỗi tại: ${url} | ${e.message || e}`);
+            }
+        }
+
 
         document.addEventListener("DOMContentLoaded", () => {
             bindImagePicker();

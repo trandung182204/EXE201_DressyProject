@@ -70,7 +70,7 @@ namespace BE.Services.Implementations
                 {
                     Id = p.Id,
                     Name = p.Name,
-
+                    CategoryId = p.CategoryId,
                     CategoryName = p.Category != null
                         ? p.Category.Name
                         : null,
@@ -189,5 +189,28 @@ namespace BE.Services.Implementations
                 })
                 .FirstOrDefaultAsync();
         }
+        public async Task<bool> DeleteByProviderAsync(long providerId, long productId)
+        {
+            // Lấy product + check thuộc provider
+            var product = await _context.Products
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductVariants)
+                .FirstOrDefaultAsync(p => p.Id == productId && p.ProviderId == providerId);
+
+            if (product == null) return false;
+
+            // Nếu DB bạn không cascade delete thì remove tay:
+            if (product.ProductImages != null && product.ProductImages.Count > 0)
+                _context.ProductImages.RemoveRange(product.ProductImages);
+
+            if (product.ProductVariants != null && product.ProductVariants.Count > 0)
+                _context.ProductVariants.RemoveRange(product.ProductVariants);
+
+            _context.Products.Remove(product);
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }
