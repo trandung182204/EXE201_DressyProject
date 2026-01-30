@@ -9,11 +9,6 @@ public partial class Products
     public long Id { get; set; }
 
     public long? ProviderId { get; set; }
-    
-    [Column("provider_branch_id")]
-    public long? ProviderBranchId { get; set; }
-
-    public virtual ProviderBranches? ProviderBranch { get; set; }
 
     public long? CategoryId { get; set; }
 

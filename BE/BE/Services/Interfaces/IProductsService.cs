@@ -13,13 +13,9 @@ namespace BE.Services.Interfaces
         Task<Products?> UpdateAsync(int id, Products model);
         Task<bool> DeleteAsync(int id);
         Task<bool> UpdateStatusAsync(long id, string status);
-        Task<IEnumerable<Products>> GetByBranchAsync(long branchId);
-        Task<Products?> GetByBranchAndIdAsync(long branchId, long productId);
-        Task<Products> AddToBranchAsync(long branchId, CreateProductDto dto);
-        Task<Products?> UpdateInBranchAsync(long branchId, long productId, UpdateProductDto dto);
-        Task<bool> DeleteInBranchAsync(long branchId, long productId);
-
         Task<IEnumerable<ProductListItemDto>> GetProductsByProviderAsync(long providerId);
+        Task<Products> AddForProviderAsync(long providerId, CreateProviderProductDto dto);
+        Task<ProductDetailDto?> GetProductDetailByProviderAsync(long providerId, long productId);
 
     }
 }

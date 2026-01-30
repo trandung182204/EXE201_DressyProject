@@ -12,9 +12,6 @@ namespace BE.Repositories.Interfaces
         Task<Products?> UpdateAsync(int id, Products model);
         Task<bool> DeleteAsync(int id);
 
-        Task<IEnumerable<Products>> GetByBranchAsync(long branchId);
-        Task<Products?> GetByBranchAndIdAsync(long branchId, long productId);
-
         List<Products> GetByProviderId(long providerId);
 
     }
