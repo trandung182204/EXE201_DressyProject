@@ -28,7 +28,7 @@ jobs:
         username: root
         password: ${{ secrets.VPS_PASSWORD }}
         source: "publish/*"
-        target: "/var/www/EXE201_DressyProject/BE"
+        target: "/var/www/EXE201_DressyProject/BE/publish/BE.dll"
 
     - name: Restart service
       uses: appleboy/ssh-action@v1.0.3
