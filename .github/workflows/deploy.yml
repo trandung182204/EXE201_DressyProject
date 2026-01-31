@@ -24,7 +24,7 @@ jobs:
     - name: Deploy to VPS via SSH (root)
       uses: appleboy/scp-action@v0.1.7
       with:
-        host: ${{ secrets.VPS_HOST }}
+        host: xungxinh.io.vn
         username: root
         password: ${{ secrets.VPS_PASSWORD }}
         source: "publish/*"
