@@ -1,4 +1,7 @@
-const API_BASE = "http://localhost:5135/api";
+const API_BASE =
+    location.hostname === "localhost" || location.hostname === "127.0.0.1"
+        ? "http://localhost:5135/api"
+        : "/api";
 
 // =======================
 // DASHBOARD COUNTERS
