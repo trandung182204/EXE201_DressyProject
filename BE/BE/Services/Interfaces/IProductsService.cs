@@ -8,10 +8,10 @@ namespace BE.Services.Interfaces
     public interface IProductsService
     {
         Task<IEnumerable<Products>> GetAllAsync();
-        Task<Products?> GetByIdAsync(int id);
+        Task<Products?> GetByIdAsync(long id);
         Task<Products> AddAsync(Products model);
-        Task<Products?> UpdateAsync(int id, Products model);
-        Task<bool> DeleteAsync(int id);
+        Task<Products?> UpdateAsync(long id, Products model);
+        Task<bool> DeleteAsync(long id);
         Task<bool> UpdateStatusAsync(long id, string status);
         Task<IEnumerable<ProductListItemDto>> GetProductsByProviderAsync(long providerId);
         Task<Products> AddForProviderAsync(long providerId, CreateProviderProductDto dto);
