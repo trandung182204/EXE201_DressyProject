@@ -72,10 +72,11 @@ public class AuthController : ControllerBase
 
             // Query DB for fullName
             var user = await _db.Users
-                .AsNoTracking()
-                .Where(u => u.Id == userId)
-                .Select(u => new { u.FullName })
-                .FirstOrDefaultAsync();
+    .AsNoTracking()
+    .Where(u => u.Id == userId)
+    .Select(u => new { u.FullName, u.Phone })
+    .FirstOrDefaultAsync();
+
 
             if (user == null)
             {
@@ -88,7 +89,8 @@ public class AuthController : ControllerBase
                 Email = emailClaim?.Value ?? "",
                 Role = roleClaim?.Value ?? "customer",
                 FullName = user.FullName,
-                ProviderId = long.TryParse(providerIdClaim?.Value, out var pid) ? pid : null
+                ProviderId = long.TryParse(providerIdClaim?.Value, out var pid) ? pid : null,
+                Phone = user.Phone
             };
 
             return Ok(response);

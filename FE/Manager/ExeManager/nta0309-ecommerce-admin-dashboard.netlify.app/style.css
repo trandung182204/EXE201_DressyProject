@@ -8086,6 +8086,88 @@ blockquote {
   overflow: hidden;
   color: #000000 !important;
 }
+/* =========================
+   FIX KÍCH THƯỚC GALLERY ẢNH
+   (thumbs + main image)
+========================= */
+
+/* Khung tổng: thumbs + main */
+.product-details-image{
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* ===== CỘT ẢNH PHỤ (THUMBS) ===== */
+.product-thumbs{
+  width: 90px;                 /* cố định cột thumbs */
+  max-width: 90px;
+  flex: 0 0 90px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  overflow-y: auto;            /* nhiều ảnh thì scroll */
+  max-height: 520px;           /* khớp chiều cao ảnh chính */
+  padding-right: 4px;
+}
+
+/* mỗi item thumb */
+.product-thumbs .single-thumbs{
+  list-style: none;
+}
+
+/* link bọc ảnh thumb */
+.product-thumbs a{
+  display: block;
+  width: 80px;                 /* size thumb */
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e6e6e6;
+}
+
+/* ảnh thumb */
+.product-thumbs img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;           /* quan trọng: ảnh nào cũng fit */
+  display: block;
+}
+
+/* thumb active nổi bật hơn */
+.product-thumbs a.active{
+  border-color: #09ad95;
+}
+
+/* ===== ẢNH CHÍNH ===== */
+.main-preview-image{
+  width: 420px;                /* cố định khung ảnh chính */
+  height: 520px;
+  flex: 0 0 420px;
+
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid #eee;
+}
+
+/* tab-content phải full khung */
+.product-image,
+.product-image .tab-pane,
+.single-product-image{
+  width: 100%;
+  height: 100%;
+}
+
+/* ảnh chính */
+.single-product-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;           /* ảnh nào cũng vừa khung */
+  display: block;
+}
+
 
 /*======================================
 	End Utilities CSS
