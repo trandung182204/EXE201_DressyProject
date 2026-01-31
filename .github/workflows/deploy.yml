@@ -1,0 +1,40 @@
+name: Deploy to VPS (Root)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Build project
+      run: dotnet publish -c Release -o publish
+
+    - name: Deploy to VPS via SSH (root)
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: root
+        password: ${{ secrets.VPS_PASSWORD }}
+        source: "publish/*"
+        target: "/var/www/EXE201_DressyProject/BE"
+
+    - name: Restart service
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: root
+        password: ${{ secrets.VPS_PASSWORD }}
+        script: |
+          systemctl restart be
