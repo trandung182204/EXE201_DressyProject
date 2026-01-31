@@ -19,7 +19,7 @@ namespace BE.Services.Implementations
         {
             return await _context.Products.ToListAsync();
         }
-        public async Task<Products?> GetByIdAsync(int id)
+        public async Task<Products?> GetByIdAsync(long id)
         {
             return await _context.Products.FindAsync(id);
         }
@@ -29,7 +29,7 @@ namespace BE.Services.Implementations
             await _context.SaveChangesAsync();
             return model;
         }
-        public async Task<Products?> UpdateAsync(int id, Products model)
+        public async Task<Products?> UpdateAsync(long id, Products model)
         {
             var item = await _context.Products.FindAsync(id);
             if (item == null) return null;
@@ -37,7 +37,7 @@ namespace BE.Services.Implementations
             await _context.SaveChangesAsync();
             return item;
         }
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(long id)
         {
             var item = await _context.Products.FindAsync(id);
             if (item == null) return false;

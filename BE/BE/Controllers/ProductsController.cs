@@ -23,7 +23,7 @@ namespace BE.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(long id)
         {
             var item = await _service.GetByIdAsync(id);
             if (item == null) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
@@ -38,7 +38,7 @@ namespace BE.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Products model)
+        public async Task<IActionResult> Update(long id, [FromBody] Products model)
         {
             var updated = await _service.UpdateAsync(id, model);
             if (updated == null) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
@@ -46,7 +46,7 @@ namespace BE.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(long id)
         {
             var deleted = await _service.DeleteAsync(id);
             if (!deleted) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
