@@ -15,7 +15,7 @@ namespace BE.Controllers
             _service = service;
         }
 
-        [HttpGet]
+        [HttpGet("/test")]
         public async Task<IActionResult> GetAll()
         {
             var data = await _service.GetAllAsync();
