@@ -38,5 +38,7 @@ public class UserProfileResponse
     public string Role { get; set; } = null!;
     public string? FullName { get; set; }
     public long? ProviderId { get; set; }
+
+    public string? Phone { get; set; }
 }
 

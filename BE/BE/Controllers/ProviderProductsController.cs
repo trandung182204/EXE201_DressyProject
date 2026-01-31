@@ -177,6 +177,35 @@ namespace BE.Controllers
                 return BadRequest(new { success = false, message = ex.Message });
             }
         }
+        [HttpPut("{productId:long}")]
+        public async Task<IActionResult> UpdateMyProduct(long productId, [FromBody] UpdateProviderProductDto dto)
+        {
+            if (dto == null)
+                return BadRequest(new { success = false, message = "Body is required" });
+
+            long providerId;
+            try
+            {
+                providerId = await ResolveProviderIdAsync();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { success = false, message = ex.Message });
+            }
+
+            try
+            {
+                var updated = await _productsService.UpdateForProviderAsync(providerId, productId, dto);
+                if (updated == null)
+                    return NotFound(new { success = false, message = "Không tìm thấy sản phẩm hoặc không thuộc provider này." });
+
+                return Ok(new { success = true, data = updated, message = "Updated successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
 
 
     }

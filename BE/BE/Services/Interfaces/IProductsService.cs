@@ -17,6 +17,8 @@ namespace BE.Services.Interfaces
         Task<Products> AddForProviderAsync(long providerId, CreateProviderProductDto dto);
         Task<ProductDetailDto?> GetProductDetailByProviderAsync(long providerId, long productId);
         Task<bool> DeleteByProviderAsync(long providerId, long productId);
+        Task<ProductDetailDto?> UpdateForProviderAsync(long providerId, long productId, UpdateProviderProductDto dto);
+
 
     }
 }

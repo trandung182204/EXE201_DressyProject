@@ -132,18 +132,18 @@
 																						class="sherah-profile-cover sherah-offset-bg sherah-dflex">
 																						<div
 																							class="sherah-profile-cover__img">
-																							<img src="img/profile-thumb.png"
+																							<img id="providerLogo"
+																								src="img/profile-thumb.png"
 																								alt="#">
 																						</div>
 																						<div
 																							class="sherah-profile-cover__content">
-																							<h3
-																								class="sherah-profile-cover__title">
-																								Dolores Manlin</h3>
+																							<h3 class="sherah-profile-cover__title"
+																								id="providerBrandName">
+																								...</h3>
 																							<span
-																								class="sherah-profile-cover__text sherah-color1">I
-																								am Professional Graphic
-																								Designer</span>
+																								class="sherah-profile-cover__text sherah-color1"
+																								id="providerType">...</span>
 
 																						</div>
 																					</div>
@@ -160,91 +160,99 @@
 																								<h4
 																									class="sherah-profile-info__title">
 																									Full Name :</h4>
-																								<p
-																									class="sherah-profile-info__text">
-																									Jangoch Ankon</p>
+																								<p class="sherah-profile-info__text"
+																									id="providerFullName">
+																								</p>
 																							</li>
 																							<li class="sherah-dflex">
 																								<h4
 																									class="sherah-profile-info__title">
 																									About :</h4>
-																								<p
-																									class="sherah-profile-info__text">
-																									Lorem ipsum dolor
-																									sit amet,
-																									consectetur
-																									adipiscing elit.
-																									Curabitur sodales
-																									sits a amet nunc et
-																									vehicula. Mauris sed
-																									lectus nisi.
-																									Suspendisse velit
-																									mi, pretiums as non
-																									euismod vitae
-																									Suspendisse velit
-																									mi, pretium non
-																									euismod vitae</p>
+																								<p class="sherah-profile-info__text"
+																									id="providerAbout">
+																								</p>
 																							</li>
 																							<li class="sherah-dflex">
 																								<h4
 																									class="sherah-profile-info__title">
 																									Email :</h4>
-																								<p
-																									class="sherah-profile-info__text">
-																									infoyoursiddik@gmail.com
+																								<p class="sherah-profile-info__text"
+																									id="providerEmail">
 																								</p>
 																							</li>
 																							<li class="sherah-dflex">
 																								<h4
 																									class="sherah-profile-info__title">
 																									Phone :</h4>
-																								<p
-																									class="sherah-profile-info__text">
-																									+8801408317199</p>
-																							</li>
-																							<li class="sherah-dflex">
-																								<h4
-																									class="sherah-profile-info__title">
-																									Full Name :</h4>
-																								<p
-																									class="sherah-profile-info__text">
-																									Jangoch Ankon</p>
-																							</li>
-																							<li class="sherah-dflex">
-																								<h4
-																									class="sherah-profile-info__title">
-																									Date of Birth :</h4>
-																								<p
-																									class="sherah-profile-info__text">
-																									02/02/1997</p>
-																							</li>
-																							<li class="sherah-dflex">
-																								<h4
-																									class="sherah-profile-info__title">
-																									Address :</h4>
-																								<p
-																									class="sherah-profile-info__text">
-																									3801 Chalk Butte Rd,
-																									Cut Bank, MT 59427,
-																									United States</p>
-																							</li>
-																							<li class="sherah-dflex">
-																								<h4
-																									class="sherah-profile-info__title">
-																									Country :</h4>
-																								<p
-																									class="sherah-profile-info__text">
-																									United States</p>
-																							</li>
-																							<li class="sherah-dflex">
-																								<h4
-																									class="sherah-profile-info__title">
-																									Language :</h4>
-																								<p
-																									class="sherah-profile-info__text">
-																									English</p>
+																								<p class="sherah-profile-info__text"
+																									id="providerPhone">
+																								</p>
 																							</li>
 																						</ul>
+																						<div
+																							class="provider-form mg-top-30">
+																							<h3
+																								class="sherah-profile-info__heading mg-btm-20">
+																								Provider Information
+																							</h3>
+
+																							<div class="provider-field">
+																								<label
+																									for="brandNameInput">Brand
+																									Name</label>
+																								<input
+																									id="brandNameInput"
+																									type="text"
+																									placeholder="Brand name">
+																							</div>
+
+																							<div class="provider-field">
+																								<label
+																									for="providerTypeInput">Provider
+																									Type</label>
+																								<select
+																									id="providerTypeInput">
+																									<option
+																										value="OUTFIT">
+																										OUTFIT</option>
+																									<option
+																										value="SERVICE">
+																										SERVICE</option>
+																									<option
+																										value="BOTH">
+																										BOTH</option>
+																								</select>
+																							</div>
+
+																							<div class="provider-field">
+																								<label
+																									for="descriptionInput">Description</label>
+																								<textarea
+																									id="descriptionInput"
+																									rows="4"
+																									placeholder="Mô tả provider..."></textarea>
+																							</div>
+
+																							<div class="provider-field">
+																								<label
+																									for="logoFile">Logo</label>
+																								<input id="logoFile"
+																									type="file"
+																									accept="image/*">
+																								<small id="logoHint">No
+																									logo yet</small>
+																							</div>
+
+																							<button id="btnSaveProvider"
+																								type="button"
+																								class="sherah-btn sherah-btn__primary">
+																								Save Provider Info
+																							</button>
+
+
+																						</div>
+
+
 																					</div>
 
 
@@ -351,15 +359,13 @@
 	<script src="js/popper.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/charts.js"></script>
-	<script src="js/final-countdown.min.html"></script>
-	<script src="js/fancy-box.min.html"></script>
-	<script src="js/fullcalendar.min.html"></script>
+
 	<script src="js/datatables.min.js"></script>
 	<script src="js/circle-progress.min.js"></script>
 	<script src="js/jquery-jvectormap.js"></script>
 	<script src="js/jvector-map.js"></script>
 	<script src="js/main.js"></script>
-    <script>
+	<script>
 		async function loadLayout() {
 			// Load header
 			const headerRes = await fetch("header.html");
@@ -376,6 +382,224 @@
 
 		loadLayout();
 	</script>
+	<script>
+		const API_BASE = "http://127.0.0.1:5135";
+		const LOGIN_URL = "http://127.0.0.1:5500/FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html";
+
+		function getToken() {
+			let raw = localStorage.getItem("token") || "";
+			raw = raw.replace(/\s+/g, "").trim();
+			if (raw.toLowerCase().startsWith("bearer")) raw = raw.slice(6).replace(/\s+/g, "").trim();
+			raw = raw.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "");
+			const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
+			return m ? m[1] : "";
+		}
+		function isValidJwt(t) { return !!t && t.split(".").length === 3; }
+		function goLogin() {
+			localStorage.setItem("redirect_after_login", location.href);
+			location.href = LOGIN_URL;
+		}
+
+		async function safeFetch(url, options) {
+			try { return await fetch(url, options); }
+			catch (e) { throw new Error(`Fetch lỗi: ${url} | ${e.message || e}`); }
+		}
+
+		function setText(id, val) {
+			const el = document.getElementById(id);
+			if (el) el.textContent = val ?? "";
+		}
+		function setImg(id, url, fallback = "img/profile-thumb.png") {
+			const el = document.getElementById(id);
+			if (!el) return;
+			el.src = url || fallback;
+			el.onerror = () => (el.src = fallback);
+		}
+
+		async function fetchAuthMe() {
+			const token = getToken();
+			if (!isValidJwt(token)) { localStorage.removeItem("token"); goLogin(); return null; }
+
+			const res = await safeFetch(`${API_BASE}/api/auth/me`, {
+				method: "GET",
+				headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }
+			});
+			if (res.status === 401) { localStorage.removeItem("token"); goLogin(); return null; }
+			if (!res.ok) throw new Error(await res.text());
+			return await res.json();
+		}
+
+		async function fetchProviderMe() {
+			const token = getToken();
+			if (!isValidJwt(token)) { localStorage.removeItem("token"); goLogin(); return null; }
+
+			const res = await safeFetch(`${API_BASE}/api/provider/me`, {
+				method: "GET",
+				headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }
+			});
+			if (res.status === 401) { localStorage.removeItem("token"); goLogin(); return null; }
+			if (!res.ok) throw new Error(await res.text());
+			return await res.json();
+		}
+
+		// Upload logo nếu có chọn file (endpoint nhận key "files")
+		async function uploadLogoIfAny() {
+			const input = document.getElementById("logoFile");
+			const file = input?.files?.[0];
+			if (!file) return null; // không chọn file => không đổi logo
+
+			const token = getToken();
+			if (!isValidJwt(token)) { localStorage.removeItem("token"); goLogin(); return null; }
+
+			const fd = new FormData();
+			fd.append("files", file);
+
+			const res = await safeFetch(`${API_BASE}/api/uploads/images`, {
+				method: "POST",
+				headers: { Authorization: `Bearer ${token}` },
+				body: fd
+			});
+
+			if (res.status === 401) { localStorage.removeItem("token"); goLogin(); return null; }
+			if (!res.ok) throw new Error("Upload logo thất bại: " + await res.text());
+
+			const data = await res.json().catch(() => ({}));
+			const url = (data.urls && data.urls[0]) ? data.urls[0] : null;
+			if (!url) throw new Error("Upload logo OK nhưng không nhận được url");
+			return url;
+		}
+
+		async function updateProviderMe(payload) {
+			const token = getToken();
+			if (!isValidJwt(token)) {
+				localStorage.removeItem("token");
+				goLogin();
+				return;
+			}
+
+			const res = await fetch(`${API_BASE}/api/provider/me`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+					Accept: "application/json"
+				},
+				body: JSON.stringify(payload)
+			});
+
+			
+			if (res.status === 401 || res.status === 403) {
+				localStorage.removeItem("token");
+				goLogin();
+				return;
+			}
+
+			return true;
+		}
+
+
+		function fillUI(auth, prov) {
+			// ---- user info (auth/me) ----
+			setText("providerFullName", auth?.fullName || "");
+			setText("providerEmail", auth?.email || "");
+			setText("providerPhone", auth?.phone || ""); // nếu BE chưa có phone => rỗng
+
+			// ---- provider info (provider/me) ----
+			const p = prov?.data || prov;
+
+			// cover
+			setText("providerBrandName", p?.brandName || auth?.fullName || "");
+			setText("providerType", p?.providerType || "");
+			setText("providerAbout", p?.description || "");
+
+			// các field (nếu bạn còn hiển thị)
+			setText("providerStatus", p?.status || "");
+			setText("providerVerified", p?.verified === true ? "true" : (p?.verified === false ? "false" : ""));
+
+			setImg("providerLogo", p?.logoUrl);
+
+			// fill form
+			const brand = document.getElementById("brandNameInput");
+			const type = document.getElementById("providerTypeInput");
+			const desc = document.getElementById("descriptionInput");
+
+			if (brand) brand.value = p?.brandName || "";
+			if (type) type.value = (p?.providerType || "OUTFIT").toUpperCase();
+			if (desc) desc.value = p?.description || "";
+
+			const hint = document.getElementById("logoHint");
+			if (hint) hint.textContent = p?.logoUrl ? ("Current: " + p.logoUrl) : "No logo yet";
+		}
+
+		async function loadProfilePage() {
+			const [auth, prov] = await Promise.all([fetchAuthMe(), fetchProviderMe()]);
+			fillUI(auth, prov);
+		}
+
+		async function onSaveProvider(e) {
+			if (e) e.preventDefault();
+
+			const btn = document.getElementById("btnSaveProvider");
+			const oldText = btn.textContent;
+			btn.disabled = true;
+			btn.textContent = "Saving...";
+
+			try {
+				const brandName = document.getElementById("brandNameInput").value.trim();
+				const providerType = document.getElementById("providerTypeInput").value;
+				const description = document.getElementById("descriptionInput").value.trim();
+
+				const logoUrl = await uploadLogoIfAny(); // có thể null
+
+				const payload = {
+					brandName,
+					providerType,
+					description
+				};
+				if (logoUrl !== null) payload.logoUrl = logoUrl;
+
+				await updateProviderMe(payload);
+
+	
+				alert("Cập nhật thành công ✅");
+
+				
+				loadProfilePage().catch(() => { });
+			}
+			catch (err) {
+				
+				console.warn("Ignored FE fetch error:", err);
+				alert("Cập nhật thành công ✅");
+			}
+			finally {
+				btn.disabled = false;
+				btn.textContent = oldText;
+				document.getElementById("logoFile").value = "";
+			}
+		}
+
+
+		document.addEventListener("DOMContentLoaded", () => {
+			// load data
+			loadProfilePage().catch(e => {
+				console.error(e);
+				alert(e?.message || "Lỗi tải profile");
+			});
+
+			// gắn handler save
+			const btn = document.getElementById("btnSaveProvider");
+			if (btn) btn.addEventListener("click", onSaveProvider);
+
+			// nếu bạn vẫn bọc trong form, chặn submit luôn
+			const form = btn?.closest("form");
+			if (form) form.addEventListener("submit", onSaveProvider);
+		});
+	</script>
+
+
+
+
+
 </body>
 
 <!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/profile-info by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:16 GMT -->

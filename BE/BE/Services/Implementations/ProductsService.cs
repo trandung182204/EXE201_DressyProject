@@ -211,6 +211,117 @@ namespace BE.Services.Implementations
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<ProductDetailDto?> UpdateForProviderAsync(long providerId, long productId, UpdateProviderProductDto dto)
+        {
+            // Validate cơ bản
+            if (dto.CategoryId <= 0) throw new Exception("CategoryId is required");
+            if (string.IsNullOrWhiteSpace(dto.Name)) throw new Exception("Name is required");
+            if (dto.Variants == null || dto.Variants.Count == 0) throw new Exception("At least 1 variant is required");
+
+            // Check category tồn tại
+            var categoryExists = await _context.Categories.AnyAsync(c => c.Id == dto.CategoryId);
+            if (!categoryExists) throw new Exception("Category not found");
+
+            await using var tx = await _context.Database.BeginTransactionAsync();
+
+            // Load product + navigation
+            var product = await _context.Products
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductVariants)
+                .FirstOrDefaultAsync(p => p.Id == productId && p.ProviderId == providerId);
+
+            if (product == null) return null;
+
+            // ===== Update fields product =====
+            product.CategoryId = dto.CategoryId;
+            product.Name = dto.Name!.Trim();
+            product.ProductType = dto.ProductType;
+            product.Description = dto.Description;
+
+            if (!string.IsNullOrWhiteSpace(dto.Status))
+            {
+                var st = dto.Status.Trim().ToUpper();
+                if (st != "AVAILABLE" && st != "UNAVAILABLE")
+                    throw new Exception("Status must be AVAILABLE or UNAVAILABLE");
+                product.Status = st;
+            }
+
+            // ===== Replace Images =====
+            // Xóa hết ảnh cũ, add ảnh mới
+            if (product.ProductImages != null && product.ProductImages.Count > 0)
+                _context.ProductImages.RemoveRange(product.ProductImages);
+
+            var newImages = (dto.ImageUrls ?? new List<string?>())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => new ProductImages
+                {
+                    ProductId = product.Id,
+                    ImageUrl = x!.Trim()
+                })
+                .ToList();
+
+            if (newImages.Count > 0)
+                await _context.ProductImages.AddRangeAsync(newImages);
+
+            // ===== Upsert Variants =====
+            var existingVariants = product.ProductVariants?.ToDictionary(v => v.Id, v => v)
+                                   ?? new Dictionary<long, ProductVariants>();
+
+            var incomingIds = new HashSet<long>();
+
+            foreach (var v in dto.Variants)
+            {
+                var incomingId = (v.Id ?? 0);
+
+                // Update existing
+                if (incomingId > 0 && existingVariants.TryGetValue(incomingId, out var ev))
+                {
+                    incomingIds.Add(incomingId);
+
+                    ev.SizeLabel = v.SizeLabel;
+                    ev.ColorName = v.ColorName;
+                    ev.ColorCode = v.ColorCode;
+                    ev.Quantity = v.Quantity ?? ev.Quantity;
+                    ev.PricePerDay = v.PricePerDay ?? ev.PricePerDay;
+                    ev.DepositAmount = v.DepositAmount ?? ev.DepositAmount;
+                    ev.Status = v.Status ?? ev.Status;
+                }
+                else
+                {
+                    // Add new
+                    var nv = new ProductVariants
+                    {
+                        ProductId = product.Id,
+                        SizeLabel = v.SizeLabel,
+                        ColorName = v.ColorName,
+                        ColorCode = v.ColorCode,
+                        Quantity = v.Quantity ?? 0,
+                        PricePerDay = v.PricePerDay ?? 0,
+                        DepositAmount = v.DepositAmount ?? 0,
+                        Status = v.Status ?? true
+                    };
+                    await _context.ProductVariants.AddAsync(nv);
+                }
+            }
+
+            // Delete variants bị remove khỏi payload
+            if (product.ProductVariants != null && product.ProductVariants.Count > 0)
+            {
+                var toDelete = product.ProductVariants
+                    .Where(ev => !incomingIds.Contains(ev.Id)) // chỉ delete những thằng có id cũ mà FE không gửi
+                    .ToList();
+
+                // Chỉ nên delete những variant thực sự “existing” (id > 0)
+                if (toDelete.Count > 0)
+                    _context.ProductVariants.RemoveRange(toDelete);
+            }
+
+            await _context.SaveChangesAsync();
+            await tx.CommitAsync();
+
+            // Trả về detail mới nhất
+            return await GetProductDetailByProviderAsync(providerId, productId);
+        }
 
     }
 }
