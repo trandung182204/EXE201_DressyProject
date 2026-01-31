@@ -21,8 +21,7 @@ namespace BE.Controllers
             var data = await _service.GetAllAsync();
             return Ok(new { success = true, data, message = "Fetched successfully" });
         }
-        
-       
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
