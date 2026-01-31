@@ -1,4 +1,4 @@
-name: Deploy to VPS (Root)
+name: Deploy BE to VPS
 
 on:
   push:
@@ -18,22 +18,22 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Build project
+    - name: Publish BE
       run: dotnet publish -c Release -o publish
 
-    - name: Deploy to VPS via SSH (root)
+    - name: Upload publish folder to VPS
       uses: appleboy/scp-action@v0.1.7
       with:
         host: xungxinh.io.vn
         username: root
         password: ${{ secrets.VPS_PASSWORD }}
-        source: "publish/*"
+        source: "publish"
         target: "/var/www/EXE201_DressyProject/BE"
 
-    - name: Restart service
+    - name: Restart BE service
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: ${{ secrets.VPS_HOST }}
+        host: xungxinh.io.vn
         username: root
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
