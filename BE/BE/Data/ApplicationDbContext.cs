@@ -60,7 +60,7 @@ public partial class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        
+
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -183,6 +183,16 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(20)
                 .UseCollation("Vietnamese_100_CI_AI")
                 .HasColumnName("status");
+
+            entity.Property(e => e.ProviderId)
+                  .HasColumnName("provider_id");
+
+ 
+            entity.HasOne(e => e.Provider)
+                  .WithMany()
+                  .HasForeignKey(e => e.ProviderId)
+                  .OnDelete(DeleteBehavior.SetNull)
+                  .HasConstraintName("FK_categories_provider");
 
             entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent)
                 .HasForeignKey(d => d.ParentId)

@@ -159,9 +159,11 @@
                                                             <div class="form-group">
                                                                 <label class="sherah-wc__form-label">Category*</label>
                                                                 <div class="form-group__input">
-                                                                    <input id="categoryId" class="sherah-wc__form-input"
-                                                                        placeholder="CategoryId (number)" type="number"
-                                                                        name="categoryId">
+                                                                    <select id="categoryId"
+                                                                        class="sherah-wc__form-input" name="categoryId">
+                                                                        <option value="">-- Select category --</option>
+                                                                    </select>
+
 
                                                                 </div>
                                                             </div>
@@ -680,7 +682,7 @@
             const colors = getCheckedColors();
 
             if (!name) throw new Error("Vui lòng nhập Product Title");
-            if (!categoryId || Number.isNaN(categoryId)) throw new Error("Vui lòng nhập CategoryId (number)");
+            if (!categoryId || Number.isNaN(categoryId)) throw new Error("Vui lòng chọn Category");
             if (!pricePerDay || Number.isNaN(pricePerDay)) throw new Error("Vui lòng nhập Price per day");
             if (Number.isNaN(totalStock) || totalStock < 1) throw new Error("Vui lòng nhập Stock >= 1");
             if (sizes.length === 0) throw new Error("Vui lòng chọn ít nhất 1 Size");
@@ -767,10 +769,79 @@
             }
         }
 
+        function normalizeCategories(payload) {
+            if (Array.isArray(payload)) return payload;
+            if (payload && Array.isArray(payload.data)) return payload.data;
+            if (payload && payload.success && Array.isArray(payload.data)) return payload.data;
+            return [];
+        }
+
+        async function loadProviderCategories(includeGlobal = true) {
+            const token = getToken();
+            if (!isValidJwt(token)) {
+                localStorage.removeItem("token");
+                goLogin();
+                return [];
+            }
+
+            const res = await safeFetch(`${API_BASE}/api/provider/categories?includeGlobal=${includeGlobal ? "true" : "false"}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+            });
+
+            if (res.status === 401) {
+                localStorage.removeItem("token");
+                goLogin();
+                return [];
+            }
+
+            if (!res.ok) {
+                const t = await res.text();
+                throw new Error(t || "Không thể tải categories");
+            }
+
+            const payload = await res.json();
+            return normalizeCategories(payload);
+        }
+
+        function renderCategoryDropdown(categories) {
+            const sel = document.getElementById("categoryId");
+            if (!sel) return;
+
+            const cats = (categories || [])
+                .filter(c => c && c.id != null)
+                .map(c => ({ id: Number(c.id), name: c.name || "Unknown" }))
+                .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+            sel.innerHTML = `<option value="">-- Select category --</option>` +
+                cats.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+        }
+
+        async function initCategoryDropdown() {
+            const sel = document.getElementById("categoryId");
+            if (!sel) return;
+
+            sel.disabled = true;
+            sel.innerHTML = `<option value="">Loading...</option>`;
+
+            try {
+                const categories = await loadProviderCategories(true);
+                renderCategoryDropdown(categories);
+            } catch (e) {
+                console.error(e);
+                sel.innerHTML = `<option value="">(Load categories failed)</option>`;
+            } finally {
+                sel.disabled = false;
+            }
+        }
 
         document.addEventListener("DOMContentLoaded", () => {
             bindImagePicker();
             wireSubmit();
+            initCategoryDropdown();
         });
     </script>
 

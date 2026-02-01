@@ -15,6 +15,9 @@ public partial class Categories
 
     public string? Status { get; set; }
 
+    public long? ProviderId { get; set; }
+    public Providers? Provider { get; set; }
+
     public virtual ICollection<Categories> InverseParent { get; set; } = new List<Categories>();
 
     public virtual Categories? Parent { get; set; }
