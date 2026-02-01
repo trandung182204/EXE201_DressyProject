@@ -111,7 +111,7 @@
                         <div class="sherah-products-meta">
                           <ul class="sherah-products-meta__list">
                             <li><span class="p-list-title">Category : </span> <span id="pd-category">--</span></li>
-                            <li><span class="p-list-title">Color : </span> <span id="pd-colors">--</span></li>                            
+                            <li><span class="p-list-title">Color : </span> <span id="pd-colors">--</span></li>
                             <li><span class="p-list-title">Size : </span> <span id="pd-sizes">--</span></li>
 
                           </ul>
@@ -184,74 +184,80 @@
     loadLayout();
   </script>
   <script>
-  // ===== CONFIG =====
-  const API_BASE = "http://localhost:5135"; // giống products.html của bạn
-  const LOGIN_URL = "http://127.0.0.1:5500/FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html";
-  const FALLBACK_IMG = "img/product-detail.png";
+    // ===== CONFIG =====
+    const isLocal =
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1";
+    const API_BASE = isLocal ? "http://127.0.0.1:5135" : "";
 
-  // ===== TOKEN (copy chuẩn từ products.html) =====
-  function getToken() {
-    let raw = localStorage.getItem("token") || "";
-    raw = raw.replace(/\s+/g, "").trim();
+    const LOGIN_URL = new URL(
+      "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
+      location.href
+    ).href;
+    const FALLBACK_IMG = "img/product-detail.png";
 
-    if (raw.toLowerCase().startsWith("bearer")) {
-      raw = raw.slice(6);
+    function getToken() {
+      let raw = localStorage.getItem("token") || "";
       raw = raw.replace(/\s+/g, "").trim();
+
+      if (raw.toLowerCase().startsWith("bearer")) {
+        raw = raw.slice(6);
+        raw = raw.replace(/\s+/g, "").trim();
+      }
+
+      raw = raw.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "");
+
+      const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
+      return m ? m[1] : "";
     }
 
-    raw = raw.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "");
+    function isValidJwt(t) {
+      return !!t && t.split(".").length === 3;
+    }
 
-    const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
-    return m ? m[1] : "";
-  }
+    function goLogin() {
+      localStorage.setItem("redirect_after_login", window.location.href);
+      window.location.href = LOGIN_URL;
+    }
 
-  function isValidJwt(t) {
-    return !!t && t.split(".").length === 3;
-  }
+    // ===== URL PARAM =====
+    function getProductIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      // products.html đang dùng ?id=...
+      const id = params.get("id") || params.get("productId");
+      return id ? Number(id) : null;
+    }
 
-  function goLogin() {
-    localStorage.setItem("redirect_after_login", window.location.href);
-    window.location.href = LOGIN_URL;
-  }
+    // ===== HELPERS =====
+    function safeText(v) {
+      return v === null || v === undefined ? "" : String(v);
+    }
 
-  // ===== URL PARAM =====
-  function getProductIdFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    // products.html đang dùng ?id=...
-    const id = params.get("id") || params.get("productId");
-    return id ? Number(id) : null;
-  }
+    function formatMoney(v) {
+      if (v === null || v === undefined || v === "") return "--";
+      const n = Number(v);
+      if (Number.isNaN(n)) return safeText(v);
+      return n.toLocaleString("vi-VN") + " ₫/ Ngày";
+    }
 
-  // ===== HELPERS =====
-  function safeText(v) {
-    return v === null || v === undefined ? "" : String(v);
-  }
+    function uniqueNonEmpty(arr) {
+      return [...new Set((arr || []).filter(x => x !== null && x !== undefined && String(x).trim() !== ""))];
+    }
 
-  function formatMoney(v) {
-    if (v === null || v === undefined || v === "") return "--";
-    const n = Number(v);
-    if (Number.isNaN(n)) return safeText(v);
-    return n.toLocaleString("vi-VN") + " ₫/ Ngày";
-  }
+    function renderGallery(imageUrls) {
+      const urls = (Array.isArray(imageUrls) && imageUrls.length ? imageUrls : [FALLBACK_IMG])
+        .map(u => u || FALLBACK_IMG);
 
-  function uniqueNonEmpty(arr) {
-    return [...new Set((arr || []).filter(x => x !== null && x !== undefined && String(x).trim() !== ""))];
-  }
+      const $thumbs = $("#pills-tab");
+      const $tabs = $("#pills-tabContent");
+      $thumbs.empty();
+      $tabs.empty();
 
-  function renderGallery(imageUrls) {
-    const urls = (Array.isArray(imageUrls) && imageUrls.length ? imageUrls : [FALLBACK_IMG])
-      .map(u => u || FALLBACK_IMG);
+      urls.forEach((url, idx) => {
+        const tabId = `pills-img-${idx}`;
+        const isActive = idx === 0;
 
-    const $thumbs = $("#pills-tab");
-    const $tabs = $("#pills-tabContent");
-    $thumbs.empty();
-    $tabs.empty();
-
-    urls.forEach((url, idx) => {
-      const tabId = `pills-img-${idx}`;
-      const isActive = idx === 0;
-
-      $thumbs.append(`
+        $thumbs.append(`
         <li class="single-thumbs" role="presentation">
           <a class="${isActive ? "active" : ""}" id="${tabId}-tab"
              data-bs-toggle="pill" href="#${tabId}" role="tab"
@@ -261,101 +267,101 @@
         </li>
       `);
 
-      $tabs.append(`
+        $tabs.append(`
         <div class="tab-pane fade ${isActive ? "show active" : ""}" id="${tabId}" role="tabpanel" aria-labelledby="${tabId}-tab">
           <div class="single-product-image">
             <img src="${url}" alt="product" onerror="this.src='${FALLBACK_IMG}'">
           </div>
         </div>
       `);
-    });
-  }
-
-  function fillProductDetail(p) {
-    $("#pd-name").text(p?.name ?? "--");
-    $("#pd-desc").text(p?.description ?? "--");
-    $("#pd-category").text(p?.categoryName ?? "--");
-
-    const variants = Array.isArray(p?.variants) ? p.variants : [];
-
-    // tổng tồn kho
-    const totalQty = variants.reduce((sum, v) => sum + (Number(v?.quantity) || 0), 0);
-    $("#pd-stock").text(`${totalQty} In stock`);
-
-    // giá min pricePerDay
-    const prices = variants.map(v => v?.pricePerDay).filter(x => x !== null && x !== undefined);
-    const minPrice = prices.length ? Math.min(...prices.map(Number)) : null;
-    $("#pd-price").text(minPrice !== null ? formatMoney(minPrice) : "--");
-
-    // meta size/color
-    const sizes = uniqueNonEmpty(variants.map(v => v?.sizeLabel));
-    const colors = uniqueNonEmpty(variants.map(v => v?.colorName));
-    const colorCodes = uniqueNonEmpty(variants.map(v => v?.colorCode));
-
-    $("#pd-sizes").text(sizes.length ? sizes.join(", ") : "--");
-    $("#pd-colors").text(colors.length ? colors.join(", ") : "--");
-    $("#pd-colorcodes").text(colorCodes.length ? colorCodes.join(", ") : "--");
-
-    renderGallery(p?.imageUrls);
-  }
-
-  async function fetchProductDetail(productId) {
-    const token = getToken();
-
-    if (!isValidJwt(token)) {
-      alert("Token không hợp lệ / bị lỗi. Vui lòng đăng nhập lại.");
-      localStorage.removeItem("token");
-      goLogin();
-      return null;
+      });
     }
 
-    const res = await fetch(`${API_BASE}/api/provider/products/${productId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
+    function fillProductDetail(p) {
+      $("#pd-name").text(p?.name ?? "--");
+      $("#pd-desc").text(p?.description ?? "--");
+      $("#pd-category").text(p?.categoryName ?? "--");
+
+      const variants = Array.isArray(p?.variants) ? p.variants : [];
+
+      // tổng tồn kho
+      const totalQty = variants.reduce((sum, v) => sum + (Number(v?.quantity) || 0), 0);
+      $("#pd-stock").text(`${totalQty} In stock`);
+
+      // giá min pricePerDay
+      const prices = variants.map(v => v?.pricePerDay).filter(x => x !== null && x !== undefined);
+      const minPrice = prices.length ? Math.min(...prices.map(Number)) : null;
+      $("#pd-price").text(minPrice !== null ? formatMoney(minPrice) : "--");
+
+      // meta size/color
+      const sizes = uniqueNonEmpty(variants.map(v => v?.sizeLabel));
+      const colors = uniqueNonEmpty(variants.map(v => v?.colorName));
+      const colorCodes = uniqueNonEmpty(variants.map(v => v?.colorCode));
+
+      $("#pd-sizes").text(sizes.length ? sizes.join(", ") : "--");
+      $("#pd-colors").text(colors.length ? colors.join(", ") : "--");
+      $("#pd-colorcodes").text(colorCodes.length ? colorCodes.join(", ") : "--");
+
+      renderGallery(p?.imageUrls);
+    }
+
+    async function fetchProductDetail(productId) {
+      const token = getToken();
+
+      if (!isValidJwt(token)) {
+        alert("Token không hợp lệ / bị lỗi. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        goLogin();
+        return null;
+      }
+
+      const res = await fetch(`${API_BASE}/api/provider/products/${productId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        }
+      });
+
+      if (res.status === 401) {
+        const text = await res.text();
+        alert("401 Unauthorized: " + text);
+        localStorage.removeItem("token");
+        goLogin();
+        return null;
+      }
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Không thể tải chi tiết sản phẩm");
+      }
+
+      const payload = await res.json().catch(() => ({}));
+      // BE controller của bạn trả: { success: true, data: detail, message: ... }
+      if (payload && payload.success && payload.data) return payload.data;
+
+      // fallback nếu BE trả thẳng object
+      return payload;
+    }
+
+    // ===== INIT =====
+    document.addEventListener("DOMContentLoaded", async () => {
+      const productId = getProductIdFromUrl();
+      if (!productId) {
+        alert("Thiếu id trên URL. Ví dụ: product-detail.html?id=123");
+        return;
+      }
+
+      try {
+        const data = await fetchProductDetail(productId);
+        if (!data) return;
+        fillProductDetail(data);
+      } catch (err) {
+        console.error(err);
+        alert(err?.message || "Lỗi khi tải chi tiết sản phẩm");
       }
     });
-
-    if (res.status === 401) {
-      const text = await res.text();
-      alert("401 Unauthorized: " + text);
-      localStorage.removeItem("token");
-      goLogin();
-      return null;
-    }
-
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text || "Không thể tải chi tiết sản phẩm");
-    }
-
-    const payload = await res.json().catch(() => ({}));
-    // BE controller của bạn trả: { success: true, data: detail, message: ... }
-    if (payload && payload.success && payload.data) return payload.data;
-
-    // fallback nếu BE trả thẳng object
-    return payload;
-  }
-
-  // ===== INIT =====
-  document.addEventListener("DOMContentLoaded", async () => {
-    const productId = getProductIdFromUrl();
-    if (!productId) {
-      alert("Thiếu id trên URL. Ví dụ: product-detail.html?id=123");
-      return;
-    }
-
-    try {
-      const data = await fetchProductDetail(productId);
-      if (!data) return;
-      fillProductDetail(data);
-    } catch (err) {
-      console.error(err);
-      alert(err?.message || "Lỗi khi tải chi tiết sản phẩm");
-    }
-  });
-</script>
+  </script>
 
 </body>
 
