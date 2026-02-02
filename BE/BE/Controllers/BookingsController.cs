@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using BE.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using BE.Models;
 
 namespace BE.Controllers
@@ -53,16 +54,29 @@ namespace BE.Controllers
         }
 
         [HttpGet("list")]
-public async Task<IActionResult> GetBookingList()
-{
-    var data = await _service.GetBookingListAsync();
-    return Ok(new
-    {
-        success = true,
-        data,
-        message = "Fetched successfully"
-    });
-}
+        public async Task<IActionResult> GetBookingList()
+        {
+            var data = await _service.GetBookingListAsync();
+            return Ok(new
+            {
+                success = true,
+                data,
+                message = "Fetched successfully"
+            });
+        }
+        [Authorize(Roles = "provider")]
+        [HttpGet("provider")]
+        public async Task<IActionResult> GetBookingsForProvider()
+        {
+            var providerIdStr = User.FindFirst("providerId")?.Value;
+
+            if (string.IsNullOrWhiteSpace(providerIdStr) || !long.TryParse(providerIdStr, out var providerId))
+                return Unauthorized(new { success = false, message = "Missing providerId in token." });
+
+            var data = await _service.GetBookingListByProviderAsync(providerId);
+
+            return Ok(new { success = true, data, message = "Fetched successfully" });
+        }
 
     }
 }
