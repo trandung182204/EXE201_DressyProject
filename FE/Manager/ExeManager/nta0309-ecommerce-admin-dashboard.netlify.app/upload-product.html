@@ -528,8 +528,14 @@
     </script>
     <script>
         // ===== CONFIG =====
-        const API_BASE = "http://127.0.0.1:5135";
-        const LOGIN_URL = "http://127.0.0.1:5500/FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html";
+        const isLocal =
+            location.hostname === "localhost" ||
+            location.hostname === "127.0.0.1";
+        const API_BASE = isLocal ? "http://localhost:5135" : "";
+        const LOGIN_URL = new URL(
+            "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
+            location.href
+        ).href;
 
         // ===== TOKEN =====
         function getToken() {
