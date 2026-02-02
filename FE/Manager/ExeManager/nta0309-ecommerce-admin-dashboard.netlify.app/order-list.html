@@ -111,23 +111,22 @@
 	<script src="js/jquery-jvectormap.js"></script>
 	<script src="js/jvector-map.js"></script>
 	<script src="js/main.js"></script>
+	<script src="js/auth-header.js"></script>
+
 
 	<script>
 		async function loadLayout() {
-			// Load header
 			const headerRes = await fetch("header.html");
-			document.getElementById("header-container").innerHTML =
-				await headerRes.text();
+			document.getElementById("header-container").innerHTML = await headerRes.text();
 
-			// Load dashboard / sidebar
 			const dashRes = await fetch("dashboard.html");
-			document.getElementById("dashboard-container").innerHTML =
-				await dashRes.text();
+			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
 			initSherahLayout();
-		}
 
-		loadLayout();
+			// ✅ quan trọng: gọi sau khi header đã có trong DOM
+			if (window.loadAuthToHeader) window.loadAuthToHeader();
+		}
 	</script>
 	<script>
 		const isLocal =
@@ -139,6 +138,7 @@
 		function getToken() {
 			return localStorage.getItem("token") || "";
 		}
+
 
 		function formatDateTime(iso) {
 			if (!iso) return "";

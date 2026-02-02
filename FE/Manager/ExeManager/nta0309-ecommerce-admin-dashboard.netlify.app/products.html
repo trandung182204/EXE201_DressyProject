@@ -198,24 +198,22 @@
     <script src="js/jquery-jvectormap.js"></script>
     <script src="js/jvector-map.js"></script>
     <script src="js/main.js"></script>
-
+    <script src="js/auth-header.js"></script>
 
     <script>
-        async function loadLayout() {
-            try {
-                const headerRes = await fetch("header.html");
-                document.getElementById("header-container").innerHTML = await headerRes.text();
+		async function loadLayout() {
+			const headerRes = await fetch("header.html");
+			document.getElementById("header-container").innerHTML = await headerRes.text();
 
-                const dashRes = await fetch("dashboard.html");
-                document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+			const dashRes = await fetch("dashboard.html");
+			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
-                if (typeof initSherahLayout === "function") initSherahLayout();
-            } catch (e) {
-                console.error("loadLayout error:", e);
-            }
-        }
-        loadLayout();
-    </script>
+			initSherahLayout();
+
+			// ✅ quan trọng: gọi sau khi header đã có trong DOM
+			if (window.loadAuthToHeader) window.loadAuthToHeader();
+		}
+	</script>
 
     <script>
 
@@ -525,6 +523,7 @@
 
 
         document.addEventListener("DOMContentLoaded", () => {
+            loadLayout();
             setupSearch();
             bindDeleteClicks();
             setupAddCategoryUI(); 
@@ -938,6 +937,7 @@
 
     </script>
 
+ 
 
 
 </body>

@@ -388,6 +388,7 @@
 	<script src="js/jvector-map.js"></script>
 	<script src="js/slickslider.min.js"></script>
 	<script src="js/main.js"></script>
+	<script src="js/auth-header.js"></script>
 
 	<script>
 		$(document).ready(function () {
@@ -837,20 +838,17 @@
 	</script>
 	<script>
 		async function loadLayout() {
-			// Load header
 			const headerRes = await fetch("header.html");
-			document.getElementById("header-container").innerHTML =
-				await headerRes.text();
+			document.getElementById("header-container").innerHTML = await headerRes.text();
 
-			// Load dashboard / sidebar
 			const dashRes = await fetch("dashboard.html");
-			document.getElementById("dashboard-container").innerHTML =
-				await dashRes.text();
+			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
 			initSherahLayout();
-		}
 
-		loadLayout();
+			// ✅ quan trọng: gọi sau khi header đã có trong DOM
+			if (window.loadAuthToHeader) window.loadAuthToHeader();
+		}
 	</script>
 	<script>
 		const isLocal =
@@ -897,6 +895,11 @@
 			return res;
 		}
 	</script>
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    loadLayout();
+  });
+</script>
 
 
 </body>
