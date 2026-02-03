@@ -7,6 +7,36 @@ const API_BASE = isLocal
   ? "http://localhost:5135/api"
   : "/api";
 
+/**
+ * Xây dựng đường dẫn redirect dựa trên role
+ * Đường dẫn tương đối từ thư mục html/ hiện tại
+ * Khi deploy, chỉ cần cập nhật các đường dẫn này
+ */
+function mapRoleToRedirect(role) {
+  const roleLower = (role || "customer").toLowerCase().trim();
+
+  // Cấu trúc thư mục:
+  // FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html
+  // FE/Admin/admin-dashboard/index.html
+  // FE/Manager/index.html
+  // 
+  // Từ html/ lên FE/ cần 6 cấp:
+  // html → dress-rental → sites → wpdemo.redq.io → dress-rental-template → FE
+
+  switch (roleLower) {
+    case "admin":
+      // Từ html/ lên 6 cấp về FE/, rồi vào Admin/admin-dashboard/
+      return "../../../../../../Admin/admin-dashboard/index.html";
+    case "provider":
+      // Từ html/ lên 6 cấp về FE/, rồi vào Manager/
+      return "../../../../../../Manager/index.html";
+    case "customer":
+    default:
+      // Cùng thư mục html/
+      return "index.html";
+  }
+}
+
 function setMsg(id, text, ok = false) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -48,8 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (data?.userName) localStorage.setItem("fullName", data.userName);
         else if (data?.name) localStorage.setItem("fullName", data.name);
 
-        if (data?.redirectUrl) window.location.href = data.redirectUrl;
-        else setMsg("loginMsg", "Đăng nhập OK nhưng thiếu redirectUrl");
+        // Sử dụng role để xây dựng redirect URL (không phụ thuộc vào backend)
+        const redirectUrl = mapRoleToRedirect(data.role);
+        window.location.href = redirectUrl;
       } catch (err) {
         setMsg("loginMsg", err?.message || "Đăng nhập thất bại");
       }
@@ -81,8 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (data?.userName) localStorage.setItem("fullName", data.userName);
         else if (data?.name) localStorage.setItem("fullName", data.name);
 
-        if (data?.redirectUrl) window.location.href = data.redirectUrl;
-        else setMsg("registerMsg", "Đăng ký OK nhưng thiếu redirectUrl");
+        // Sử dụng role để xây dựng redirect URL (không phụ thuộc vào backend)
+        const redirectUrl = mapRoleToRedirect(data.role);
+        window.location.href = redirectUrl;
       } catch (err) {
         setMsg("registerMsg", err?.message || "Đăng ký thất bại");
       }

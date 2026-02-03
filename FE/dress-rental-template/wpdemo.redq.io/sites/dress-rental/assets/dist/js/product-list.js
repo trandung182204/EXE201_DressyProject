@@ -8,8 +8,8 @@ const isLocal =
   location.hostname === "127.0.0.1";
 
 const API_BASE = isLocal
-  ? "http://localhost:5135/api"
-  : "/api";
+  ? "http://localhost:5135"
+  : "";
 const ENDPOINT = `${API_BASE}/api/ProductsCustomer/listing`;
 const CATEGORIES_ENDPOINT = `${API_BASE}/api/Categories`;
 
