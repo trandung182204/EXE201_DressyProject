@@ -6,7 +6,11 @@
  * Supports Select2 dynamic options (Correctly handles re-init)
  */
 
-const API_BASE = "http://localhost:5135";
+const isLocal =
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1";
+
+const API_BASE = isLocal ? "http://localhost:5135" : "";
 
 // Current product state
 let currentProduct = null;

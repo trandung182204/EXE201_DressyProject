@@ -1,7 +1,26 @@
+/**
+ * Kiểm tra xem có đang ở môi trường production không
+ */
+function isProductionEnv() {
+  return location.hostname === "xungxinh.io.vn" ||
+    location.hostname === "www.xungxinh.io.vn";
+}
+
+/**
+ * Lấy đường dẫn redirect sau khi logout
+ */
+function getLogoutRedirect() {
+  if (isProductionEnv()) {
+    return "/index.html";
+  }
+  // Local: sử dụng đường dẫn tương đối đến cùng thư mục
+  return "index.html";
+}
+
 function renderAuthHeader() {
   const label = document.getElementById("auth-label");
   const title = document.getElementById("auth-title");
-  const list  = document.getElementById("auth-list");
+  const list = document.getElementById("auth-list");
 
   // Nếu header chưa vào DOM thì thôi
   if (!label || !title || !list) return false;
@@ -23,7 +42,7 @@ function renderAuthHeader() {
     localStorage.removeItem("fullName");
     localStorage.removeItem("userId");
     localStorage.removeItem("providerId");
-    window.location.href = "index.html";
+    window.location.href = getLogoutRedirect();
   });
 
   return true;
@@ -39,3 +58,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   obs.observe(document.documentElement, { childList: true, subtree: true });
 });
+

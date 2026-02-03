@@ -8,10 +8,23 @@ const API_BASE = isLocal
   : "";
 
 /**
+ * Kiểm tra xem có đang ở môi trường production không
+ */
+function isProduction() {
+  return location.hostname === "xungxinh.io.vn" ||
+    location.hostname === "www.xungxinh.io.vn";
+}
+
+/**
  * Tự động detect base path từ URL hiện tại
  * Tìm vị trí của "dress-rental-template" trong path và tính đường dẫn về FE/
  */
 function getBasePath() {
+  // Nếu đang ở production, trả về root
+  if (isProduction()) {
+    return "/";
+  }
+
   const path = location.pathname;
 
   // Tìm vị trí của dress-rental-template trong path
@@ -34,6 +47,23 @@ function getBasePath() {
  */
 function mapRoleToRedirect(role) {
   const roleLower = (role || "customer").toLowerCase().trim();
+
+  // Nếu đang ở production (xungxinh.io.vn)
+  if (isProduction()) {
+    switch (roleLower) {
+      case "admin":
+        // TODO: Cập nhật đường dẫn admin cho production nếu cần
+        return "/index.html";
+      case "provider":
+        // TODO: Cập nhật đường dẫn provider cho production nếu cần  
+        return "/index.html";
+      case "customer":
+      default:
+        return "/index.html";
+    }
+  }
+
+  // Local development
   const basePath = getBasePath();
 
   switch (roleLower) {
