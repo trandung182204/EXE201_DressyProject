@@ -16,9 +16,9 @@
 	<link rel="stylesheet" href="../assets/dist/style/footer.css">
 	<link rel="stylesheet" href="../assets/dist/style/blog.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="../assets/dist/style/style.css">
-	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
-	<link rel="stylesheet" href="../assets/dist/style/responsive.css">
+	<!-- <link rel="stylesheet" href="../assets/dist/style/style.css"> -->
+	<!-- font-awesome already loaded from CDN above -->
+	<!-- <link rel="stylesheet" href="../assets/dist/style/responsive.css"> -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
 </head>
@@ -123,44 +123,28 @@
 							<i class="fa fa-star-o ash" aria-hidden="true"></i>
 							<span class="ash">(29 đánh giá)</span>
 						</a>
-						<h4>$50 <del> $99 thuê </del> <span> Giảm 50% /</span> <small> $999 giá gốc </small></h4>
 						<div class="select-box">
-
-							<select class="rq-rental-select2">
-								<option value="AL">Màu sắc</option>
-								<option value="AL">Đỏ</option>
-								<option value="WY">Hồng</option>
-								<option value="WY">Xanh lá</option>
-							</select>
-							<select class="rq-rental-select2">
-								<option value="AL">Kích thước</option>
-								<option value="AL">38</option>
-								<option value="WY">39</option>
-								<option value="WY">40</option>
-								<option value="WY">41</option>
-								<option value="WY">42</option>
-								<option value="WY">43</option>
-							</select>
-
-
-						</div>
-
-						<div class="row ex-padd">
-							<div class="col-sm-7">
-								<span class="font-18-for-reg-1">Thuê trong:</span>
-								<span class="rq-radiobox">
-									<input type="radio" name="checkout-login-method" id="checkout-login1" value="guest"
-										checked />
-									<label for="checkout-login1">4 Ngày</label>
-								</span><span class="rq-radiobox">
-									<input type="radio" name="checkout-login-method" id="checkout-login2" value="guest"
-										checked />
-									<label for="checkout-login2">8 Ngày</label>
-								</span>
+							<div style="display: inline-block; width: 48%; vertical-align: top;">
+								<select class="rq-rental-select2" id="colorSelect">
+									<option value="">Chọn màu sắc</option>
+								</select>
+								<div id="colorError" class="rq-inline-error"
+									style="display:none; margin-top: 5px; font-size: 13px; color: #842029; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 5px; border-radius: 4px;">
+									<i class="fa fa-exclamation-triangle"></i> Chọn màu
+								</div>
 							</div>
-							<div class="col-sm-5">
+
+							<div style="display: inline-block; width: 48%; vertical-align: top; margin-left: 2%;">
+								<select class="rq-rental-select2" id="sizeSelect">
+									<option value="">Chọn kích thước</option>
+								</select>
+								<div id="sizeError" class="rq-inline-error"
+									style="display:none; margin-top: 5px; font-size: 13px; color: #842029; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 5px; border-radius: 4px;">
+									<i class="fa fa-exclamation-triangle"></i> Chọn kích thước
+								</div>
 							</div>
 						</div>
+
 						<div class="row">
 							<div class="col-lg-7 col-md-8 col-sm-8">
 								<div class="rq-picker rq-picker2">
@@ -729,7 +713,7 @@
 	<script src="../assets/dist/js/vendor/jquery.smooth-scroll.js"></script>
 	<script src="../assets/dist/js/custom.js"></script>
 	<script src="../assets/dist/js/auth-header.js"></script>
-	<script src="../assets/dist/js/layout.js"></script>
+	<script src="../assets/dist/js/booking.js"></script>
 </body>
 
 <!-- Mirrored from wpdemo.redq.io/sites/dress-rental/html/booking.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 22 Jan 2026 15:16:38 GMT -->
