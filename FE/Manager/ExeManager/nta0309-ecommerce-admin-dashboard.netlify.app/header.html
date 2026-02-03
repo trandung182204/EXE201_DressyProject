@@ -1,45 +1,8 @@
-<!DOCTYPE html>
-<html class="no-js" lang="zxx">
 
-<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/products by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:11 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 
-<head>
-    <!-- Meta Tags -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="keywords" content="Site keywords here">
-    <meta name="description" content="#">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Site Title -->
-    <title>Sherah - HTML eCommerce Dashboard Template</title>
 
-    <!-- Font -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
-        rel="stylesheet">
-
-    <!-- Fav Icon -->
-    <link rel="icon" href="img/favicon.png">
-
-    <!-- sherah Stylesheet -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/font-awesome-all.min.css">
-    <link rel="stylesheet" href="css/charts.min.css">
-    <link rel="stylesheet" href="css/datatables.min.css">
-    <link rel="stylesheet" href="css/jvector-map.css">
-    <link rel="stylesheet" href="css/slickslider.min.css">
-    <link rel="stylesheet" href="css/jquery-ui.css">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="style.css">
-
-</head>
-
-<body id="sherah-dark-light">
-
-    <div class="sherah-body-area">
+<body >
         <!-- sherah Admin Menu -->
         <!-- End sherah Admin Menu -->
 
@@ -426,147 +389,10 @@
 
         <!-- End sherah Dashboard -->
 
-    </div>
 
-    <!-- sherah Scripts -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-migrate.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/charts.js"></script>
-    <script src="js/final-countdown.min.html"></script>
-    <script src="js/fancy-box.min.html"></script>
-    <script src="js/fullcalendar.min.html"></script>
-    <script src="js/datatables.min.js"></script>
-    <script src="js/circle-progress.min.js"></script>
-    <script src="js/jquery-jvectormap.js"></script>
-    <script src="js/jvector-map.js"></script>
-    <script src="js/main.js"></script>
 
-    <script>
-        // Release the $ symbol from DataTables
-        var dt = $.noConflict(true);
-
-        // Use a different symbol for jQuery UI
-        var jq = $.noConflict();
-        jq(function () {
-            jq("#slider-range").slider({
-                range: true,
-                min: 0,
-                max: 500,
-                values: [100, 300],
-                slide: function (event, ui) {
-                    jq("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-
-                }
-            });
-            jq("#amount").val("$" + jq("#slider-range").slider("values", 0) +
-                " - $" + jq("#slider-range").slider("values", 1));
-
-        });
-    </script>
-
-    <script>
-        // ====== CONFIG: sửa lại path login nếu bạn đang dùng khác ======
-        const LOGIN_URL = "http://127.0.0.1:5500/EXE201_DressyProject/FE/login.html";
-
-        // Bạn có thể đang lưu theo key khác, nên mình check nhiều kiểu:
-        function readAuth() {
-            const token =
-                localStorage.getItem("accessToken") ||
-                localStorage.getItem("token") ||
-                sessionStorage.getItem("accessToken") ||
-                sessionStorage.getItem("token");
-
-            let user = null;
-            const rawUser =
-                localStorage.getItem("user") ||
-                localStorage.getItem("currentUser") ||
-                sessionStorage.getItem("user") ||
-                sessionStorage.getItem("currentUser");
-
-            if (rawUser) {
-                try { user = JSON.parse(rawUser); } catch (e) { user = null; }
-            }
-
-            // fallback: nếu bạn lưu rời rạc
-            const username =
-                (user && (user.fullName || user.name || user.username)) ||
-                localStorage.getItem("username") ||
-                sessionStorage.getItem("username") ||
-                "User";
-
-            const role =
-                (user && (user.role || user.roleName)) ||
-                localStorage.getItem("role") ||
-                sessionStorage.getItem("role") ||
-                "";
-
-            return { token, username, role };
-        }
-
-        function requireLoginOrRedirect() {
-            const { token } = readAuth();
-            if (!token) {
-                window.location.href = LOGIN_URL;
-                return false;
-            }
-            return true;
-        }
-
-        const { role } = readAuth();
-        if (role && role.toLowerCase() !== "provider") {
-            window.location.href = LOGIN_URL;
-            return;
-        }
-
-        function renderUserToHeader() {
-            const { username, role } = readAuth();
-
-            const elName = document.getElementById("auth-username");
-            const elRole = document.getElementById("auth-role");
-
-            if (elName) elName.textContent = username;
-
-            // bạn muốn show role cho đẹp: "Admin" / "Provider"
-            if (elRole) elRole.textContent = role ? role : "";
-        }
-
-        function bindLogout() {
-            const btn = document.getElementById("btn-logout");
-            if (!btn) return;
-
-            btn.addEventListener("click", function (e) {
-                e.preventDefault();
-
-                // clear auth
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                localStorage.removeItem("currentUser");
-                localStorage.removeItem("username");
-                localStorage.removeItem("role");
-
-                sessionStorage.removeItem("accessToken");
-                sessionStorage.removeItem("token");
-                sessionStorage.removeItem("user");
-                sessionStorage.removeItem("currentUser");
-                sessionStorage.removeItem("username");
-                sessionStorage.removeItem("role");
-
-                window.location.href = LOGIN_URL;
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            if (!requireLoginOrRedirect()) return;
-            renderUserToHeader();
-            bindLogout();
-        });
-    </script>
-   <script src="auth-header.js"></script>
+    
+    
 
 </body>
 
-</html>

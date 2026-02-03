@@ -80,6 +80,33 @@
                                             <ul class="sherah-product-sidebar__list" id="categoryList">
                                                 <!-- JS sẽ render -->
                                             </ul>
+                                            <div style="margin-top:12px;">
+                                                <button id="btnToggleAddCat" class="sherah-btn" style="width:100%;">
+                                                    + Add category
+                                                </button>
+
+                                                <form id="addCatForm" style="display:none; margin-top:10px;"
+                                                    onsubmit="return false;">
+                                                    <input id="catNameInput" type="text" placeholder="Category name..."
+                                                        style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+
+                                                    <textarea id="catDescInput" placeholder="Description (optional)"
+                                                        style="width:100%; margin-top:8px; padding:10px; border:1px solid #ddd; border-radius:8px;"
+                                                        rows="2"></textarea>
+
+                                                    <div style="display:flex; gap:8px; margin-top:10px;">
+                                                        <button id="btnCreateCat" class="sherah-btn" type="button"
+                                                            style="flex:1;">Create</button>
+                                                        <button id="btnCancelCat" class="sherah-btn" type="button"
+                                                            style="flex:1; background:#eee; color:#333;">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+
+                                                    <p id="catMsg" style="margin-top:8px; font-size:13px;"></p>
+                                                </form>
+                                            </div>
+
 
                                         </div>
 
@@ -171,32 +198,34 @@
     <script src="js/jquery-jvectormap.js"></script>
     <script src="js/jvector-map.js"></script>
     <script src="js/main.js"></script>
-
-
-    <script>
-        async function loadLayout() {
-            try {
-                const headerRes = await fetch("header.html");
-                document.getElementById("header-container").innerHTML = await headerRes.text();
-
-                const dashRes = await fetch("dashboard.html");
-                document.getElementById("dashboard-container").innerHTML = await dashRes.text();
-
-                if (typeof initSherahLayout === "function") initSherahLayout();
-            } catch (e) {
-                console.error("loadLayout error:", e);
-            }
-        }
-        loadLayout();
-    </script>
+    <script src="js/auth-header.js"></script>
 
     <script>
-        const API_BASE = "http://localhost:5135";
-        const LOGIN_URL =
-            "http://127.0.0.1:5500/FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html";
+		async function loadLayout() {
+			const headerRes = await fetch("header.html");
+			document.getElementById("header-container").innerHTML = await headerRes.text();
 
+			const dashRes = await fetch("dashboard.html");
+			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+
+			initSherahLayout();
+
+			// ✅ quan trọng: gọi sau khi header đã có trong DOM
+			if (window.loadAuthToHeader) window.loadAuthToHeader();
+		}
+	</script>
+
+    <script>
+
+        const isLocal =
+            location.hostname === "localhost" ||
+            location.hostname === "127.0.0.1";
+        const API_BASE = isLocal ? "http://localhost:5135" : "";
+        const LOGIN_URL = new URL(
+            "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
+            location.href
+        ).href;
         let allProducts = [];
-
 
         function getToken() {
             let raw = localStorage.getItem("token") || "";
@@ -225,6 +254,13 @@
             if (payload && payload.success && Array.isArray(payload.data)) return payload.data;
             return [];
         }
+        function normalizeCategories(payload) {
+            if (Array.isArray(payload)) return payload;
+            if (payload && Array.isArray(payload.data)) return payload.data;
+            if (payload && payload.success && Array.isArray(payload.data)) return payload.data;
+            return [];
+        }
+
 
         function safeText(v) {
             return v === null || v === undefined ? "" : String(v);
@@ -292,7 +328,8 @@
 
                 const payload = await res.json();
                 allProducts = normalizeProducts(payload);
-                renderCategorySidebar(allProducts);
+                const categories = await loadProviderCategories();
+                renderCategorySidebarFromCategories(categories);
                 initPriceSlider(allProducts);
 
                 applyFilters();
@@ -305,6 +342,102 @@
                 resultCount.textContent = "0 results";
             }
         }
+        async function createProviderCategory(name, description) {
+            const token = getToken();
+            if (!isValidJwt(token)) {
+                localStorage.removeItem("token");
+                goLogin();
+                return null;
+            }
+
+            const res = await fetch(`${API_BASE}/api/provider/categories`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({
+                    name,
+                    description: description || null,
+
+                }),
+            });
+
+            if (res.status === 401) {
+                localStorage.removeItem("token");
+                goLogin();
+                return null;
+            }
+
+            const payload = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(payload?.message || "Create category failed");
+            return payload?.data || null;
+        }
+        function setupAddCategoryUI() {
+            const btnToggle = document.getElementById("btnToggleAddCat");
+            const form = document.getElementById("addCatForm");
+            const btnCreate = document.getElementById("btnCreateCat");
+            const btnCancel = document.getElementById("btnCancelCat");
+            const nameInput = document.getElementById("catNameInput");
+            const descInput = document.getElementById("catDescInput");
+            const msg = document.getElementById("catMsg");
+
+            if (!btnToggle || !form) return;
+
+            const setMsg = (text, ok = true) => {
+                if (!msg) return;
+                msg.textContent = text || "";
+                msg.style.color = ok ? "green" : "red";
+            };
+
+            btnToggle.addEventListener("click", () => {
+                const show = form.style.display === "none" || !form.style.display;
+                form.style.display = show ? "block" : "none";
+                setMsg("");
+                if (show) setTimeout(() => nameInput?.focus(), 0);
+            });
+
+            btnCancel?.addEventListener("click", () => {
+                form.style.display = "none";
+                if (nameInput) nameInput.value = "";
+                if (descInput) descInput.value = "";
+                setMsg("");
+            });
+
+            btnCreate?.addEventListener("click", async () => {
+                const name = (nameInput?.value || "").trim();
+                const description = (descInput?.value || "").trim();
+
+                if (!name) {
+                    setMsg("Vui lòng nhập tên category.", false);
+                    return;
+                }
+
+                btnCreate.disabled = true;
+                setMsg("Đang tạo...", true);
+
+                try {
+                    await createProviderCategory(name, description);
+
+                    // reload categories sidebar
+                    const categories = await loadProviderCategories();
+                    renderCategorySidebarFromCategories(categories);
+
+                    setMsg("Tạo category thành công ✅", true);
+
+                    // reset + hide
+                    if (nameInput) nameInput.value = "";
+                    if (descInput) descInput.value = "";
+                    form.style.display = "none";
+                } catch (e) {
+                    setMsg(e?.message || "Tạo category thất bại", false);
+                } finally {
+                    btnCreate.disabled = false;
+                }
+            });
+        }
+
 
         function renderProducts(products) {
             const container = document.getElementById("product-list");
@@ -390,8 +523,10 @@
 
 
         document.addEventListener("DOMContentLoaded", () => {
+            loadLayout();
             setupSearch();
             bindDeleteClicks();
+            setupAddCategoryUI(); 
             loadProviderProducts();
         });
 
@@ -467,6 +602,47 @@
                 });
             });
         }
+        function renderCategorySidebarFromCategories(categories) {
+            const ul = document.getElementById("categoryList");
+            if (!ul) return;
+
+            const cats = (categories || [])
+                .filter(c => c && c.id != null)
+                .map(c => ({ id: Number(c.id), name: c.name || "Unknown" }))
+                .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+            let html = `
+    <li>
+      <a href="#" data-cid="">
+        <span><i class="fa-solid fa-chevron-right"></i>All</span>
+      </a>
+    </li>
+  `;
+
+            cats.forEach(c => {
+                html += `
+      <li>
+        <a href="#" data-cid="${c.id}">
+          <span><i class="fa-solid fa-chevron-right"></i>${c.name}</span>
+        </a>
+      </li>
+    `;
+            });
+
+            ul.innerHTML = html;
+
+            ul.querySelectorAll("a[data-cid]").forEach(a => {
+                a.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const cidRaw = a.getAttribute("data-cid");
+                    filters.categoryId = cidRaw ? Number(cidRaw) : null;
+
+
+                    applyFilters();
+                });
+            });
+        }
+
 
         function initPriceSlider(products) {
             const $ = window.__JQ_UI__;
@@ -726,9 +902,42 @@
                 }
             });
         }
+        async function loadProviderCategories() {
+            const token = getToken();
+            if (!isValidJwt(token)) {
+                localStorage.removeItem("token");
+                goLogin();
+                return [];
+            }
+
+            const res = await fetch(`${API_BASE}/api/provider/categories?includeGlobal=true`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+            });
+
+            if (res.status === 401) {
+                localStorage.removeItem("token");
+                goLogin();
+                return [];
+            }
+
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(text || "Không thể tải categories");
+            }
+
+            const payload = await res.json();
+            return normalizeCategories(payload);
+        }
+
+
 
     </script>
 
+ 
 
 
 </body>
