@@ -183,6 +183,8 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+await DbSeeder.SeedAdminAsync(app.Services);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
