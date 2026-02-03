@@ -29,16 +29,21 @@ function mapRoleToRedirect(role) {
 
   // PRODUCTION
   if (!isLocal) {
-    switch (roleLower) {
-      case "admin":
-        return "/Admin/admin-dashboard/index.html";
-      case "provider":
-        return "/Manager/index.html";
-      case "customer":
-      default:
-        return "/index.html";
-    }
+  switch (roleLower) {
+    case "admin":
+      return "/Admin/admin-dashboard/index.html";
+
+    case "provider":
+      return "/Manager/ExeManager/index.html";
+      // hoặc:
+      // return "/Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html";
+
+    case "customer":
+    default:
+      return "/index.html";
   }
+}
+
 
   // LOCAL (giữ nguyên code của bạn)
   const path = location.pathname;
