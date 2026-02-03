@@ -10,7 +10,13 @@ const isLocal =
     location.hostname === "localhost" ||
     location.hostname === "127.0.0.1";
 
+// Production: API_BASE rỗng để gọi /api/... (nginx proxy đến backend port 5000)
+// Local: sử dụng localhost:5135
 const API_BASE = isLocal ? "http://localhost:5135" : "";
+
+console.log("[BOOKING] Environment:", isLocal ? "LOCAL" : "PRODUCTION");
+console.log("[BOOKING] API_BASE:", API_BASE);
+console.log("[BOOKING] Hostname:", location.hostname);
 
 // Current product state
 let currentProduct = null;

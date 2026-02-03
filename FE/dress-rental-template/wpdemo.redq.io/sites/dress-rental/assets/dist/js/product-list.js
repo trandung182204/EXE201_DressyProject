@@ -7,9 +7,16 @@ const isLocal =
   location.hostname === "localhost" ||
   location.hostname === "127.0.0.1";
 
+// Production: API_BASE rỗng để gọi /api/... (nginx proxy đến backend port 5000)
+// Local: sử dụng localhost:5135
 const API_BASE = isLocal
   ? "http://localhost:5135"
   : "";
+
+console.log("[PRODUCT-LIST] Environment:", isLocal ? "LOCAL" : "PRODUCTION");
+console.log("[PRODUCT-LIST] API_BASE:", API_BASE);
+console.log("[PRODUCT-LIST] Hostname:", location.hostname);
+
 const ENDPOINT = `${API_BASE}/api/ProductsCustomer/listing`;
 const CATEGORIES_ENDPOINT = `${API_BASE}/api/Categories`;
 

@@ -1,19 +1,19 @@
 /**
- * Kiểm tra xem có đang ở môi trường production không
+ * Kiểm tra xem có đang ở môi trường local không
  */
-function isProductionEnv() {
-  return location.hostname === "xungxinh.io.vn" ||
-    location.hostname === "www.xungxinh.io.vn";
+function isLocalEnv() {
+  return location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1";
 }
 
 /**
  * Lấy đường dẫn redirect sau khi logout
+ * Vì tất cả file HTML đều ở cùng thư mục (html/), chỉ cần dùng relative path
  */
 function getLogoutRedirect() {
-  if (isProductionEnv()) {
-    return "/index.html";
-  }
-  // Local: sử dụng đường dẫn tương đối đến cùng thư mục
+  // Relative path hoạt động cho cả production và local
+  // vì logout được gọi từ các trang trong cùng thư mục html/
+  console.log("[AUTH-HEADER] Logout redirect to: index.html");
   return "index.html";
 }
 

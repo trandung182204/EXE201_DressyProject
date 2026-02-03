@@ -3,9 +3,15 @@ const isLocal =
   location.hostname === "localhost" ||
   location.hostname === "127.0.0.1";
 
+// Production: API_BASE rỗng để gọi /api/... (nginx proxy đến backend)
+// Local: sử dụng localhost:5135
 const API_BASE = isLocal
   ? "http://localhost:5135"
   : "";
+
+console.log("[AUTH] Environment:", isLocal ? "LOCAL" : "PRODUCTION");
+console.log("[AUTH] API_BASE:", API_BASE);
+console.log("[AUTH] Hostname:", location.hostname);
 
 /**
  * Kiểm tra xem có đang ở môi trường production không
@@ -16,55 +22,32 @@ function isProduction() {
 }
 
 /**
- * Tự động detect base path từ URL hiện tại
- * Tìm vị trí của "dress-rental-template" trong path và tính đường dẫn về FE/
- */
-function getBasePath() {
-  // Nếu đang ở production, trả về root
-  if (isProduction()) {
-    return "/";
-  }
-
-  const path = location.pathname;
-
-  // Tìm vị trí của dress-rental-template trong path
-  const marker = "dress-rental-template";
-  const idx = path.indexOf(marker);
-
-  if (idx > 0) {
-    // Trả về phần path trước "dress-rental-template"
-    // Ví dụ: /some/path/dress-rental-template/... → /some/path/
-    return path.substring(0, idx);
-  }
-
-  // Fallback: giả sử đang ở root
-  return "/";
-}
-
-/**
  * Xây dựng đường dẫn redirect dựa trên role
- * Tự động detect base path để hoạt động với mọi cấu hình server
+ * Production: tất cả đều về index.html (cùng thư mục)
+ * Local: sử dụng đường dẫn đầy đủ
  */
 function mapRoleToRedirect(role) {
   const roleLower = (role || "customer").toLowerCase().trim();
 
-  // Nếu đang ở production (xungxinh.io.vn)
-  if (isProduction()) {
-    switch (roleLower) {
-      case "admin":
-        // TODO: Cập nhật đường dẫn admin cho production nếu cần
-        return "/index.html";
-      case "provider":
-        // TODO: Cập nhật đường dẫn provider cho production nếu cần  
-        return "/index.html";
-      case "customer":
-      default:
-        return "/index.html";
-    }
+  console.log("[AUTH] mapRoleToRedirect - role:", roleLower);
+  console.log("[AUTH] mapRoleToRedirect - isProduction:", isProduction());
+  console.log("[AUTH] mapRoleToRedirect - isLocal:", isLocal);
+
+  // Production - tất cả các trang đều ở cùng thư mục html/
+  // Vì nginx config có root tại .../html, nên chỉ cần dùng tên file
+  if (!isLocal) {
+    console.log("[AUTH] Using production redirect: index.html");
+    // Dùng relative path vì tất cả file đều ở cùng thư mục
+    return "index.html";
   }
 
-  // Local development
-  const basePath = getBasePath();
+  // Local development - cần đường dẫn đầy đủ
+  const path = location.pathname;
+  const marker = "dress-rental-template";
+  const idx = path.indexOf(marker);
+  const basePath = idx > 0 ? path.substring(0, idx) : "/";
+
+  console.log("[AUTH] Using local redirect with basePath:", basePath);
 
   switch (roleLower) {
     case "admin":
