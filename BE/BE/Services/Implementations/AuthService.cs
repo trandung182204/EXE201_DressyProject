@@ -105,7 +105,7 @@ public class AuthService : IAuthService
                 ProviderId = providerId,
                 FullName = user.FullName,
                 Token = token,
-                RedirectUrl = MapRedirect(finalRole)
+                RedirectUrl = null
             };
         }
         catch (Exception ex)

@@ -27,30 +27,30 @@ console.log("API_BASE:", API_BASE);
 function mapRoleToRedirect(role) {
   const roleLower = (role || "customer").toLowerCase().trim();
 
-  console.log("mapRoleToRedirect called with role:", roleLower);
-  console.log("isLocal:", isLocal);
-
-  // PRODUCTION (xungxinh.io.vn) - all HTML files are in same folder
-  // Just use relative filename
+  // PRODUCTION
   if (!isLocal) {
-    console.log("PRODUCTION: redirecting to index.html");
-    return "index.html";
+    switch (roleLower) {
+      case "admin":
+        return "/Admin/admin-dashboard/index.html";
+      case "provider":
+        return "/Manager/index.html";
+      case "customer":
+      default:
+        return "/index.html";
+    }
   }
 
-  // LOCAL DEVELOPMENT - need full paths
+  // LOCAL (giữ nguyên code của bạn)
   const path = location.pathname;
   const marker = "dress-rental-template";
   const idx = path.indexOf(marker);
   const basePath = idx > 0 ? path.substring(0, idx) : "/";
-
-  console.log("LOCAL: basePath =", basePath);
 
   switch (roleLower) {
     case "admin":
       return `${basePath}Admin/admin-dashboard/index.html`;
     case "provider":
       return `${basePath}Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html`;
-    case "customer":
     default:
       return `${basePath}dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/index.html`;
   }
