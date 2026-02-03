@@ -77,5 +77,64 @@ namespace BE.Services.Implementations
 
             return list;
         }
+        public async Task<List<ProviderBookingListDto>> GetBookingListByProviderAsync(long providerId)
+        {
+            var list = new List<ProviderBookingListDto>();
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await using var cmd = new NpgsqlCommand(@"
+    SELECT
+        b.id AS booking_id,
+        u.full_name AS customer_name,
+        b.created_at AS created_at,
+        b.status AS booking_status,
+
+        COALESCE(pay.status, 'UNPAID') AS payment_status,
+
+        COUNT(bi.id) AS total_items,
+        COALESCE(SUM(bi.price), 0) AS provider_revenue,
+        COALESCE(SUM(bi.commission_amount), 0) AS provider_commission
+    FROM bookings b
+    JOIN users u ON u.id = b.customer_id
+    JOIN booking_items bi ON bi.booking_id = b.id
+
+    LEFT JOIN (
+        SELECT DISTINCT ON (booking_id)
+            booking_id,
+            status
+        FROM payments
+        ORDER BY booking_id, paid_at DESC NULLS LAST, id DESC
+    ) pay ON pay.booking_id = b.id
+
+    WHERE bi.provider_id = @providerId
+    GROUP BY
+        b.id, u.full_name, b.created_at, b.status, pay.status
+    ORDER BY b.created_at DESC
+", conn);
+
+
+            cmd.Parameters.AddWithValue("@providerId", providerId);
+
+            await conn.OpenAsync();
+            await using var rd = await cmd.ExecuteReaderAsync();
+
+            while (await rd.ReadAsync())
+            {
+                list.Add(new ProviderBookingListDto
+                {
+                    BookingId = rd.GetInt64(0),
+                    CustomerName = rd.GetString(1),
+                    CreatedAt = rd.GetDateTime(2),
+                    BookingStatus = rd.GetString(3),
+                    PaymentStatus = rd.GetString(4),
+                    TotalItems = rd.GetInt32(5),
+                    ProviderRevenue = rd.GetDecimal(6),
+                    ProviderCommission = rd.GetDecimal(7)
+                });
+            }
+
+            return list;
+        }
+
     }
 }

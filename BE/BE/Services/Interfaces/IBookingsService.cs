@@ -14,6 +14,7 @@ namespace BE.Services.Interfaces
         Task<bool> DeleteAsync(int id);
 
         Task<List<BookingListDto>> GetBookingListAsync();
+        Task<List<ProviderBookingListDto>> GetBookingListByProviderAsync(long providerId);
 
     }
 }
