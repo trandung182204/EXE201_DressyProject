@@ -916,6 +916,12 @@
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
 
+			/* ================= API BASE ================= */
+			const API_BASE =
+				location.hostname === "localhost" || location.hostname === "127.0.0.1"
+					? "http://localhost:5135/api"
+					: "/api";
+
 			let bookings = [];
 			const tbody = document.querySelector('.sherah-table__body');
 
@@ -925,26 +931,29 @@
 			const toDate = document.getElementById('filterTo');
 			const sortSelect = document.getElementById('sortBy');
 
-			fetch('http://localhost:5135/api/bookings/list')
+			/* ================= FETCH BOOKINGS ================= */
+			fetch(`${API_BASE}/bookings/list`)
 				.then(res => res.json())
 				.then(res => {
 					if (!res.success || !Array.isArray(res.data)) return;
 					bookings = res.data;
 					render();
-				});
+				})
+				.catch(err => console.error('Fetch bookings failed:', err));
 
 			function render() {
 				let data = [...bookings];
 
 				if (customerInput && customerInput.value) {
 					data = data.filter(b =>
-						b.customerName.toLowerCase().includes(customerInput.value.toLowerCase())
+						(b.customerName || '').toLowerCase()
+							.includes(customerInput.value.toLowerCase())
 					);
 				}
 
 				if (statusSelect && statusSelect.value) {
 					data = data.filter(b =>
-						b.bookingStatus.toLowerCase() === statusSelect.value
+						(b.bookingStatus || '').toLowerCase() === statusSelect.value
 					);
 				}
 
@@ -980,25 +989,25 @@
 				tbody.innerHTML = '';
 				data.forEach(b => {
 					tbody.innerHTML += `
-            <tr>
-                <td>#${b.bookingId}</td>
-                <td>${b.customerName}</td>
-                <td>${new Date(b.createdAt).toLocaleString()}</td>
-                <td>
-                    <div class="sherah-table__status status-${b.paymentStatus.toLowerCase()}">
-                        ${b.paymentStatus}
-                    </div>
-                </td>
-                <td>${b.totalPrice.toLocaleString()} đ</td>
-                <td>${b.paymentMethod}</td>
-                <td>
-                    <div class="sherah-table__status status-${b.bookingStatus.toLowerCase()}">
-                        ${b.bookingStatus}
-                    </div>
-                </td>
-                <td>View</td>
-            </tr>
-            `;
+					<tr>
+						<td>#${b.bookingId}</td>
+						<td>${b.customerName}</td>
+						<td>${new Date(b.createdAt).toLocaleString()}</td>
+						<td>
+							<div class="sherah-table__status status-${(b.paymentStatus || '').toLowerCase()}">
+								${b.paymentStatus}
+							</div>
+						</td>
+						<td>${(b.totalPrice || 0).toLocaleString()} đ</td>
+						<td>${b.paymentMethod}</td>
+						<td>
+							<div class="sherah-table__status status-${(b.bookingStatus || '').toLowerCase()}">
+								${b.bookingStatus}
+							</div>
+						</td>
+						<td>View</td>
+					</tr>
+				`;
 				});
 			}
 
@@ -1008,6 +1017,7 @@
 
 		});
 	</script>
+
 
 
 

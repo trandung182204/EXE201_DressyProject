@@ -757,9 +757,16 @@
 			});
 	</script>
 	<script>
-		const productApiBase = "http://localhost:5135/api/Products";
-		const providerApiBase = "http://localhost:5135/api/Providers";
-		const productImagesApiBase = "http://localhost:5135/api/ProductImages";
+		const API_BASE =
+			location.hostname === "localhost" || location.hostname === "127.0.0.1"
+				? "http://localhost:5135/api"
+				: "/api";
+	
+				
+		const productApiBase = `${API_BASE}/Products`;
+		const providerApiBase = `${API_BASE}/Providers`;
+		const productImagesApiBase = `${API_BASE}/ProductImages`;
+
 
 		let allProducts = [];
 		let allProviders = [];
