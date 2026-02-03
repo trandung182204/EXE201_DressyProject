@@ -3,7 +3,13 @@
  * Connects to ASP.NET Core backend with pagination, sorting, and filtering
  */
 
-const API_BASE = "http://localhost:5135";
+const isLocal =
+  location.hostname === "localhost" ||
+  location.hostname === "127.0.0.1";
+
+const API_BASE = isLocal
+  ? "http://localhost:5135/api"
+  : "/api";
 const ENDPOINT = `${API_BASE}/api/ProductsCustomer/listing`;
 const CATEGORIES_ENDPOINT = `${API_BASE}/api/Categories`;
 

@@ -1,5 +1,11 @@
 // SỬA base URL theo BE của bạn:
-const API_BASE = "http://localhost:5135/api";
+const isLocal =
+  location.hostname === "localhost" ||
+  location.hostname === "127.0.0.1";
+
+const API_BASE = isLocal
+  ? "http://localhost:5135/api"
+  : "/api";
 
 function setMsg(id, text, ok = false) {
   const el = document.getElementById(id);

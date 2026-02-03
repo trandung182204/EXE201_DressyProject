@@ -25,7 +25,7 @@ const Auth = (function () {
         }
 
         // Production - thay bằng domain thật của bạn
-        return 'https://api.your-production-domain.com/api';
+        return 'https://xungxinh.io.vn/api';
     }
 
     /**
