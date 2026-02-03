@@ -123,7 +123,7 @@
     ["token", "role", "fullName", "userId", "providerId", "avatarUrl"].forEach((k) =>
       localStorage.removeItem(k)
     );
-    window.location.href = "/index.html";
+    window.location.href = "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/index.html";
   });
 
   window.loadAuthToHeader = loadAuthToHeader;
