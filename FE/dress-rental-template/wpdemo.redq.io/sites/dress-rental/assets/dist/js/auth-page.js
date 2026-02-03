@@ -1,53 +1,49 @@
-// SỬA base URL theo BE của bạn:
-const isLocal =
-  location.hostname === "localhost" ||
-  location.hostname === "127.0.0.1";
-
-// Production: API_BASE rỗng để gọi /api/... (nginx proxy đến backend)
-// Local: sử dụng localhost:5135
-const API_BASE = isLocal
-  ? "http://localhost:5135"
-  : "";
-
-console.log("[AUTH] Environment:", isLocal ? "LOCAL" : "PRODUCTION");
-console.log("[AUTH] API_BASE:", API_BASE);
-console.log("[AUTH] Hostname:", location.hostname);
-
 /**
- * Kiểm tra xem có đang ở môi trường production không
+ * Auth Page - Login & Register Handling
+ * Handles authentication and redirects based on user role
+ * 
+ * PRODUCTION: xungxinh.io.vn - all pages in same folder, use relative paths
+ * LOCAL: localhost - need full paths for development folder structure
  */
-function isProduction() {
-  return location.hostname === "xungxinh.io.vn" ||
-    location.hostname === "www.xungxinh.io.vn";
-}
+
+// Detect environment by checking hostname
+const hostname = location.hostname;
+const isLocal = hostname === "localhost" || hostname === "127.0.0.1";
+
+// API_BASE: empty for production (nginx proxy), localhost:5135 for local
+const API_BASE = isLocal ? "http://localhost:5135" : "";
+
+// Debug logs - check browser console to verify which environment is detected
+console.log("=== AUTH-PAGE LOADED ===");
+console.log("Hostname:", hostname);
+console.log("isLocal:", isLocal);
+console.log("API_BASE:", API_BASE);
 
 /**
- * Xây dựng đường dẫn redirect dựa trên role
- * Production: tất cả đều về index.html (cùng thư mục)
- * Local: sử dụng đường dẫn đầy đủ
+ * Get redirect URL after login/register
+ * Production: just use "index.html" (all files in same /html folder)
+ * Local: use full path to navigate between folders
  */
 function mapRoleToRedirect(role) {
   const roleLower = (role || "customer").toLowerCase().trim();
 
-  console.log("[AUTH] mapRoleToRedirect - role:", roleLower);
-  console.log("[AUTH] mapRoleToRedirect - isProduction:", isProduction());
-  console.log("[AUTH] mapRoleToRedirect - isLocal:", isLocal);
+  console.log("mapRoleToRedirect called with role:", roleLower);
+  console.log("isLocal:", isLocal);
 
-  // Production - tất cả các trang đều ở cùng thư mục html/
-  // Vì nginx config có root tại .../html, nên chỉ cần dùng tên file
+  // PRODUCTION (xungxinh.io.vn) - all HTML files are in same folder
+  // Just use relative filename
   if (!isLocal) {
-    console.log("[AUTH] Using production redirect: index.html");
-    // Dùng relative path vì tất cả file đều ở cùng thư mục
+    console.log("PRODUCTION: redirecting to index.html");
     return "index.html";
   }
 
-  // Local development - cần đường dẫn đầy đủ
+  // LOCAL DEVELOPMENT - need full paths
   const path = location.pathname;
   const marker = "dress-rental-template";
   const idx = path.indexOf(marker);
   const basePath = idx > 0 ? path.substring(0, idx) : "/";
 
-  console.log("[AUTH] Using local redirect with basePath:", basePath);
+  console.log("LOCAL: basePath =", basePath);
 
   switch (roleLower) {
     case "admin":
@@ -68,6 +64,7 @@ function setMsg(id, text, ok = false) {
 }
 
 async function postJson(url, body) {
+  console.log("POST to:", url);
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -79,9 +76,12 @@ async function postJson(url, body) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM loaded, setting up forms...");
+
   // LOGIN
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
+    console.log("Login form found");
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       setMsg("loginMsg", "");
@@ -93,6 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
           password: fd.get("password"),
         });
 
+        console.log("Login response:", data);
+
         if (data?.token) localStorage.setItem("token", data.token);
         if (data?.role) localStorage.setItem("role", data.role);
         if (data?.fullName) localStorage.setItem("fullName", data.fullName);
@@ -101,10 +103,11 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (data?.userName) localStorage.setItem("fullName", data.userName);
         else if (data?.name) localStorage.setItem("fullName", data.name);
 
-        // Sử dụng role để xây dựng redirect URL (không phụ thuộc vào backend)
         const redirectUrl = mapRoleToRedirect(data.role);
+        console.log("Redirecting to:", redirectUrl);
         window.location.href = redirectUrl;
       } catch (err) {
+        console.error("Login error:", err);
         setMsg("loginMsg", err?.message || "Đăng nhập thất bại");
       }
     });
@@ -113,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // REGISTER
   const registerForm = document.getElementById("registerForm");
   if (registerForm) {
+    console.log("Register form found");
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       setMsg("registerMsg", "");
@@ -124,8 +128,10 @@ document.addEventListener("DOMContentLoaded", () => {
           phone: fd.get("phone"),
           email: fd.get("email"),
           password: fd.get("password"),
-          role: fd.get("role"), // customer/provider
+          role: fd.get("role"),
         });
+
+        console.log("Register response:", data);
 
         if (data?.token) localStorage.setItem("token", data.token);
         if (data?.role) localStorage.setItem("role", data.role);
@@ -135,10 +141,11 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (data?.userName) localStorage.setItem("fullName", data.userName);
         else if (data?.name) localStorage.setItem("fullName", data.name);
 
-        // Sử dụng role để xây dựng redirect URL (không phụ thuộc vào backend)
         const redirectUrl = mapRoleToRedirect(data.role);
+        console.log("Redirecting to:", redirectUrl);
         window.location.href = redirectUrl;
       } catch (err) {
+        console.error("Register error:", err);
         setMsg("registerMsg", err?.message || "Đăng ký thất bại");
       }
     });
