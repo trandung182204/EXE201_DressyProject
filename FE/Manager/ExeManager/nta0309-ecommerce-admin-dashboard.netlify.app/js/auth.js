@@ -11,37 +11,52 @@ const Auth = (function () {
     // (A) CONFIGURATION - SỬA TẠI ĐÂY
     // ============================================
 
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
     /**
      * Lấy API Base URL dựa trên môi trường
-     * - Development: localhost hoặc 127.0.0.1
-     * - Production: domain thật
      */
     function getApiBase() {
-        const hostname = window.location.hostname;
-
-        // Development
-        if (hostname === 'localhost' || hostname === '127.0.0.1') {
-            return 'http://localhost:5135/api';
-        }
-
-        // Production - thay bằng domain thật của bạn
-        return 'https://api.your-production-domain.com/api';
+        return isLocal ? 'http://localhost:5135' : '';
     }
 
     /**
-     * Mapping role → redirect path (CÙNG ORIGIN)
-     * Chỉ dùng relative path, KHÔNG dùng full URL
+     * Tự động detect base path từ URL hiện tại
+     * Thử nhiều markers để tìm đường dẫn gốc FE/
      */
-    const ROLE_REDIRECT_MAP = {
-        admin: '/EXE201_DressyProject/FE/Admin/admin-dashboard/index.html',
-        provider: '/EXE201_DressyProject/FE/Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html',
-        customer: '/EXE201_DressyProject/FE/bean-style.mysapo.net/index.html'
-    };
+    function getBasePath() {
+        const path = location.pathname;
+
+        // Thử các markers khác nhau theo thứ tự ưu tiên
+        const markers = ["Manager", "Admin", "dress-rental-template"];
+
+        for (const marker of markers) {
+            const idx = path.indexOf(marker);
+            if (idx > 0) {
+                return path.substring(0, idx);
+            }
+        }
+
+        // Fallback: trả về "/"
+        return "/";
+    }
+
+    function getLoginPath() {
+        const basePath = getBasePath();
+        return `${basePath}dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html`;
+    }
 
     /**
-     * Login page path (dùng cho redirect khi chưa auth)
+     * Lấy role redirect map
      */
-    const LOGIN_PATH = '/EXE201_DressyProject/FE/bean-style.mysapo.net/account/login.html';
+    function getRoleRedirectMap() {
+        const basePath = getBasePath();
+        return {
+            admin: `${basePath}Admin/admin-dashboard/index.html`,
+            provider: `${basePath}Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html`,
+            customer: `${basePath}dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/index.html`
+        };
+    }
 
     // ============================================
     // (B) STORAGE KEYS
@@ -160,7 +175,7 @@ const Auth = (function () {
         Object.values(STORAGE_KEYS).forEach(key => {
             localStorage.removeItem(key);
         });
-        window.location.href = LOGIN_PATH;
+        window.location.href = getLoginPath();
     }
 
     /**
@@ -182,7 +197,7 @@ const Auth = (function () {
      */
     function requireAuth() {
         if (!isLoggedIn()) {
-            window.location.href = LOGIN_PATH;
+            window.location.href = getLoginPath();
             return false;
         }
         return true;
@@ -204,7 +219,7 @@ const Auth = (function () {
 
         if (!normalizedRoles.includes(currentRole)) {
             // Redirect về trang phù hợp với role của user
-            const correctPath = ROLE_REDIRECT_MAP[currentRole] || LOGIN_PATH;
+            const correctPath = getRoleRedirectMap()[currentRole] || getLoginPath();
             window.location.href = redirectUrl || correctPath;
             return false;
         }
@@ -222,7 +237,8 @@ const Auth = (function () {
      */
     function getRedirectPath(role) {
         const normalizedRole = (role || 'customer').toLowerCase();
-        return ROLE_REDIRECT_MAP[normalizedRole] || ROLE_REDIRECT_MAP['customer'];
+        const map = getRoleRedirectMap();
+        return map[normalizedRole] || map['customer'];
     }
 
     /**
@@ -266,7 +282,7 @@ const Auth = (function () {
             if (response.status === 401) {
                 console.warn('[Auth] Token expired or invalid, redirecting to login...');
                 clearAuth();
-                window.location.href = LOGIN_PATH;
+                window.location.href = getLoginPath();
                 // Return một rejected promise để caller biết
                 return Promise.reject(new Error('Unauthorized - Session expired'));
             }
@@ -307,8 +323,8 @@ const Auth = (function () {
         // Config
         getApiBase,
         getRedirectPath,
-        LOGIN_PATH,
-        ROLE_REDIRECT_MAP,
+        getLoginPath,
+        getRoleRedirectMap,
 
         // Storage
         save,

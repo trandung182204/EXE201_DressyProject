@@ -6,21 +6,41 @@
  */
 
 const Auth = (function () {
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
     function getApiBase() {
-        const hostname = window.location.hostname;
-        if (hostname === 'localhost' || hostname === '127.0.0.1') {
-            return 'http://localhost:5135/api';
-        }
-        return 'https://api.your-production-domain.com/api';
+        return isLocal ? 'http://localhost:5135' : '';
     }
 
-    const ROLE_REDIRECT_MAP = {
-        admin: '/EXE201_DressyProject/FE/Admin/admin-dashboard/index.html',
-        provider: '/EXE201_DressyProject/FE/Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html',
-        customer: '/EXE201_DressyProject/FE/bean-style.mysapo.net/index.html'
-    };
+    /**
+     * Tự động detect base path từ URL hiện tại
+     */
+    function getBasePath() {
+        const path = location.pathname;
 
-    const LOGIN_PATH = '/EXE201_DressyProject/FE/bean-style.mysapo.net/account/login.html';
+        // Tìm vị trí của "Admin" trong path
+        const marker = "Admin";
+        const idx = path.indexOf(marker);
+
+        if (idx > 0) {
+            return path.substring(0, idx);
+        }
+        return "/";
+    }
+
+    function getLoginPath() {
+        const basePath = getBasePath();
+        return `${basePath}dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html`;
+    }
+
+    function getRoleRedirectMap() {
+        const basePath = getBasePath();
+        return {
+            admin: `${basePath}Admin/admin-dashboard/index.html`,
+            provider: `${basePath}Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html`,
+            customer: `${basePath}dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/index.html`
+        };
+    }
 
     const STORAGE_KEYS = {
         token: 'auth_token',
@@ -70,7 +90,7 @@ const Auth = (function () {
 
     function logout() {
         Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
-        window.location.href = LOGIN_PATH;
+        window.location.href = getLoginPath();
     }
 
     function clearAuth() {
@@ -79,7 +99,7 @@ const Auth = (function () {
 
     function requireAuth() {
         if (!isLoggedIn()) {
-            window.location.href = LOGIN_PATH;
+            window.location.href = getLoginPath();
             return false;
         }
         return true;
@@ -92,7 +112,7 @@ const Auth = (function () {
         const normalizedRoles = roles.map(r => r.toLowerCase());
 
         if (!normalizedRoles.includes(currentRole)) {
-            const correctPath = ROLE_REDIRECT_MAP[currentRole] || LOGIN_PATH;
+            const correctPath = getRoleRedirectMap()[currentRole] || getLoginPath();
             window.location.href = redirectUrl || correctPath;
             return false;
         }
@@ -101,7 +121,8 @@ const Auth = (function () {
 
     function getRedirectPath(role) {
         const normalizedRole = (role || 'customer').toLowerCase();
-        return ROLE_REDIRECT_MAP[normalizedRole] || ROLE_REDIRECT_MAP['customer'];
+        const map = getRoleRedirectMap();
+        return map[normalizedRole] || map['customer'];
     }
 
     function redirectToDashboard() {
@@ -123,7 +144,7 @@ const Auth = (function () {
             if (response.status === 401) {
                 console.warn('[Auth] Token expired, redirecting to login...');
                 clearAuth();
-                window.location.href = LOGIN_PATH;
+                window.location.href = getLoginPath();
                 return Promise.reject(new Error('Unauthorized'));
             }
             return response;
@@ -143,7 +164,7 @@ const Auth = (function () {
     }
 
     return {
-        getApiBase, getRedirectPath, LOGIN_PATH, ROLE_REDIRECT_MAP,
+        getApiBase, getRedirectPath, getLoginPath, getRoleRedirectMap,
         save, getToken, getUserId, getRole, getEmail, getProviderId, getUser, getAuthHeader,
         isLoggedIn, isAdmin, isProvider, isCustomer,
         requireAuth, requireRole,
