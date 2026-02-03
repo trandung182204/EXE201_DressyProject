@@ -28,17 +28,13 @@ function mapRoleToRedirect(role) {
   const roleLower = (role || "customer").toLowerCase().trim();
 
   // PRODUCTION
-  if (!isLocal) {
+  // PRODUCTION
+if (!isLocal) {
   switch (roleLower) {
     case "admin":
-      return "/Admin/admin-dashboard/index.html";
-
+      return "/Admin/";
     case "provider":
-      return "/Manager/ExeManager/index.html";
-      // hoặc:
-      // return "/Manager/ExeManager/nta0309-ecommerce-admin-dashboard.netlify.app/index.html";
-
-    case "customer":
+      return "/Manager/";
     default:
       return "/index.html";
   }
