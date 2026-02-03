@@ -5,6 +5,7 @@ namespace BE.Services.Interfaces;
 
 public interface IProductsCustomerService
 {
-     Task<List<ProductListItemDto>> GetAllAsync(string? status = null);
+     Task<PagedResult<ProductListCustomerItemDto>> GetListingAsync(ProductListQuery q);
+     Task<ProductDetailDto?> GetProductDetailAsync(long id);
 }
 

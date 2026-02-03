@@ -1602,3 +1602,9 @@ header .navbar-default .navbar-nav > .open > a {
 .dr-cart li .rq-shopping-cart-inner-div.rq-auth-menu ul.rq-auth-list li .wrapper{
   display: none !important;
 }
+.navbar-brand img {
+  max-height: 140px;     /* chỉnh số này theo ý bạn: 30–50px */
+  width: auto;
+  position: relative;
+  top: -48px;
+}
