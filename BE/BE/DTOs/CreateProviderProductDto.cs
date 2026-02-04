@@ -9,7 +9,9 @@ namespace BE.DTOs
         public string ProductType { get; set; } = "";
         public string? Description { get; set; }
 
-        public List<string> ImageUrls { get; set; } = new();
+        // CHANGED: nhận danh sách id file đã upload (media_files.id)
+        public List<long> ImageFileIds { get; set; } = new();
+
         public List<CreateProviderProductVariantDto> Variants { get; set; } = new();
     }
 
@@ -23,7 +25,6 @@ namespace BE.DTOs
         public decimal PricePerDay { get; set; }
         public decimal DepositAmount { get; set; }
 
-        // nếu entity ProductVariants của bạn có Status (bool) như code cũ
         public bool Status { get; set; } = true;
     }
 }

@@ -28,6 +28,9 @@ public partial class ProviderFeedbacks
     public virtual Bookings? Booking { get; set; }
 
     public virtual Users? Customer { get; set; }
+    public long? AttachmentFileId { get; set; }
+
+    public virtual MediaFiles? AttachmentFile { get; set; }
 
     public virtual ICollection<FeedbackResponses> FeedbackResponses { get; set; } = new List<FeedbackResponses>();
 

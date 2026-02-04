@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using BE.Models;
 using BE.Data;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace BE.Controllers
 {
@@ -16,9 +15,17 @@ namespace BE.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var data = _context.ProductImages.ToList();
+            var data = await _context.ProductImages
+                .Select(x => new
+                {
+                    x.Id,
+                    x.ProductId,
+                    x.ImageFileId
+                })
+                .ToListAsync();
+
             return Ok(new { success = true, data });
         }
     }

@@ -71,12 +71,17 @@ namespace BE.Services.Implementations
                     Id = p.Id,
                     Name = p.Name,
                     CategoryId = p.CategoryId,
-                    CategoryName = p.Category != null
-                        ? p.Category.Name
-                        : null,
+                    CategoryName = p.Category != null ? p.Category.Name : null,
 
+                    // CHANGED
+                    ThumbnailFileId = p.ProductImages
+                        .Select(i => i.ImageFileId)
+                        .FirstOrDefault(),
+
+                    // OPTIONAL: url runtime
                     ThumbnailUrl = p.ProductImages
-                        .Select(i => i.ImageUrl)
+                        .Select(i => i.ImageFileId)
+                        .Select(fid => fid != null ? ("/api/media-files/" + fid) : null)
                         .FirstOrDefault(),
 
                     MinPricePerDay = p.ProductVariants
@@ -88,18 +93,16 @@ namespace BE.Services.Implementations
                 })
                 .ToListAsync();
         }
+
         public async Task<Products> AddForProviderAsync(long providerId, CreateProviderProductDto dto)
         {
-            // Validate nhẹ
             if (dto.CategoryId <= 0) throw new Exception("CategoryId is required");
             if (string.IsNullOrWhiteSpace(dto.Name)) throw new Exception("Name is required");
             if (dto.Variants == null || dto.Variants.Count == 0) throw new Exception("At least 1 variant is required");
 
-            // Optional: check category tồn tại
             bool categoryExists = await _context.Categories.AnyAsync(c => c.Id == dto.CategoryId);
             if (!categoryExists) throw new Exception("Category not found");
 
-            // Tạo product (KHÔNG branch)
             var product = new Products
             {
                 ProviderId = providerId,
@@ -112,23 +115,32 @@ namespace BE.Services.Implementations
             };
 
             _context.Products.Add(product);
-            await _context.SaveChangesAsync(); // lấy product.Id
+            await _context.SaveChangesAsync();
 
-            // Images
-            if (dto.ImageUrls != null && dto.ImageUrls.Count > 0)
+            // CHANGED: Images by fileId
+            if (dto.ImageFileIds != null && dto.ImageFileIds.Count > 0)
             {
-                var images = dto.ImageUrls
-                    .Where(x => !string.IsNullOrWhiteSpace(x))
-                    .Select(url => new ProductImages
-                    {
-                        ProductId = product.Id,
-                        ImageUrl = url.Trim()
-                    });
+                // optional validate file ids exist
+                var distinctIds = dto.ImageFileIds.Distinct().ToList();
+                var existingIds = await _context.MediaFiles
+                    .Where(f => distinctIds.Contains(f.Id))
+                    .Select(f => f.Id)
+                    .ToListAsync();
+
+                var missing = distinctIds.Except(existingIds).ToList();
+                if (missing.Count > 0)
+                    throw new Exception("Some image fileIds not found: " + string.Join(",", missing));
+
+                var images = distinctIds.Select(fid => new ProductImages
+                {
+                    ProductId = product.Id,
+                    ImageFileId = fid
+                });
 
                 _context.ProductImages.AddRange(images);
             }
 
-            // Variants
+            // Variants giữ nguyên
             if (dto.Variants != null && dto.Variants.Count > 0)
             {
                 var variants = dto.Variants.Select(v => new ProductVariants
@@ -150,6 +162,7 @@ namespace BE.Services.Implementations
             return product;
         }
 
+
         public async Task<ProductDetailDto?> GetProductDetailByProviderAsync(long providerId, long productId)
         {
             return await _context.Products
@@ -167,9 +180,16 @@ namespace BE.Services.Implementations
                     Status = p.Status,
                     CreatedAt = p.CreatedAt,
 
+                    // CHANGED
+                    ImageFileIds = p.ProductImages
+                        .OrderBy(i => i.Id)
+                        .Select(i => i.ImageFileId)
+                        .ToList(),
+
+                    // OPTIONAL: build url runtime
                     ImageUrls = p.ProductImages
                         .OrderBy(i => i.Id)
-                        .Select(i => i.ImageUrl)
+                        .Select(i => i.ImageFileId != null ? ("/api/media-files/" + i.ImageFileId) : null)
                         .ToList(),
 
                     Variants = p.ProductVariants
@@ -189,6 +209,7 @@ namespace BE.Services.Implementations
                 })
                 .FirstOrDefaultAsync();
         }
+
         public async Task<bool> DeleteByProviderAsync(long providerId, long productId)
         {
             // Lấy product + check thuộc provider
@@ -247,21 +268,34 @@ namespace BE.Services.Implementations
             }
 
             // ===== Replace Images =====
-            // Xóa hết ảnh cũ, add ảnh mới
+            // ===== Replace Images =====
             if (product.ProductImages != null && product.ProductImages.Count > 0)
                 _context.ProductImages.RemoveRange(product.ProductImages);
 
-            var newImages = (dto.ImageUrls ?? new List<string?>())
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(x => new ProductImages
-                {
-                    ProductId = product.Id,
-                    ImageUrl = x!.Trim()
-                })
+            var incomingFileIds = (dto.ImageFileIds ?? new List<long>())
+                .Distinct()
                 .ToList();
 
-            if (newImages.Count > 0)
+            if (incomingFileIds.Count > 0)
+            {
+                var existingIds = await _context.MediaFiles
+                    .Where(f => incomingFileIds.Contains(f.Id))
+                    .Select(f => f.Id)
+                    .ToListAsync();
+
+                var missing = incomingFileIds.Except(existingIds).ToList();
+                if (missing.Count > 0)
+                    throw new Exception("Some image fileIds not found: " + string.Join(",", missing));
+
+                var newImages = incomingFileIds.Select(fid => new ProductImages
+                {
+                    ProductId = product.Id,
+                    ImageFileId = fid
+                }).ToList();
+
                 await _context.ProductImages.AddRangeAsync(newImages);
+            }
+
 
             // ===== Upsert Variants =====
             var existingVariants = product.ProductVariants?.ToDictionary(v => v.Id, v => v)

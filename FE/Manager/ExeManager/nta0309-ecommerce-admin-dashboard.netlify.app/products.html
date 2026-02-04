@@ -201,22 +201,21 @@
     <script src="js/auth-header.js"></script>
 
     <script>
-		async function loadLayout() {
-			const headerRes = await fetch("header.html");
-			document.getElementById("header-container").innerHTML = await headerRes.text();
+        async function loadLayout() {
+            const headerRes = await fetch("header.html");
+            document.getElementById("header-container").innerHTML = await headerRes.text();
 
-			const dashRes = await fetch("dashboard.html");
-			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+            const dashRes = await fetch("dashboard.html");
+            document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
-			initSherahLayout();
+            initSherahLayout();
 
-			// ✅ quan trọng: gọi sau khi header đã có trong DOM
-			if (window.loadAuthToHeader) window.loadAuthToHeader();
-		}
-	</script>
+            // ✅ quan trọng: gọi sau khi header đã có trong DOM
+            if (window.loadAuthToHeader) window.loadAuthToHeader();
+        }
+    </script>
 
     <script>
-
         const isLocal =
             location.hostname === "localhost" ||
             location.hostname === "127.0.0.1";
@@ -225,6 +224,7 @@
             "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
             location.href
         ).href;
+
         let allProducts = [];
 
         function getToken() {
@@ -254,13 +254,13 @@
             if (payload && payload.success && Array.isArray(payload.data)) return payload.data;
             return [];
         }
+
         function normalizeCategories(payload) {
             if (Array.isArray(payload)) return payload;
             if (payload && Array.isArray(payload.data)) return payload.data;
             if (payload && payload.success && Array.isArray(payload.data)) return payload.data;
             return [];
         }
-
 
         function safeText(v) {
             return v === null || v === undefined ? "" : String(v);
@@ -272,6 +272,7 @@
             if (Number.isNaN(n)) return safeText(v);
             return n.toLocaleString("vi-VN") + " ₫";
         }
+
         let paging = {
             page: 1,
             pageSize: 9,
@@ -283,10 +284,49 @@
 
         let filters = {
             q: "",
-            categoryId: null,     // null = all
+            categoryId: null,
             minPrice: 0,
             maxPrice: Number.MAX_SAFE_INTEGER
         };
+
+        // ===== THUMBNAIL HELPERS =====
+        function pickFirstImageFileId(p) {
+            if (p?.thumbnailFileId) return Number(p.thumbnailFileId);
+
+            if (Array.isArray(p?.imageFileIds) && p.imageFileIds.length) return Number(p.imageFileIds[0]);
+
+            if (Array.isArray(p?.images) && p.images.length) return Number(p.images[0]?.fileId ?? p.images[0]?.id);
+            if (Array.isArray(p?.productImages) && p.productImages.length) return Number(p.productImages[0]?.fileId ?? p.productImages[0]?.id);
+
+            return null;
+        }
+
+        function buildMediaCandidates(fileId) {
+            if (!fileId) return [];
+            return [
+                `${API_BASE}/api/media-files/${fileId}/content`,
+                `${API_BASE}/api/media-files/${fileId}/download`,
+                `${API_BASE}/api/media-files/${fileId}`
+            ];
+        }
+
+        function swapImgFallback(imgEl) {
+            try {
+                const list = JSON.parse(imgEl.getAttribute("data-srcset") || "[]");
+                const idx = Number(imgEl.getAttribute("data-srcidx") || "0");
+
+                if (idx < list.length) {
+                    imgEl.setAttribute("data-srcidx", String(idx + 1));
+                    imgEl.src = list[idx];
+                    return;
+                }
+            } catch (_) { }
+
+            imgEl.onerror = null;
+            imgEl.src = "img/product-img1.png";
+        }
+
+        // ===== LOAD PRODUCTS =====
         async function loadProviderProducts() {
             const token = getToken();
             if (!isValidJwt(token)) {
@@ -303,8 +343,6 @@
             resultCount.textContent = "Loading...";
 
             try {
-                console.log("JWT parts:", token.split(".").length);
-
                 const res = await fetch(`${API_BASE}/api/provider/products`, {
                     method: "GET",
                     headers: {
@@ -328,20 +366,21 @@
 
                 const payload = await res.json();
                 allProducts = normalizeProducts(payload);
+
                 const categories = await loadProviderCategories();
                 renderCategorySidebarFromCategories(categories);
-                initPriceSlider(allProducts);
 
+                initPriceSlider(allProducts);
                 applyFilters();
 
             } catch (err) {
                 console.error(err);
-                container.innerHTML = `<div class="col-12"><p style="color:red;">Lỗi: ${safeText(
-                    err.message
-                )}</p></div>`;
+                container.innerHTML = `<div class="col-12"><p style="color:red;">Lỗi: ${safeText(err.message)}</p></div>`;
                 resultCount.textContent = "0 results";
             }
         }
+
+        // ===== CATEGORY CREATE UI (giữ nguyên) =====
         async function createProviderCategory(name, description) {
             const token = getToken();
             if (!isValidJwt(token)) {
@@ -357,11 +396,7 @@
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
-                body: JSON.stringify({
-                    name,
-                    description: description || null,
-
-                }),
+                body: JSON.stringify({ name, description: description || null }),
             });
 
             if (res.status === 401) {
@@ -374,6 +409,7 @@
             if (!res.ok) throw new Error(payload?.message || "Create category failed");
             return payload?.data || null;
         }
+
         function setupAddCategoryUI() {
             const btnToggle = document.getElementById("btnToggleAddCat");
             const form = document.getElementById("addCatForm");
@@ -420,13 +456,11 @@
                 try {
                     await createProviderCategory(name, description);
 
-                    // reload categories sidebar
                     const categories = await loadProviderCategories();
                     renderCategorySidebarFromCategories(categories);
 
                     setMsg("Tạo category thành công ✅", true);
 
-                    // reset + hide
                     if (nameInput) nameInput.value = "";
                     if (descInput) descInput.value = "";
                     form.style.display = "none";
@@ -438,7 +472,7 @@
             });
         }
 
-
+        // ===== RENDER PRODUCTS (ĐÃ SỬA ĐÚNG) =====
         function renderProducts(products) {
             const container = document.getElementById("product-list");
             const resultCount = document.getElementById("resultCount");
@@ -449,65 +483,86 @@
                 resultCount.textContent = "Showing 0 results";
                 return;
             }
+
             products.forEach((p) => {
                 const id = p.id ?? p.productId ?? "";
                 const name = p.name ?? "Unnamed";
                 const category = p.categoryName ?? "";
-                const thumb = p.thumbnailUrl || p.thumbnail || "img/product-img1.png";
+
+                // ✅ ưu tiên url ảnh đầu tiên nếu có (tùy BE trả field nào)
+                const directUrlRaw =
+                    p.thumbnailUrl ||
+                    p.thumbnail ||
+                    (Array.isArray(p.imageUrls) && p.imageUrls.length ? p.imageUrls[0] : "") ||
+                    "";
+
+                const directUrl = normalizeMediaUrl(directUrlRaw);
+
+                const firstId = pickFirstImageFileId(p);
+                const candidates = (!directUrl && firstId) ? buildMediaCandidates(firstId) : [];
+
+                // ✅ nếu directUrl rỗng thì dùng candidates (đã là API_BASE)
+                const thumb = directUrl || (candidates[0] || "img/product-img1.png");
+
                 const price = p.minPricePerDay ?? p.pricePerDay ?? p.price ?? null;
-                const status = p.status ?? "";
 
                 container.innerHTML += `
-            <div class="col-xxl-4 col-lg-6 col-md-6 col-12">
-            <div class="sherah-product-card sherah-product-card__v2 sherah-default-bg sherah-border mg-top-30">
-                <div class="sherah-product-card__img">
-                <img src="${thumb}" alt="${safeText(name)}" onerror="this.src='img/product-img1.png'">
-                </div>
+                <div class="col-xxl-4 col-lg-6 col-md-6 col-12">
+                    <div class="sherah-product-card sherah-product-card__v2 sherah-default-bg sherah-border mg-top-30">
+                        <div class="sherah-product-card__img">
+                            <img
+                                src="${thumb}"
+                                alt="${safeText(name)}"
+                                data-srcset='${JSON.stringify(candidates)}'
+                                data-srcidx="1"
+                                onerror="swapImgFallback(this)"
+                            >
+                        </div>
 
-                <div class="sherah-product-card__content sherah-dflex-column sherah-flex-gap-5">
-                <h5 class="sherah-product-card__title">
-                    <a href="product-detail.html?id=${id}" class="sherah-pcolor">${safeText(name)}</a>
-                </h5>
+                        <div class="sherah-product-card__content sherah-dflex-column sherah-flex-gap-5">
+                            <h5 class="sherah-product-card__title">
+                                <a href="product-detail.html?id=${id}" class="sherah-pcolor">${safeText(name)}</a>
+                            </h5>
 
-                <div class="sherah-product__bottom">
-                    <div class="sherah-product__bottom--single">
-                    <h5 class="sherah-product-card__price">
-                        ${price !== null ? formatMoney(price) + " / ngày" : ""}
-                    </h5>
-                    <div class="sherah-product-card__meta">
-                        ${category ? `<span>Loại: <b>${safeText(category)}</b></span><br>` : ""}                
+                            <div class="sherah-product__bottom">
+                                <div class="sherah-product__bottom--single">
+                                    <h5 class="sherah-product-card__price">
+                                        ${price !== null ? formatMoney(price) + " / ngày" : ""}
+                                    </h5>
+                                    <div class="sherah-product-card__meta">
+                                        ${category ? `<span>Loại: <b>${safeText(category)}</b></span><br>` : ""}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sherah-table__status__group">
+                            <a href="edit-product.html?id=${id}" class="sherah-table__action sherah-color2 sherah-color3__bg--opactity" title="Edit">
+                                <svg class="sherah-color3__fill" xmlns="http://www.w3.org/2000/svg" width="18.29" height="18.252" viewBox="0 0 18.29 18.252">
+                                    <g transform="translate(-234.958 -37.876)">
+                                        <path d="M242.545,95.779h-5.319a2.219,2.219,0,0,1-2.262-2.252c-.009-1.809,0-3.617,0-5.426q0-2.552,0-5.1a2.3,2.3,0,0,1,2.419-2.419q2.909,0,5.818,0c.531,0,.87.274.9.715a.741.741,0,0,1-.693.8c-.3.026-.594.014-.892.014q-2.534,0-5.069,0c-.7,0-.964.266-.964.976q0,5.122,0,10.245c0,.687.266.955.946.955q5.158,0,10.316,0c.665,0,.926-.265.926-.934q0-2.909,0-5.818a.765.765,0,0,1,.791-.853.744.744,0,0,1,.724.808c.007,1.023,0,2.047,0,3.07s.012,2.023-.006,3.034A2.235,2.235,0,0,1,248.5,95.73a1.83,1.83,0,0,1-.458.048Q245.293,95.782,242.545,95.779Z" transform="translate(0 -39.652)" fill="#09ad95"/>
+                                        <path d="M332.715,72.644l2.678,2.677c-.05.054-.119.133-.194.207q-2.814,2.815-5.634,5.625a1.113,1.113,0,0,1-.512.284c-.788.177-1.582.331-2.376.48-.5.093-.664-.092-.564-.589.157-.781.306-1.563.473-2.341a.911.911,0,0,1,.209-.437q2.918-2.938,5.853-5.86A.334.334,0,0,1,332.715,72.644Z" transform="translate(-84.622 -32.286)" fill="#09ad95"/>
+                                        <path d="M433.709,42.165l-2.716-2.715a15.815,15.815,0,0,1,1.356-1.248,1.886,1.886,0,0,1,2.579,2.662A17.589,17.589,0,0,1,433.709,42.165Z" transform="translate(-182.038)" fill="#09ad95"/>
+                                    </g>
+                                </svg>
+                            </a>
+
+                            <a href="product-detail.html?id=${id}" class="sherah-btn default">Detail</a>
+
+                            <a href="#" data-delete-id="${id}" class="sherah-table__action sherah-color2 sherah-color2__bg--offset">
+                                <svg class="sherah-color2__fill" xmlns="http://www.w3.org/2000/svg" width="16.247" height="18.252" viewBox="0 0 16.247 18.252">
+                                    <g transform="translate(-160.007 -18.718)">
+                                        <path d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z" transform="translate(-9.898 -58.597)"/>
+                                        <path d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z" transform="translate(0 0)"/>
+                                        <path d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z" transform="translate(-58.483 -78.508)"/>
+                                        <path d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z" transform="translate(-97.561 -78.509)"/>
+                                    </g>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
-                    </div>
-
-                
-                    
                 </div>
-                </div>
-                <div class="sherah-table__status__group">
-                    <a href="edit-product.html?id=${id}" class="sherah-table__action sherah-color2 sherah-color3__bg--opactity" title="Edit">			
-                    <svg class="sherah-color3__fill" xmlns="http://www.w3.org/2000/svg" width="18.29" height="18.252" viewBox="0 0 18.29 18.252">
-                        <g id="Group_132" data-name="Group 132" transform="translate(-234.958 -37.876)">
-                            <path id="Path_481" data-name="Path 481" d="M242.545,95.779h-5.319a2.219,2.219,0,0,1-2.262-2.252c-.009-1.809,0-3.617,0-5.426q0-2.552,0-5.1a2.3,2.3,0,0,1,2.419-2.419q2.909,0,5.818,0c.531,0,.87.274.9.715a.741.741,0,0,1-.693.8c-.3.026-.594.014-.892.014q-2.534,0-5.069,0c-.7,0-.964.266-.964.976q0,5.122,0,10.245c0,.687.266.955.946.955q5.158,0,10.316,0c.665,0,.926-.265.926-.934q0-2.909,0-5.818a.765.765,0,0,1,.791-.853.744.744,0,0,1,.724.808c.007,1.023,0,2.047,0,3.07s.012,2.023-.006,3.034A2.235,2.235,0,0,1,248.5,95.73a1.83,1.83,0,0,1-.458.048Q245.293,95.782,242.545,95.779Z" transform="translate(0 -39.652)" fill="#09ad95"/>
-                            <path id="Path_482" data-name="Path 482" d="M332.715,72.644l2.678,2.677c-.05.054-.119.133-.194.207q-2.814,2.815-5.634,5.625a1.113,1.113,0,0,1-.512.284c-.788.177-1.582.331-2.376.48-.5.093-.664-.092-.564-.589.157-.781.306-1.563.473-2.341a.911.911,0,0,1,.209-.437q2.918-2.938,5.853-5.86A.334.334,0,0,1,332.715,72.644Z" transform="translate(-84.622 -32.286)" fill="#09ad95"/>
-                            <path id="Path_483" data-name="Path 483" d="M433.709,42.165l-2.716-2.715a15.815,15.815,0,0,1,1.356-1.248,1.886,1.886,0,0,1,2.579,2.662A17.589,17.589,0,0,1,433.709,42.165Z" transform="translate(-182.038)" fill="#09ad95"/>												
-                        </g>																				
-                    </svg>
-                    </a>
-                    <a href="product-detail.html?id=${id}" class="sherah-btn default">Detail</a>
-                    <a href="#" data-delete-id="${id}" class="sherah-table__action sherah-color2 sherah-color2__bg--offset">
-                        <svg class="sherah-color2__fill"  xmlns="http://www.w3.org/2000/svg" width="16.247" height="18.252" viewBox="0 0 16.247 18.252">
-                            <g id="Icon" transform="translate(-160.007 -18.718)">
-                                <path id="Path_484" data-name="Path 484" d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z" transform="translate(-9.898 -58.597)" />
-                                <path id="Path_485" data-name="Path 485" d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z" transform="translate(0 0)" />
-                                <path id="Path_486" data-name="Path 486" d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z" transform="translate(-58.483 -78.508)" />
-                                <path id="Path_487" data-name="Path 487" d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z" transform="translate(-97.561 -78.509)" />
-                            </g>
-                        </svg>
-                    </a>								
-                </div>
-            </div>
-            </div>
-        `;
+            `;
             });
         }
 
@@ -521,20 +576,19 @@
             });
         }
 
-
         document.addEventListener("DOMContentLoaded", () => {
             loadLayout();
             setupSearch();
             bindDeleteClicks();
-            setupAddCategoryUI(); 
+            setupAddCategoryUI();
             loadProviderProducts();
         });
-
 
         function formatMoneyVND(v) {
             const n = Number(v || 0);
             return n.toLocaleString("vi-VN") + " ₫";
         }
+
         function parseMoneyToNumber(text) {
             if (!text) return null;
             const cleaned = String(text).replace(/[^\d\-]/g, "");
@@ -554,54 +608,6 @@
             return { min: Math.min(a, b), max: Math.max(a, b) };
         }
 
-
-        function buildCategoriesFromProducts(products) {
-            const map = new Map();
-            for (const p of products) {
-                const cid = p.categoryId ?? null;
-                const cname = p.categoryName ?? "Unknown";
-                if (cid == null) continue;
-                if (!map.has(cid)) map.set(cid, { id: cid, name: cname, count: 0 });
-                map.get(cid).count++;
-            }
-            return Array.from(map.values()).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-        }
-
-        function renderCategorySidebar(products) {
-            const ul = document.getElementById("categoryList");
-            if (!ul) return;
-
-            const cats = buildCategoriesFromProducts(products);
-
-            // All
-            let html = `
-    <li>
-      <a href="#" data-cid="">
-        <span><i class="fa-solid fa-chevron-right"></i>All</span>
-      </a>
-    </li>
-  `;
-
-            cats.forEach(c => {
-                html += `
-      <li>
-        <a href="#" data-cid="${c.id}">
-          <span><i class="fa-solid fa-chevron-right"></i>${c.name}</span>
-        </a>
-      </li>
-    `;
-            });
-
-            ul.innerHTML = html;
-            ul.querySelectorAll("a[data-cid]").forEach(a => {
-                a.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    const cidRaw = a.getAttribute("data-cid");
-                    filters.categoryId = cidRaw ? Number(cidRaw) : null;
-                    applyFilters();
-                });
-            });
-        }
         function renderCategorySidebarFromCategories(categories) {
             const ul = document.getElementById("categoryList");
             if (!ul) return;
@@ -612,21 +618,21 @@
                 .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 
             let html = `
-    <li>
-      <a href="#" data-cid="">
-        <span><i class="fa-solid fa-chevron-right"></i>All</span>
-      </a>
-    </li>
-  `;
+            <li>
+                <a href="#" data-cid="">
+                    <span><i class="fa-solid fa-chevron-right"></i>All</span>
+                </a>
+            </li>
+        `;
 
             cats.forEach(c => {
                 html += `
-      <li>
-        <a href="#" data-cid="${c.id}">
-          <span><i class="fa-solid fa-chevron-right"></i>${c.name}</span>
-        </a>
-      </li>
-    `;
+                <li>
+                    <a href="#" data-cid="${c.id}">
+                        <span><i class="fa-solid fa-chevron-right"></i>${c.name}</span>
+                    </a>
+                </li>
+            `;
             });
 
             ul.innerHTML = html;
@@ -636,13 +642,10 @@
                     e.preventDefault();
                     const cidRaw = a.getAttribute("data-cid");
                     filters.categoryId = cidRaw ? Number(cidRaw) : null;
-
-
                     applyFilters();
                 });
             });
         }
-
 
         function initPriceSlider(products) {
             const $ = window.__JQ_UI__;
@@ -665,6 +668,7 @@
 
             filters.minPrice = min;
             filters.maxPrice = max;
+
             if ($("#slider-range").hasClass("ui-slider")) {
                 $("#slider-range").slider("destroy");
                 $("#slider-range").empty();
@@ -702,8 +706,6 @@
 
                 $("#slider-range").slider("values", [v0, v1]);
             });
-
-            console.log("✅ Slider OK", { min, max });
         }
 
         function applyFilters() {
@@ -721,6 +723,7 @@
                 if (filters.categoryId != null) {
                     if (Number(p.categoryId) !== Number(filters.categoryId)) return false;
                 }
+
                 const price = Number(p.minPricePerDay ?? p.pricePerDay ?? 0);
                 if (Number.isNaN(price)) return false;
 
@@ -731,15 +734,13 @@
 
             paging.page = 1;
             renderPage(filtered);
-
         }
-        function renderPage(products) {
 
+        function renderPage(products) {
             filteredProductsCache = products || [];
             paging.total = filteredProductsCache.length;
             paging.totalPages = Math.max(1, Math.ceil(paging.total / paging.pageSize));
 
-            // clamp page
             if (paging.page > paging.totalPages) paging.page = paging.totalPages;
             if (paging.page < 1) paging.page = 1;
 
@@ -767,6 +768,7 @@
             const to = Math.min(end, total);
             resultCount.textContent = `Showing ${from}–${to} of ${total} results`;
         }
+
         function renderPagination() {
             const ul = document.getElementById("pagination");
             if (!ul) return;
@@ -774,7 +776,6 @@
             const totalPages = paging.totalPages;
             const page = paging.page;
 
-            // helper tạo <li>
             const liBtn = (label, targetPage, disabled = false, active = false) => {
                 const cls = [
                     disabled ? "disabled" : "",
@@ -783,13 +784,12 @@
                 ].filter(Boolean).join(" ");
 
                 return `
-      <li class="${cls}">
-        <a href="#" data-page="${targetPage}">${label}</a>
-      </li>
-    `;
+                <li class="${cls}">
+                    <a href="#" data-page="${targetPage}">${label}</a>
+                </li>
+            `;
             };
 
-            // logic hiển thị window trang (vd: 1 ... 4 5 6 ... 20)
             const windowSize = 5;
             let start = Math.max(1, page - Math.floor(windowSize / 2));
             let end = Math.min(totalPages, start + windowSize - 1);
@@ -816,7 +816,6 @@
 
             ul.innerHTML = html;
 
-            // bind click
             ul.querySelectorAll("a[data-page]").forEach(a => {
                 a.addEventListener("click", (e) => {
                     e.preventDefault();
@@ -825,11 +824,12 @@
                     if (p < 1 || p > paging.totalPages) return;
 
                     paging.page = p;
-                    renderPage(filteredProductsCache); // ✅ chỉ đổi trang, không filter lại
+                    renderPage(filteredProductsCache);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                 });
             });
         }
+
         async function deleteProduct(productId) {
             const token = getToken();
             if (!isValidJwt(token)) {
@@ -854,15 +854,12 @@
                 return false;
             }
 
-            // BE bạn trả JSON: {success, message}
             const payload = await res.json().catch(() => ({}));
-
-            if (!res.ok) {
-                throw new Error(payload?.message || "Xoá sản phẩm thất bại");
-            }
+            if (!res.ok) throw new Error(payload?.message || "Xoá sản phẩm thất bại");
 
             return true;
         }
+
         function bindDeleteClicks() {
             const container = document.getElementById("product-list");
             if (!container) return;
@@ -886,11 +883,8 @@
                     const ok = await deleteProduct(id);
                     if (!ok) return;
 
-                    // ✅ Update local state
                     allProducts = allProducts.filter(p => Number(p.id ?? p.productId) !== id);
-
-                    // ✅ Re-apply filter/pagination (bạn đang có applyFilters())
-                    if (typeof applyFilters === "function") applyFilters();
+                    applyFilters();
 
                     alert("Deleted successfully");
                 } catch (err) {
@@ -902,6 +896,7 @@
                 }
             });
         }
+
         async function loadProviderCategories() {
             const token = getToken();
             if (!isValidJwt(token)) {
@@ -932,12 +927,28 @@
             const payload = await res.json();
             return normalizeCategories(payload);
         }
+        function normalizeMediaUrl(u) {
+            if (!u) return "";
 
+            const s = String(u).trim();
 
+            // đã là full url
+            if (/^https?:\/\//i.test(s)) return s;
+
+            // //domain/path
+            if (s.startsWith("//")) return window.location.protocol + s;
+
+            // /api/...
+            if (s.startsWith("/")) return API_BASE ? (API_BASE + s) : s;
+
+            // api/...
+            return API_BASE ? (API_BASE + "/" + s) : s;
+        }
 
     </script>
 
- 
+
+
 
 
 </body>
