@@ -268,7 +268,6 @@ namespace BE.Services.Implementations
             }
 
             // ===== Replace Images =====
-            // ===== Replace Images =====
             if (product.ProductImages != null && product.ProductImages.Count > 0)
                 _context.ProductImages.RemoveRange(product.ProductImages);
 
@@ -296,12 +295,11 @@ namespace BE.Services.Implementations
                 await _context.ProductImages.AddRangeAsync(newImages);
             }
 
-
             // ===== Upsert Variants =====
             var existingVariants = product.ProductVariants?.ToDictionary(v => v.Id, v => v)
                                    ?? new Dictionary<long, ProductVariants>();
 
-            var incomingIds = new HashSet<long>();
+            var incomingExistingIds = new HashSet<long>(); // chỉ chứa id > 0 (variant đã tồn tại)
 
             foreach (var v in dto.Variants)
             {
@@ -310,11 +308,12 @@ namespace BE.Services.Implementations
                 // Update existing
                 if (incomingId > 0 && existingVariants.TryGetValue(incomingId, out var ev))
                 {
-                    incomingIds.Add(incomingId);
+                    incomingExistingIds.Add(incomingId);
 
-                    ev.SizeLabel = v.SizeLabel;
-                    ev.ColorName = v.ColorName;
-                    ev.ColorCode = v.ColorCode;
+                    ev.SizeLabel = (v.SizeLabel ?? ev.SizeLabel)?.Trim();
+                    ev.ColorName = (v.ColorName ?? ev.ColorName)?.Trim();
+                    ev.ColorCode = v.ColorCode ?? ev.ColorCode;
+
                     ev.Quantity = v.Quantity ?? ev.Quantity;
                     ev.PricePerDay = v.PricePerDay ?? ev.PricePerDay;
                     ev.DepositAmount = v.DepositAmount ?? ev.DepositAmount;
@@ -322,30 +321,32 @@ namespace BE.Services.Implementations
                 }
                 else
                 {
-                    // Add new
+                    // Add new (Id null/0)
                     var nv = new ProductVariants
                     {
                         ProductId = product.Id,
-                        SizeLabel = v.SizeLabel,
-                        ColorName = v.ColorName,
+                        SizeLabel = (v.SizeLabel ?? "").Trim(),
+                        ColorName = (v.ColorName ?? "").Trim(),
                         ColorCode = v.ColorCode,
+
                         Quantity = v.Quantity ?? 0,
                         PricePerDay = v.PricePerDay ?? 0,
                         DepositAmount = v.DepositAmount ?? 0,
                         Status = v.Status ?? true
                     };
+
                     await _context.ProductVariants.AddAsync(nv);
                 }
             }
 
-            // Delete variants bị remove khỏi payload
+            // ✅ FIX BUG QUAN TRỌNG:
+            // Chỉ xoá các variant CŨ trong DB (Id > 0) mà không có trong payload.
             if (product.ProductVariants != null && product.ProductVariants.Count > 0)
             {
                 var toDelete = product.ProductVariants
-                    .Where(ev => !incomingIds.Contains(ev.Id)) // chỉ delete những thằng có id cũ mà FE không gửi
+                    .Where(ev => ev.Id > 0 && !incomingExistingIds.Contains(ev.Id))
                     .ToList();
 
-                // Chỉ nên delete những variant thực sự “existing” (id > 0)
                 if (toDelete.Count > 0)
                     _context.ProductVariants.RemoveRange(toDelete);
             }
@@ -356,6 +357,7 @@ namespace BE.Services.Implementations
             // Trả về detail mới nhất
             return await GetProductDetailByProviderAsync(providerId, productId);
         }
+
 
     }
 }
