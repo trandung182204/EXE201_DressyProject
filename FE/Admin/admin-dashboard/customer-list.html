@@ -1,529 +1,747 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
 
-<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/customer-list by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:09 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
-
 <head>
-	<!-- Meta Tags -->
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="keywords" content="Site keywords here">
-	<meta name="description" content="#">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sherah eCommerce Admin Dashboard">
+    <title>Sherah - Quản lý User</title>
 
-	<!-- Site Title -->
-	<title>Sherah - HTML eCommerce Dashboard Template</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
 
-	<!-- Font -->
-	<link
-		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
-		rel="stylesheet">
+    <link rel="icon" href="img/favicon.png">
 
-	<!-- Fav Icon -->
-	<link rel="icon" href="img/favicon.png">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome-all.min.css">
+    <link rel="stylesheet" href="css/charts.min.css">
+    <link rel="stylesheet" href="css/datatables.min.css">
+    <link rel="stylesheet" href="css/jvector-map.css">
+    <link rel="stylesheet" href="css/slickslider.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="style.css">
 
-	<!-- sherah Stylesheet -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/font-awesome-all.min.css">
-	<link rel="stylesheet" href="css/charts.min.css">
-	<link rel="stylesheet" href="css/datatables.min.css">
-	<link rel="stylesheet" href="css/jvector-map.css">
-	<link rel="stylesheet" href="css/slickslider.min.css">
-	<link rel="stylesheet" href="css/jquery-ui.css">
-	<link rel="stylesheet" href="css/reset.css">
-	<link rel="stylesheet" href="style.css">
+    <style>
+        /* --- CUSTOM MODERN STYLES --- */
+        :root {
+            --primary-color: #0d6efd;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-gray: #f8fafc;
+            --border-color: #e2e8f0;
+        }
 
+        body {
+            background-color: var(--bg-gray);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* 1. Filter Section Redesign */
+        .filter-card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            margin-bottom: 24px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .filter-input {
+            background-color: #ffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 14px;
+            color: var(--text-dark);
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .filter-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+            outline: none;
+        }
+
+        select.filter-input {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        /* 2. Table Redesign */
+        .table-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden; /* Bo góc cho table */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+        }
+
+        .table {
+            margin-bottom: 0;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .sherah-table__head th {
+            background-color: #f1f5f9;
+            color: var(--text-light);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            letter-spacing: 0.5px;
+        }
+
+        .sherah-table__body td {
+            padding: 20px 24px;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-dark);
+            font-size: 14px;
+            background: #fff;
+            transition: background 0.2s;
+        }
+
+        .sherah-table__body tr:last-child td {
+            border-bottom: none;
+        }
+
+        .sherah-table__body tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        /* User Profile Style */
+        .user-profile-cell {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-avatar-placeholder {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: #0d6efd;
+            border-radius: 12px; /* Soft square */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(13, 110, 253, 0.15);
+        }
+
+        .user-info h6 {
+            margin: 0 0 2px 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .user-info h6 a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.2s;
+        }
+        .user-info h6 a:hover { color: var(--primary-color); }
+
+        .user-info small {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* Role Badges */
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .role-admin { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .role-provider { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; }
+        .role-customer { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .role-default { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+
+        /* Modern Status Select (Styled as Badge) */
+        .status-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .status-select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding: 6px 32px 6px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            border: 1px solid transparent;
+            outline: none;
+            transition: all 0.2s;
+            /* Custom Arrow */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        .status-active { 
+            background-color: #ecfdf5; 
+            color: #059669; 
+            border-color: #a7f3d0; 
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23059669' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        }
+        
+        .status-blocked { 
+            background-color: #fef2f2; 
+            color: #dc2626; 
+            border-color: #fecaca;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23dc2626' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        }
+
+        .status-select:hover {
+            filter: brightness(0.95);
+            transform: translateY(-1px);
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+            background: #fff;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .action-btn:hover {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border-color: #fee2e2;
+        }
+
+        /* Pagination & Sorting */
+        .pagination-container {
+            margin-top: 20px;
+        }
+        
+        .pagination-btn {
+            min-width: 36px;
+            height: 36px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #64748b;
+            border-radius: 8px;
+            margin: 0 4px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .pagination-btn:hover:not(:disabled) {
+            background: #f1f5f9;
+            color: #0d6efd;
+            border-color: #cbd5e1;
+        }
+        
+        .pagination-btn.active {
+            background: #0d6efd;
+            color: #fff;
+            border-color: #0d6efd;
+            box-shadow: 0 4px 6px -1px rgba(13, 110, 253, 0.4);
+        }
+
+        .sortable { cursor: pointer; user-select: none; transition: background 0.2s; }
+        .sortable:hover { background-color: #e2e8f0; }
+        .sort-indicator { margin-left: 5px; font-size: 10px; color: var(--primary-color); }
+
+        /* Utility */
+        .text-date { font-family: 'Roboto Mono', monospace; font-size: 13px; color: #64748b; }
+        .text-phone { font-family: 'Roboto Mono', monospace; font-size: 13px; color: #475569; }
+    </style>
 </head>
 
 <body id="sherah-dark-light">
 
-	<div class="sherah-body-area">
-		<!-- sherah Admin Menu -->
-		
-		<!-- End sherah Admin Menu -->
+    <div class="sherah-body-area">
+        <div id="header-container"></div>
+        <div id="dashboard-container"></div>
+        <section class="sherah-adashboard sherah-show">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sherah-body">
+                            <div class="sherah-dsinner">
+                                
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="sherah-breadcrumb mg-top-30">
+                                            <h2 class="sherah-breadcrumb__title">Quản lý người dùng</h2>
+                                            <ul class="sherah-breadcrumb__list">
+                                                <li><a href="#">Trang chủ</a></li>
+                                                <li class="active"><a href='customer-list.html'>Danh sách User</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
 
-		<!-- Start Header -->
-		<div id="header-container"></div>
-		<!-- End sherah Admin Menu -->
-		<div id="dashboard-container"></div>
-		<!-- End Header -->
+                                <div class="sherah-page-inner mg-top-25">
+                                    
+                                    <div class="filter-card">
+                                        <div class="row g-3 align-items-end">
+                                            <div class="col-lg-3 col-md-6 col-12">
+                                                <label class="filter-label"><i class="fa fa-search me-1"></i> Tìm kiếm</label>
+                                                <input id="search-name" type="text" class="filter-input" placeholder="Tên hoặc Email...">
+                                            </div>
 
-		<!-- sherah Dashboard -->
-		<section class="sherah-adashboard sherah-show">
-			<div class="container">
-				<div class="row">
-					<div class="col-12">
-						<div class="sherah-body">
-							<!-- Dashboard Inner -->
-							<div class="sherah-dsinner">
-								<div class="row">
-									<div class="col-12">
-										<div class="sherah-breadcrumb mg-top-30">
-											<h2 class="sherah-breadcrumb__title">Pages</h2>
-											<ul class="sherah-breadcrumb__list">
-												<li><a href="#">Home</a></li>
-												<li class="active"><a href='customer-list.html'>User List</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="sherah-table sherah-page-inner sherah-border sherah-default-bg mg-top-25">
-									<!-- Filter, Search, and Page Controls -->
-									<div
-										style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-										<div>
-											<label for="role-filter">Role: </label>
-											<select id="role-filter">
-												<option value="">All</option>
-												<option value="user">User</option>
-												<option value="admin">Admin</option>
-												<option value="provider">Provider</option>
-											</select>
-										</div>
-										<div>
-											<input id="search-name" type="text" placeholder="Search by name..."
-												style="padding: 4px 8px; border-radius: 4px; border: 1px solid #ccc;">
-										</div>
-									</div>
-									<table id="sherah-table__vendor" class="sherah-table__main sherah-table__main-v3">
-										<!-- sherah Table Head -->
-										<thead class="sherah-table__head">
-											<tr>
-												<th class="sherah-table__column-2 sherah-table__h2 sortable"
-													data-sort="fullName">Name <span class="sort-indicator"></span></th>
-												<th class="sherah-table__column-3 sherah-table__h3 sortable"
-													data-sort="email">Email <span class="sort-indicator"></span></th>
-												<th class="sherah-table__column-4 sherah-table__h4 sortable"
-													data-sort="fullName">Fullname <span class="sort-indicator"></span>
-												</th>
-												<th class="sherah-table__column-5 sherah-table__h5 sortable"
-													data-sort="phone">Phone <span class="sort-indicator"></span></th>
-												<th class="sherah-table__column-7 sherah-table__h6 sortable"
-													data-sort="status">Status <span class="sort-indicator"></span></th>
-												<th class="sherah-table__column-8 sherah-table__h7 sortable"
-													data-sort="createdAt">Join On <span class="sort-indicator"></span>
-												</th>
-												<th class="sherah-table__column-9 sherah-table__h8 sortable"
-													data-sort="role">Role <span class="sort-indicator"></span></th>
-											</tr>
-										</thead>
-										<tbody class="sherah-table__body" id="user-table-body">
-											<!-- User rows will be injected here by JS -->
-										</tbody>
-									</table>
-									<!-- Pagination Controls -->
-									<div id="pagination"
-										style="display: flex; justify-content: flex-end; align-items: center; margin-top: 12px;">
-									</div>
-								</div>
-							</div>
-							<!-- End Dashboard Inner -->
-						</div>
-					</div>
+                                            <div class="col-lg-2 col-md-6 col-6">
+                                                <label class="filter-label"><i class="fa fa-user-tag me-1"></i> Quyền</label>
+                                                <select id="role-filter" class="filter-input">
+                                                    <option value="">Tất cả</option>
+                                                    <option value="customer">Customer</option>
+                                                    <option value="provider">Provider</option>
+                                                </select>
+                                            </div>
 
+                                            <div class="col-lg-2 col-md-6 col-6">
+                                                <label class="filter-label"><i class="fa fa-toggle-on me-1"></i> Trạng thái</label>
+                                                <select id="status-filter" class="filter-input">
+                                                    <option value="">Tất cả</option>
+                                                    <option value="ACTIVE">Active</option>
+                                                    <option value="BLOCKED">Blocked</option>
+                                                </select>
+                                            </div>
 
-				</div>
-			</div>
-		</section>
-		<!-- End sherah Dashboard -->
+                                            <div class="col-lg-3 col-md-6 col-12">
+                                                <label class="filter-label"><i class="fa fa-calendar-alt me-1"></i> Ngày tham gia</label>
+                                                <div class="d-flex gap-2">
+                                                    <input type="date" id="date-from" class="filter-input" title="Từ ngày">
+                                                    <input type="date" id="date-to" class="filter-input" title="Đến ngày">
+                                                </div>
+                                            </div>
 
-	</div>
+                                            <div class="col-lg-2 col-md-12 col-12">
+                                                <button id="btn-reset" class="btn btn-light border w-100" style="padding: 10px; border-radius: 10px; font-weight: 500;" onclick="resetFilters()">
+                                                    <i class="fa fa-sync me-1"></i> Làm mới
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
 
-	<!-- sherah Scripts -->
-	<script src="js/jquery.min.js"></script>
-	<script src="js/jquery-migrate.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/charts.js"></script>
-	<script src="js/datatables.min.js"></script>
-	<script src="js/circle-progress.min.js"></script>
-	<script src="js/jquery-jvectormap.js"></script>
-	<script src="js/jvector-map.js"></script>
-	<script src="js/slickslider.min.js"></script>
-	<script src="js/main.js"></script>
-	<script src="js/auth-header.js"></script>
-	
-	<script>
-		async function loadLayout() {
-			const headerRes = await fetch("header.html");
-			document.getElementById("header-container").innerHTML = await headerRes.text();
+                                    <div class="table-card">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead class="sherah-table__head">
+                                                    <tr>
+                                                        <th class="sortable" data-sort="fullName" style="width: 30%;">
+                                                            Thông tin User <span class="sort-indicator"></span>
+                                                        </th>
+                                                        <th class="sortable" data-sort="phone">
+                                                            Số điện thoại <span class="sort-indicator"></span>
+                                                        </th>
+                                                        <th class="sortable" data-sort="role">
+                                                            Quyền hạn <span class="sort-indicator"></span>
+                                                        </th>
+                                                        <th class="sortable text-center" data-sort="status">
+                                                            Trạng thái <span class="sort-indicator"></span>
+                                                        </th>
+                                                        <th class="sortable text-end" data-sort="createdAt">
+                                                            Ngày tham gia <span class="sort-indicator"></span>
+                                                        </th>
+                                                        <th class="text-end" style="width: 100px;">Thao tác</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="sherah-table__body" id="user-table-body">
+                                                    </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
 
-			const dashRes = await fetch("dashboard.html");
-			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+                                    <div class="d-flex justify-content-between align-items-center mt-4">
+                                        <div class="text-muted small">
+                                            Hiển thị <span id="showing-count" class="fw-bold text-dark">0</span> kết quả
+                                        </div>
+                                        <div id="pagination" class="d-flex">
+                                            </div>
+                                    </div>
 
-			initSherahLayout();
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
-			// ✅ quan trọng: gọi sau khi header đã có trong DOM
-			if (window.loadAuthToHeader) window.loadAuthToHeader();
-		}
-	</script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/datatables.min.js"></script>
+    <script src="js/circle-progress.min.js"></script>
+    <script src="js/jquery-jvectormap.js"></script>
+    <script src="js/jvector-map.js"></script>
+    <script src="js/slickslider.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth-header.js"></script>
+    
+    <script>
+        async function loadLayout() {
+            try {
+                const headerRes = await fetch("header.html");
+                if(headerRes.ok) document.getElementById("header-container").innerHTML = await headerRes.text();
 
-	 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    loadLayout();
-  });
-</script>
+                const dashRes = await fetch("dashboard.html");
+                 if(dashRes.ok) document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
-	<style>
-		/* --- CSS cho Role (Quyền hạn) --- */
-		.role-badge {
-			display: inline-block;
-			padding: 5px 10px;
-			border-radius: 15px;
-			font-size: 12px;
-			font-weight: 600;
-			text-transform: capitalize;
-			margin-right: 5px;
-			margin-bottom: 5px;
-		}
+                if (typeof initSherahLayout === 'function') initSherahLayout();
+                if (window.loadAuthToHeader) window.loadAuthToHeader();
+            } catch (e) {
+                console.error("Layout loading error:", e);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", () => { loadLayout(); });
+    </script>
 
-		/* Màu sắc riêng cho từng Role */
-		.role-admin {
-			background-color: #ffebee;
-			/* Nền đỏ nhạt */
-			color: #c62828;
-			/* Chữ đỏ đậm */
-			border: 1px solid #ffcdd2;
-		}
+    <script>
+        // Cấu hình API
+        const API_BASE = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+                ? "http://localhost:5135/api"
+                : "/api";
+        const apiBase = `${API_BASE}/Users`;
 
-		.role-provider {
-			background-color: #e3f2fd;
-			/* Nền xanh dương nhạt */
-			color: #1565c0;
-			/* Chữ xanh dương đậm */
-			border: 1px solid #bbdefb;
-		}
+        // State quản lý dữ liệu
+        let allUsers = [];
+        let currentPage = 1;
+        const pageSize = 6;
+        let currentSort = { field: 'createdAt', dir: 'desc' }; // Mặc định sắp xếp ngày mới nhất
 
-		.role-customer {
-			background-color: #e8f5e9;
-			/* Nền xanh lá nhạt */
-			color: #2e7d32;
-			/* Chữ xanh lá đậm */
-			border: 1px solid #c8e6c9;
-		}
+        // Cache DOM Elements cho bộ lọc
+        const filters = {
+            search: document.getElementById('search-name'),
+            role: document.getElementById('role-filter'),
+            status: document.getElementById('status-filter'),
+            dateFrom: document.getElementById('date-from'),
+            dateTo: document.getElementById('date-to')
+        };
 
-		/* Fallback cho role lạ */
-		.role-default {
-			background-color: #f5f5f5;
-			color: #616161;
-			border: 1px solid #e0e0e0;
-		}
+        // --- 1. HÀM RENDER UI ---
+        function renderUsers(users) {
+            const tbody = document.getElementById('user-table-body');
+            tbody.innerHTML = '';
 
-		/* --- CSS cho Status Select (Trạng thái) --- */
-		.status-select {
-			padding: 6px 12px;
-			border-radius: 6px;
-			font-weight: 600;
-			font-size: 13px;
-			cursor: pointer;
-			outline: none;
-			border: 1px solid transparent;
-			transition: all 0.3s ease;
-			appearance: none;
-			/* Ẩn mũi tên mặc định để đẹp hơn (tùy chọn) */
-			-webkit-appearance: none;
-			text-align: center;
-			width: 100%;
-			max-width: 120px;
-		}
+            if (users.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <div class="d-flex flex-column align-items-center justify-content-center" style="opacity: 0.6;">
+                                <i class="fa fa-folder-open fa-3x mb-3 text-secondary"></i>
+                                <h6 class="text-secondary fw-normal">Không tìm thấy dữ liệu phù hợp</h6>
+                            </div>
+                        </td>
+                    </tr>`;
+                return;
+            }
 
-		/* Màu khi Active */
-		.status-active {
-			background-color: #e0f2f1;
-			/* Xanh ngọc nhạt */
-			color: #00695c;
-			border-color: #80cbc4;
-		}
+            users.forEach(user => {
+                // Xử lý Role
+                const roles = (user.role || user.roles || []);
+                const roleNames = Array.isArray(roles) ? roles.map(r => r.roleName || r.RoleName || '') : [];
+                // Ẩn Admin khỏi danh sách (nếu muốn)
+                if (roleNames.some(r => r.toLowerCase() === 'admin')) return;
 
-		/* Màu khi Blocked */
-		.status-blocked {
-			background-color: #fbe9e7;
-			/* Cam đỏ nhạt */
-			color: #d84315;
-			border-color: #ffab91;
-		}
+                // Tạo Badge Role
+                const roleHtml = roleNames.map(r => {
+                    let cls = 'role-default';
+                    if (r.toLowerCase() === 'provider') cls = 'role-provider';
+                    else if (r.toLowerCase() === 'customer') cls = 'role-customer';
+                    return `<span class="role-badge ${cls}">${r}</span>`;
+                }).join(' ');
 
-		/* Hiệu ứng hover cho select */
-		.status-select:hover {
-			opacity: 0.9;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		}
-	</style>
+                // Xử lý Status
+                const status = (user.status || 'ACTIVE').toUpperCase();
+                const statusClass = (status === 'ACTIVE') ? 'status-active' : 'status-blocked';
+                const isBlocked = (status === 'BLOCKED');
 
+                // Tạo Avatar chữ cái
+                const avatarChar = (user.fullName || 'U').charAt(0).toUpperCase();
 
-	<script>
-		const API_BASE =
-			location.hostname === "localhost" || location.hostname === "127.0.0.1"
-				? "http://localhost:5135/api"
-				: "/api";
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="user-profile-cell">
+                            <div class="user-avatar-placeholder">${avatarChar}</div>
+                            <div class="user-info">
+                                <h6><a href="#">${user.fullName || 'No Name'}</a></h6>
+                                <small>${user.email || 'No Email'}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="text-phone">${user.phone || '--'}</span></td>
+                    <td>${roleHtml}</td>
+                    <td class="text-center">
+                        <div class="status-wrapper">
+                            <select class="status-select ${statusClass}" onchange="updateStatus(${user.id}, this.value, this)">
+                                <option value="ACTIVE" ${!isBlocked ? 'selected' : ''}>Active</option>
+                                <option value="BLOCKED" ${isBlocked ? 'selected' : ''}>Blocked</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td class="text-end">
+                        <span class="text-date">
+                            ${user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : '--'}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <button class="action-btn" title="Xóa User" onclick="deleteUser(${user.id}, this)">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
-		const apiBase = `${API_BASE}/Users`;
+        function renderPagination(total, page, size) {
+            const pageCount = Math.ceil(total / size);
+            const container = document.getElementById('pagination');
+            container.innerHTML = '';
+            
+            if (pageCount <= 1) return;
 
-		let allUsers = [];
-		let currentPage = 1;
-		const pageSize = 6;
-		let currentSort = { field: '', dir: '' };
+            let html = `<button class="pagination-btn" ${page === 1 ? 'disabled' : ''} onclick="gotoPage(${page - 1})"><i class="fa fa-chevron-left" style="font-size:10px"></i></button>`;
+            
+            for (let i = 1; i <= pageCount; i++) {
+                if (i === 1 || i === pageCount || (i >= page - 1 && i <= page + 1)) {
+                     html += `<button class="pagination-btn ${i === page ? 'active' : ''}" onclick="gotoPage(${i})">${i}</button>`;
+                } else if (i === page - 2 || i === page + 2) {
+                     html += `<span style="padding:0 5px; color:#999; display:flex; align-items:flex-end;">...</span>`;
+                }
+            }
+            
+            html += `<button class="pagination-btn" ${page === pageCount ? 'disabled' : ''} onclick="gotoPage(${page + 1})"><i class="fa fa-chevron-right" style="font-size:10px"></i></button>`;
+            container.innerHTML = html;
+        }
 
-		function renderUsers(users) {
-			const tbody = document.getElementById('user-table-body');
-			tbody.innerHTML = '';
-			users.forEach(user => {
-				const roles = (user.role || user.roles || []);
-				const roleNames = Array.isArray(roles) ? roles.map(r => r.roleName || r.RoleName || '').filter(Boolean) : [];
-				if (roleNames.includes('admin') || roleNames.includes('Admin')) return;
+        // --- 2. LOGIC LỌC & SẮP XẾP ---
+        function applyFiltersAndSort() {
+            let result = allUsers.slice();
 
-				const status = (user.status || '').toUpperCase();
+            // 2.1 Lọc Role
+            const roleVal = filters.role.value.toLowerCase();
+            if (roleVal) {
+                result = result.filter(u => {
+                    const roles = (u.role || u.roles || []);
+                    const names = Array.isArray(roles) ? roles.map(r => (r.roleName || r.RoleName || '').toLowerCase()) : [];
+                    return names.includes(roleVal);
+                });
+            }
 
-				let statusColor = '';
-				if (status === 'ACTIVE') statusColor = 'background:#4caf50;color:#fff;';
-				else if (status === 'BLOCKED') statusColor = 'background:#f44336;color:#fff;';
+            // 2.2 Lọc Status
+            const statusVal = filters.status.value;
+            if (statusVal) {
+                result = result.filter(u => (u.status || '').toUpperCase() === statusVal);
+            }
 
-				const statusOptions = [
-					{ value: 'ACTIVE', label: 'Active' },
-					{ value: 'BLOCKED', label: 'Blocked' }
-				];
+            // 2.3 Lọc Search (Tên hoặc Email)
+            const searchVal = filters.search.value.trim().toLowerCase();
+            if (searchVal) {
+                result = result.filter(u => 
+                    (u.fullName || '').toLowerCase().includes(searchVal) || 
+                    (u.email || '').toLowerCase().includes(searchVal)
+                );
+            }
 
-				const tr = document.createElement('tr');
-				tr.innerHTML = `
-				<td class="sherah-table__column-1 sherah-table__data-1">
-					<div class="sherah-table__product">
-						<h4 class="sherah-table__vendor--title"><a href="#">${user.fullName || ''}</a></h4>
-					</div>
-				</td>
-				<td class="sherah-table__column-2 sherah-table__data-2">
-					<div class="sherah-table__product-content">
-						<p class="sherah-table__product-desc">${user.email || ''}</p>
-					</div>
-				</td>
-				<td class="sherah-table__column-3 sherah-table__data-3">
-					<div class="sherah-table__product-content">
-						<p class="sherah-table__product-desc">${user.fullName || ''}</p>
-					</div>
-				</td>
-				<td class="sherah-table__column-4 sherah-table__data-4">
-					<div class="sherah-table__product-content">
-						<p class="sherah-table__product-desc">${user.phone || ''}</p>
-					</div>
-				</td>
-				<td class="sherah-table__column-5 sherah-table__data-5">
-					<select class="sherah-table__status" style="${statusColor} border:none; border-radius:4px; padding:2px 8px;" onchange="updateStatus(${user.id}, this.value)">
-						${statusOptions.map(opt => `<option value="${opt.value}" ${(status === opt.value) ? 'selected' : ''}>${opt.label}</option>`).join('')}
-					</select>
-				</td>
-				<td class="sherah-table__column-6 sherah-table__data-6">
-					<div class="sherah-table__product-content">
-						<p class="sherah-table__product-desc">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : ''}</p>
-					</div>
-				</td>
-				<td class="sherah-table__column-7 sherah-table__data-7">
-					<div class="sherah-table__product-content">
-						<p class="sherah-table__product-desc">${roleNames.join(', ')}</p>
-					</div>
-				</td>
-			`;
-				tbody.appendChild(tr);
-			});
-		}
+            // 2.4 Lọc Date Range
+            if (filters.dateFrom.value || filters.dateTo.value) {
+                const dFrom = filters.dateFrom.value ? new Date(filters.dateFrom.value).setHours(0,0,0,0) : null;
+                const dTo = filters.dateTo.value ? new Date(filters.dateTo.value).setHours(23,59,59,999) : null;
+                
+                result = result.filter(u => {
+                    if (!u.createdAt) return false;
+                    const time = new Date(u.createdAt).getTime();
+                    if (dFrom && time < dFrom) return false;
+                    if (dTo && time > dTo) return false;
+                    return true;
+                });
+            }
 
-		function renderPagination(total, page, pageSize) {
-			const pageCount = Math.ceil(total / pageSize);
-			const pagination = document.getElementById('pagination');
-			pagination.innerHTML = '';
-			if (pageCount <= 1) return;
-			let html = '';
-			html += `<button ${page === 1 ? 'disabled' : ''} onclick="gotoPage(${page - 1})">&lt;</button>`;
-			for (let i = 1; i <= pageCount; i++) {
-				html += `<button ${i === page ? 'style="font-weight:bold; background:#eee;"' : ''} onclick="gotoPage(${i})">${i}</button>`;
-			}
-			html += `<button ${page === pageCount ? 'disabled' : ''} onclick="gotoPage(${page + 1})">&gt;</button>`;
-			pagination.innerHTML = html;
-		}
+            // 2.5 Sắp xếp
+            if (currentSort.field) {
+                result.sort((a, b) => {
+                    let va = a[currentSort.field];
+                    let vb = b[currentSort.field];
 
-		function updateStatus(id, status) {
-			fetch(`${apiBase}/${id}/status`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ status: status })
-			})
-				.then(res => res.json())
-				.then(res => {
-					if (!res.success) {
-						alert('Failed to update status: ' + (res.message || 'Unknown error'));
-					}
-					fetchUsers();
-				})
-				.catch(err => alert('Failed to update status: ' + err));
-		}
+                    // Xử lý đặc biệt cho ngày tháng
+                    if (currentSort.field === 'createdAt') {
+                        va = va ? new Date(va).getTime() : 0;
+                        vb = vb ? new Date(vb).getTime() : 0;
+                    } else {
+                        // Xử lý string
+                        va = (va || '').toString().toLowerCase();
+                        vb = (vb || '').toString().toLowerCase();
+                    }
 
-		function deleteUser(id, el) {
-			if (!confirm('Are you sure you want to delete this user?')) return;
-			fetch(`${apiBase}/${id}`, { method: 'DELETE' })
-				.then(res => res.json())
-				.then(res => {
-					if (res.success) {
-						const row = el.closest('tr');
-						if (row) row.remove();
-					} else {
-						alert('Delete failed: ' + (res.message || 'Unknown error'));
-					}
-				})
-				.catch(err => {
-					alert('Delete failed: ' + err);
-				});
-		}
+                    if (va < vb) return currentSort.dir === 'asc' ? -1 : 1;
+                    if (va > vb) return currentSort.dir === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
 
-		function gotoPage(page) {
-			currentPage = page;
-			renderUserTable();
-		}
+            // Update UI
+            document.getElementById('showing-count').innerText = result.length;
+            
+            // Pagination Slice
+            const start = (currentPage - 1) * pageSize;
+            const pagedUsers = result.slice(start, start + pageSize);
+            
+            renderUsers(pagedUsers);
+            renderPagination(result.length, currentPage, pageSize);
+            updateSortIndicators();
+        }
 
-		function sortBy(field) {
-			if (currentSort.field === field) {
-				currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
-			} else {
-				currentSort.field = field;
-				currentSort.dir = 'asc';
-			}
-			renderUserTable();
-			updateSortIndicators();
-		}
+        // --- 3. ACTIONS (API CALLS) ---
+        function fetchUsers() {
+            fetch(apiBase)
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success && Array.isArray(res.data)) {
+                        allUsers = res.data;
+                        applyFiltersAndSort();
+                    }
+                })
+                .catch(err => console.error('Lỗi tải danh sách:', err));
+        }
 
-		function updateSortIndicators() {
-			document.querySelectorAll('th.sortable').forEach(th => {
-				const span = th.querySelector('.sort-indicator');
-				if (!span) return;
-				if (th.dataset.sort === currentSort.field) {
-					span.textContent = currentSort.dir === 'asc' ? '▲' : '▼';
-				} else {
-					span.textContent = '';
-				}
-			});
-		}
+        function updateStatus(id, newStatus, selectEl) {
+            // Hiệu ứng loading nhẹ (disabled select)
+            selectEl.disabled = true;
 
-		function renderUserTable() {
-			let users = allUsers.slice();
-			// Filter by role
-			const role = document.getElementById('role-filter').value;
-			if (role) {
-				users = users.filter(u => {
-					const roles = (u.role || u.roles || []);
-					const roleNames = Array.isArray(roles) ? roles.map(r => r.roleName || r.RoleName || '').filter(Boolean) : [];
-					return roleNames.map(r => r.toLowerCase()).includes(role.toLowerCase());
-				});
-			}
-			// Search by name
-			const search = document.getElementById('search-name').value.trim().toLowerCase();
-			if (search) {
-				users = users.filter(u => (u.fullName || '').toLowerCase().includes(search));
-			}
-			// Sort
-			if (currentSort.field) {
-				users.sort((a, b) => {
-					let va = a[currentSort.field] || '';
-					let vb = b[currentSort.field] || '';
-					if (currentSort.field === 'createdAt') {
-						va = va ? new Date(va) : 0;
-						vb = vb ? new Date(vb) : 0;
-					}
-					if (typeof va === 'string') va = va.toLowerCase();
-					if (typeof vb === 'string') vb = vb.toLowerCase();
-					if (va < vb) return currentSort.dir === 'asc' ? -1 : 1;
-					if (va > vb) return currentSort.dir === 'asc' ? 1 : -1;
-					return 0;
-				});
-			}
-			// Pagination
-			const total = users.length;
-			const start = (currentPage - 1) * pageSize;
-			const paged = users.slice(start, start + pageSize);
-			renderUsers(paged);
-			renderPagination(total, currentPage, pageSize);
-		}
+            fetch(`${apiBase}/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(res => res.json())
+            .then(res => {
+                selectEl.disabled = false;
+                if (res.success) {
+                    // Update Local Data để không cần fetch lại toàn bộ
+                    const user = allUsers.find(u => u.id == id);
+                    if(user) user.status = newStatus;
 
-		function fetchUsers() {
-			fetch(apiBase)
-				.then(res => res.json())
-				.then(res => {
-					if (res.success && Array.isArray(res.data)) {
-						allUsers = res.data;
-						currentPage = 1;
-						renderUserTable();
-					}
-				})
-				.catch(err => {
-					console.error('Failed to fetch users:', err);
-				});
-		}
+                    // Update UI Class màu sắc
+                    selectEl.className = `status-select ${newStatus === 'ACTIVE' ? 'status-active' : 'status-blocked'}`;
+                } else {
+                    alert('Cập nhật thất bại: ' + (res.message || 'Lỗi không xác định'));
+                    // Reset lại giá trị cũ
+                    selectEl.value = newStatus === 'ACTIVE' ? 'BLOCKED' : 'ACTIVE';
+                }
+            })
+            .catch(err => {
+                selectEl.disabled = false;
+                alert('Lỗi hệ thống: ' + err);
+            });
+        }
 
-		document.addEventListener('DOMContentLoaded', function () {
-			fetchUsers();
-			document.getElementById('role-filter').addEventListener('change', function () {
-				currentPage = 1;
-				renderUserTable();
-			});
-			document.getElementById('search-name').addEventListener('input', function () {
-				currentPage = 1;
-				renderUserTable();
-			});
-			document.querySelectorAll('th.sortable').forEach(th => {
-				th.style.cursor = 'pointer';
-				th.addEventListener('click', function () {
-					sortBy(th.dataset.sort);
-				});
-			});
-		});
-	</script>
-	<style>
-		/* ===== USER STATUS SELECT – SAME STYLE AS PRODUCT ===== */
-		.sherah-table__status {
-			padding: 8px 18px !important;
-			border-radius: 8px !important;
-			font-weight: 600;
-			font-size: 15px;
-			cursor: pointer;
-			outline: none;
-			border: 1.5px solid #bdbdbd !important;
-			transition: all 0.3s ease;
-			appearance: none;
-			-webkit-appearance: none;
-			text-align: center;
-			background: #f7f7f7;
-			color: #333;
-			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-			min-width: 120px;
-		}
+        function deleteUser(id, btnEl) {
+            if (!confirm('Bạn có chắc chắn muốn xóa người dùng này?')) return;
+            
+            fetch(`${apiBase}/${id}`, { method: 'DELETE' })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        // Xóa khỏi mảng local
+                        allUsers = allUsers.filter(u => u.id !== id);
+                        applyFiltersAndSort(); // Re-render
+                    } else {
+                        alert('Xóa thất bại: ' + res.message);
+                    }
+                })
+                .catch(err => alert('Lỗi xóa: ' + err));
+        }
 
-		/* Active = Available */
-		.sherah-table__status option[value="active"]:checked,
-		.sherah-table__status.active,
-		.sherah-table__status[data-status="active"] {
-			background-color: #e8f5e9;
-			color: #1b5e20;
-			border-color: #43a047;
-		}
+        // --- 4. HELPERS ---
+        function gotoPage(page) {
+            currentPage = page;
+            applyFiltersAndSort();
+        }
 
-		/* Blocked = Unavailable */
-		.sherah-table__status option[value="blocked"]:checked,
-		.sherah-table__status.blocked,
-		.sherah-table__status[data-status="blocked"] {
-			background-color: #fdecea;
-			color: #c62828;
-			border-color: #c62828;
-		}
+        function sortBy(field) {
+            if (currentSort.field === field) {
+                currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.field = field;
+                currentSort.dir = 'asc';
+            }
+            applyFiltersAndSort();
+        }
 
-		/* Hover giống product */
-		.sherah-table__status:hover {
-			opacity: 0.97;
-			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
-		}
-	</style>
+        function updateSortIndicators() {
+            document.querySelectorAll('.sortable .sort-indicator').forEach(span => span.textContent = '');
+            const th = document.querySelector(`.sortable[data-sort="${currentSort.field}"]`);
+            if (th) {
+                th.querySelector('.sort-indicator').textContent = currentSort.dir === 'asc' ? ' ▲' : ' ▼';
+            }
+        }
 
+        function resetFilters() {
+            filters.search.value = '';
+            filters.role.value = '';
+            filters.status.value = '';
+            filters.dateFrom.value = '';
+            filters.dateTo.value = '';
+            currentPage = 1;
+            applyFiltersAndSort();
+        }
 
+        // --- 5. INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy dữ liệu lần đầu
+            fetchUsers();
+
+            // Gắn sự kiện cho các filter input
+            Object.values(filters).forEach(el => {
+                el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', () => {
+                    currentPage = 1; // Reset về trang 1 khi filter thay đổi
+                    applyFiltersAndSort();
+                });
+            });
+
+            // Gắn sự kiện Sort cho các cột Header
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.addEventListener('click', () => sortBy(th.dataset.sort));
+            });
+        });
+    </script>
 </body>
-
-<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/customer-list by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:10 GMT -->
-
 </html>

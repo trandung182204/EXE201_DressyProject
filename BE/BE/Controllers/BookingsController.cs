@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using BE.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using BE.Models;
+using BE.DTOs;
+using System.Threading.Tasks;
 
 namespace BE.Controllers
 {
@@ -10,6 +12,7 @@ namespace BE.Controllers
     public class BookingsController : ControllerBase
     {
         private readonly IBookingsService _service;
+
         public BookingsController(IBookingsService service)
         {
             _service = service;
@@ -23,10 +26,19 @@ namespace BE.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(long id)
         {
             var item = await _service.GetByIdAsync(id);
-            if (item == null) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
+            if (item == null) return NotFound(new { success = false, message = "Not found" });
+            return Ok(new { success = true, data = item, message = "Fetched successfully" });
+        }
+        
+        // API Chi tiết theo DTO bạn yêu cầu
+        [HttpGet("{id}/detail")]
+        public async Task<IActionResult> GetDetail(long id)
+        {
+            var item = await _service.GetBookingDetailAsync(id);
+            if (item == null) return NotFound(new { success = false, message = "Booking not found" });
             return Ok(new { success = true, data = item, message = "Fetched successfully" });
         }
 
@@ -38,32 +50,28 @@ namespace BE.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Bookings model)
+        public async Task<IActionResult> Update(long id, [FromBody] Bookings model)
         {
             var updated = await _service.UpdateAsync(id, model);
-            if (updated == null) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
+            if (updated == null) return NotFound(new { success = false, message = "Not found" });
             return Ok(new { success = true, data = updated, message = "Updated successfully" });
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(long id)
         {
             var deleted = await _service.DeleteAsync(id);
-            if (!deleted) return NotFound(new { success = false, data = (object?)null, message = "Not found" });
-            return Ok(new { success = true, data = (object?)null, message = "Deleted successfully" });
+            if (!deleted) return NotFound(new { success = false, message = "Not found" });
+            return Ok(new { success = true, message = "Deleted successfully" });
         }
 
         [HttpGet("list")]
         public async Task<IActionResult> GetBookingList()
         {
             var data = await _service.GetBookingListAsync();
-            return Ok(new
-            {
-                success = true,
-                data,
-                message = "Fetched successfully"
-            });
+            return Ok(new { success = true, data, message = "Fetched successfully" });
         }
+
         [Authorize(Roles = "provider")]
         [HttpGet("provider")]
         public async Task<IActionResult> GetBookingsForProvider()
@@ -78,5 +86,14 @@ namespace BE.Controllers
             return Ok(new { success = true, data, message = "Fetched successfully" });
         }
 
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(long id, [FromBody] UpdateBookingStatusDto dto)
+        {
+            var ok = await _service.UpdateStatusAsync(id, dto.Status);
+            if (!ok)
+                return NotFound(new { success = false, message = "Booking not found" });
+
+            return Ok(new { success = true, message = "Status updated successfully" });
+        }
     }
 }

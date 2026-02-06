@@ -1,438 +1,788 @@
 <!DOCTYPE html>
-<html class="no-js" lang="zxx">
-
-<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/order-list by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:14 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<html class="no-js" lang="vi">
 
 <head>
-	<!-- Meta Tags -->
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="keywords" content="Site keywords here">
-	<meta name="description" content="#">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sherah eCommerce Admin Dashboard">
+    <title>Sherah - Quản lý đơn hàng</title>
 
-	<!-- Site Title -->
-	<title>Sherah - HTML eCommerce Dashboard Template</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" href="img/favicon.png">
 
-	<!-- Font -->
-	<link
-		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
-		rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome-all.min.css">
+    <link rel="stylesheet" href="css/charts.min.css">
+    <link rel="stylesheet" href="css/datatables.min.css">
+    <link rel="stylesheet" href="css/jvector-map.css">
+    <link rel="stylesheet" href="css/slickslider.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="style.css">
 
-	<!-- Fav Icon -->
-	<link rel="icon" href="img/favicon.png">
+    <style>
+        .filter-toolbar {
+            background: #ffffff;
+            color: #333333 !important;
+            /* QUAN TRỌNG: Ép chữ thành màu đen */
+            padding: 22px;
+            border-radius: 12px;
+            margin-bottom: 22px;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+        }
 
-	<!-- sherah Stylesheet -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/font-awesome-all.min.css">
-	<link rel="stylesheet" href="css/charts.min.css">
-	<link rel="stylesheet" href="css/datatables.min.css">
-	<link rel="stylesheet" href="css/jvector-map.css">
-	<link rel="stylesheet" href="css/slickslider.min.css">
-	<link rel="stylesheet" href="css/jquery-ui.css">
-	<link rel="stylesheet" href="css/reset.css">
-	<link rel="stylesheet" href="style.css">
+        .filter-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #555;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
 
+        .filter-input {
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-size: 14px;
+            width: 100%;
+            background-color: #fff;
+            color: #333333 !important;
+            /* QUAN TRỌNG: Chữ trong ô input phải đen */
+            height: 42px;
+            transition: all 0.25s ease;
+        }
+
+        .filter-input:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+            outline: none;
+        }
+
+        .table-responsive {
+            background: #ffffff;
+            color: #333333 !important;
+            /* QUAN TRỌNG: Ép chữ trong bảng thành đen */
+            border-radius: 12px;
+            border: 1px solid #eaeaea;
+            overflow-x: auto;
+            min-height: 420px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+        }
+
+        .sherah-table__head th {
+            font-weight: 700;
+            font-size: 13px;
+            color: #333333 !important;
+            /* Ép màu tiêu đề */
+            background: #f8fafc;
+            padding: 16px;
+            border-bottom: 2px solid #e5e7eb;
+            white-space: nowrap;
+        }
+
+        .sherah-table__body td {
+            vertical-align: middle;
+            padding: 15px;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 14px;
+            color: #333333 !important;
+            /* Ép màu nội dung bảng */
+        }
+
+        .sherah-table__body tr:hover {
+            background-color: #f9fbff;
+        }
+
+        .sherah-table__body td a,
+        .sherah-table__body td span:not(.badge),
+        .sherah-table__body td div {
+            color: #333333;
+        }
+
+        .order-id {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .order-id:hover {
+            text-decoration: underline;
+        }
+
+        .price-text {
+            font-weight: 700;
+            font-size: 15px;
+            color: #111827;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 11px;
+            /* Giảm font một chút cho gọn nếu text tiếng Anh dài */
+            font-weight: 700;
+            text-align: center;
+            display: inline-block;
+            min-width: 100px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            /* Chữ in hoa cho đẹp như ảnh */
+        }
+
+        /* Màu xanh lá (Hoàn thành / Success) */
+        .badge-success {
+            background: #ecfdf5 !important;
+            color: #059669 !important;
+            /* QUAN TRỌNG: Thêm !important để hiện màu xanh */
+            border: 1px solid #a7f3d0 !important;
+        }
+
+        /* Màu vàng cam (Chờ xử lý / Pending) */
+        .badge-warning {
+            background: #fffbeb !important;
+            color: #b45309 !important;
+            /* QUAN TRỌNG: Thêm !important để hiện màu cam */
+            border: 1px solid #fde68a !important;
+        }
+
+        /* Màu đỏ (Hủy / Failed / Cancelled) */
+        .badge-danger {
+            background: #fef2f2 !important;
+            color: #dc2626 !important;
+            /* QUAN TRỌNG: Thêm !important để hiện màu đỏ */
+            border: 1px solid #fecaca !important;
+        }
+
+        /* Màu xanh dương (Đang giao / Info) */
+        .badge-info {
+            background: #eff6ff !important;
+            color: #2563eb !important;
+            /* QUAN TRỌNG: Thêm !important để hiện màu xanh */
+            border: 1px solid #bfdbfe !important;
+        }
+
+        .pagination-btn {
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            padding: 6px 12px;
+            margin: 0 3px;
+            border-radius: 8px;
+            cursor: pointer;
+            min-width: 36px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #f3f4f6;
+        }
+
+        .pagination-btn.active {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+
+        .pagination-btn:disabled {
+            color: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .sortable:hover {
+            background-color: #eef2f7;
+        }
+
+        .sort-indicator {
+            margin-left: 4px;
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .loading-overlay {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 220px;
+            width: 100%;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: #2563eb;
+        }
+    </style>
 </head>
+
 
 <body id="sherah-dark-light">
 
-	<div class="sherah-body-area">
-		<!-- sherah Admin Menu -->
-		<div id="header-container"></div>
-		<!-- End sherah Admin Menu -->
-		<div id="dashboard-container"></div>
-		<!-- End Header -->
+    <div class="sherah-body-area">
+        <div id="header-container"></div>
+        <div id="dashboard-container"></div>
 
-		<!-- sherah Dashboard -->
-		<section class="sherah-adashboard sherah-show">
-			<div class="container">
-				<div class="row">
-					<div class="col-12">
-						<div class="sherah-body">
-							<!-- Dashboard Inner -->
-							<div class="sherah-dsinner">
-								<div class="row mg-top-30">
-									<div class="col-12 sherah-flex-between">
-										<!-- Sherah Breadcrumb -->
-										<div class="sherah-breadcrumb">
-											<h2 class="sherah-breadcrumb__title">Order list</h2>
-											<ul class="sherah-breadcrumb__list">
-												<li><a href="#">Home</a></li>
-												<li class="active"><a href='order-list.html'>Order List</a></li>
-											</ul>
-										</div>
-										<!-- End Sherah Breadcrumb -->
+        <section class="sherah-adashboard sherah-show">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sherah-body">
+                            <div class="sherah-dsinner">
 
-									</div>
-								</div>
-								<div class="order-filter-bar">
-									<input type="text" id="filterCustomer" placeholder="Search customer">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="sherah-breadcrumb mg-top-30">
+                                            <h2 class="sherah-breadcrumb__title">Quản lý đơn hàng</h2>
+                                            <ul class="sherah-breadcrumb__list">
+                                                <li><a href="#">Trang chủ</a></li>
+                                                <li class="active"><a href='order-list.html'>Danh sách đơn hàng</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
 
-									<select id="filterStatus">
-										<option value="">All status</option>
-										<option value="pending">Pending</option>
-										<option value="completed">Completed</option>
-										<option value="cancelled">Cancelled</option>
-									</select>
+                                <div class="sherah-page-inner mg-top-25">
 
-									<input type="date" id="filterFrom">
-									<input type="date" id="filterTo">
+                                    <div class="filter-toolbar">
+                                        <div class="row g-3 align-items-end">
+                                            <div class="col-lg-3 col-md-6 col-12">
+                                                <label class="filter-label">Tìm kiếm</label>
+                                                <input id="search-input" type="text" class="filter-input"
+                                                    placeholder="Mã đơn, Tên khách hàng...">
+                                            </div>
 
-									<select id="sortBy">
-										<option value="">Sort by</option>
-										<option value="date_desc">Newest</option>
-										<option value="date_asc">Oldest</option>
-										<option value="price_desc">Price ↑</option>
-										<option value="price_asc">Price ↓</option>
-									</select>
-								</div>
+                                            <div class="col-lg-2 col-md-6 col-6">
+                                                <label class="filter-label">Trạng thái đơn</label>
+                                                <select id="status-filter" class="filter-input">
+                                                    <option value="">Tất cả</option>
+                                                    <option value="pending">Chờ xử lý (Pending)</option>
+                                                    <option value="processing">Đang xử lý</option>
+                                                    <option value="shipped">Đã giao</option>
+                                                    <option value="completed">Hoàn thành</option>
+                                                    <option value="cancelled">Đã hủy</option>
+                                                </select>
+                                            </div>
 
+                                            <div class="col-lg-2 col-md-6 col-6">
+                                                <label class="filter-label">Thanh toán</label>
+                                                <select id="payment-filter" class="filter-input">
+                                                    <option value="">Tất cả</option>
+                                                    <option value="success">Đã thanh toán</option>
+                                                    <option value="pending">Chưa thanh toán</option>
+                                                    <option value="failed">Thanh toán thất bại</option>
+                                                </select>
+                                            </div>
 
-								<div class="sherah-table sherah-page-inner sherah-border sherah-default-bg mg-top-25">
-									<table id="sherah-table__vendor" class="sherah-table__main sherah-table__main-v3">
-										<!-- sherah Table Head -->
-										<thead class="sherah-table__head">
-											<tr>
-												<th class="sherah-table__column-1 sherah-table__h1">Order ID</th>
-												<th class="sherah-table__column-2 sherah-table__h2">Customer Name</th>
-												<th class="sherah-table__column-3 sherah-table__h3">Date</th>
-												<th class="sherah-table__column-4 sherah-table__h4">Payment Status</th>
-												<th class="sherah-table__column-5 sherah-table__h5">Total</th>
-												<th class="sherah-table__column-6 sherah-table__h6">Payment Method</th>
-												<th class="sherah-table__column-7 sherah-table__h7">Order Status</th>
-												<th class="sherah-table__column-8 sherah-table__h8">Action</th>
-											</tr>
-										</thead>
-										<tbody class="sherah-table__body">
-											<tr>
-												<td class="sherah-table__column-1 sherah-table__data-1">
-													<div class="sherah-language-form__input">
-														<input class="sherah-language-form__check" id="checkbox"
-															name="checkbox" type="checkbox">
-														<p class="crany-table__product--number"><a href="#"
-																class="sherah-color1">#Kz025418</a></p>
-													</div>
-												</td>
-												<td class="sherah-table__column-2 sherah-table__data-2">
-													<div class="sherah-table__product-content">
-														<p class="sherah-table__product-desc">Mendorcart</p>
-													</div>
-												</td>
-												<td class="sherah-table__column-3 sherah-table__data-3">
-													<p class="sherah-table__product-desc">Mar 24, 2022 <span
-															class="sherah-table__time">04:26 PM</span></p>
-												</td>
-												<td class="sherah-table__column-4 sherah-table__data-4">
-													<div class="sherah-table__product-content">
-														<div
-															class="sherah-table__status sherah-color2 sherah-color2__bg--opactity">
-															Paid</div>
-													</div>
-												</td>
-												<td class="sherah-table__column-5 sherah-table__data-5">
-													<div class="sherah-table__product-content">
-														<p class="sherah-table__product-desc">$11250</p>
-													</div>
-												</td>
-												<td class="sherah-table__column-6 sherah-table__data-6">
-													<div class="sherah-table__product-content">
-														<p class="sherah-table__product-desc">Mastercard</p>
-													</div>
-												</td>
-												<td class="sherah-table__column-7 sherah-table__data-7">
-													<div
-														class="sherah-table__status sherah-color2 sherah-color2__bg--opactity">
-														Shipped</div>
-												</td>
-												<td class="sherah-table__column-8 sherah-table__data-8">
-													<div class="sherah-table__status__group">
-														<a href="#"
-															class="sherah-table__action sherah-color2 sherah-color3__bg--opactity">
-															<svg class="sherah-color3__fill"
-																xmlns="http://www.w3.org/2000/svg" width="18.29"
-																height="18.252" viewBox="0 0 18.29 18.252">
-																<g id="Group_132" data-name="Group 132"
-																	transform="translate(-234.958 -37.876)">
-																	<path id="Path_481" data-name="Path 481"
-																		d="M242.545,95.779h-5.319a2.219,2.219,0,0,1-2.262-2.252c-.009-1.809,0-3.617,0-5.426q0-2.552,0-5.1a2.3,2.3,0,0,1,2.419-2.419q2.909,0,5.818,0c.531,0,.87.274.9.715a.741.741,0,0,1-.693.8c-.3.026-.594.014-.892.014q-2.534,0-5.069,0c-.7,0-.964.266-.964.976q0,5.122,0,10.245c0,.687.266.955.946.955q5.158,0,10.316,0c.665,0,.926-.265.926-.934q0-2.909,0-5.818a.765.765,0,0,1,.791-.853.744.744,0,0,1,.724.808c.007,1.023,0,2.047,0,3.07s.012,2.023-.006,3.034A2.235,2.235,0,0,1,248.5,95.73a1.83,1.83,0,0,1-.458.048Q245.293,95.782,242.545,95.779Z"
-																		transform="translate(0 -39.652)"
-																		fill="#09ad95" />
-																	<path id="Path_482" data-name="Path 482"
-																		d="M332.715,72.644l2.678,2.677c-.05.054-.119.133-.194.207q-2.814,2.815-5.634,5.625a1.113,1.113,0,0,1-.512.284c-.788.177-1.582.331-2.376.48-.5.093-.664-.092-.564-.589.157-.781.306-1.563.473-2.341a.911.911,0,0,1,.209-.437q2.918-2.938,5.853-5.86A.334.334,0,0,1,332.715,72.644Z"
-																		transform="translate(-84.622 -32.286)"
-																		fill="#09ad95" />
-																	<path id="Path_483" data-name="Path 483"
-																		d="M433.709,42.165l-2.716-2.715a15.815,15.815,0,0,1,1.356-1.248,1.886,1.886,0,0,1,2.579,2.662A17.589,17.589,0,0,1,433.709,42.165Z"
-																		transform="translate(-182.038)"
-																		fill="#09ad95" />
-																</g>
-															</svg>
-														</a>
-														<a href="#"
-															class="sherah-table__action sherah-color2 sherah-color2__bg--offset">
-															<svg class="sherah-color2__fill"
-																xmlns="http://www.w3.org/2000/svg" width="16.247"
-																height="18.252" viewBox="0 0 16.247 18.252">
-																<g id="Icon" transform="translate(-160.007 -18.718)">
-																	<path id="Path_484" data-name="Path 484"
-																		d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z"
-																		transform="translate(-9.898 -58.597)" />
-																	<path id="Path_485" data-name="Path 485"
-																		d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z"
-																		transform="translate(0 0)" />
-																	<path id="Path_486" data-name="Path 486"
-																		d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z"
-																		transform="translate(-58.483 -78.508)" />
-																	<path id="Path_487" data-name="Path 487"
-																		d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z"
-																		transform="translate(-97.561 -78.509)" />
-																</g>
-															</svg>
-														</a>
-													</div>
-												</td>
-											</tr>
+                                            <div class="col-lg-3 col-md-6 col-12">
+                                                <label class="filter-label">Ngày đặt</label>
+                                                <div class="d-flex gap-2">
+                                                    <input type="date" id="date-from" class="filter-input"
+                                                        title="Từ ngày">
+                                                    <input type="date" id="date-to" class="filter-input"
+                                                        title="Đến ngày">
+                                                </div>
+                                            </div>
 
-										</tbody>
-									</table>
-								</div>
-							</div>
-							<!-- End Dashboard Inner -->
-						</div>
-					</div>
+                                            <div class="col-lg-2 col-md-12 col-12">
+                                                <button id="btn-reset" class="btn btn-light border w-100 fw-bold"
+                                                    style="height: 42px;" onclick="resetFilters()">
+                                                    <i class="fa fa-sync me-2"></i> Làm mới
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="sherah-table__head">
+                                                <tr>
+                                                    <th class="sortable" data-sort="bookingId">Mã đơn <span
+                                                            class="sort-indicator"></span></th>
+                                                    <th class="sortable" data-sort="customerName">Khách hàng <span
+                                                            class="sort-indicator"></span></th>
+                                                    <th class="sortable" data-sort="createdAt">Ngày đặt <span
+                                                            class="sort-indicator"></span></th>
+                                                    <th class="text-center">Thanh toán</th>
+                                                    <th class="sortable text-end" data-sort="totalPrice">Tổng tiền <span
+                                                            class="sort-indicator"></span></th>
+                                                    <th class="text-center">Trạng thái</th>
+                                                    <th class="text-end">Hành động</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="sherah-table__body" id="order-table-body">
+                                            </tbody>
+                                        </table>
 
-				</div>
-			</div>
-		</section>
-		<!-- End sherah Dashboard -->
+                                        <div id="loading-spinner" class="loading-overlay">
+                                            <div class="spinner-border" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
 
-	</div>
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center mt-4">
+                                        <div class="text-muted small mb-2 mb-md-0">
+                                            Hiển thị <span id="showing-count" class="fw-bold text-dark">0</span> đơn
+                                            hàng
+                                        </div>
+                                        <div id="pagination" class="d-flex">
+                                        </div>
+                                    </div>
 
-	<style>
-		.order-filter-bar {
-			display: grid;
-			grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-			gap: 10px;
-			margin-bottom: 20px;
-			align-items: center;
-		}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
-		.order-filter-bar input,
-		.order-filter-bar select {
-			height: 40px;
-			padding: 0 12px;
-			border-radius: 6px;
-			border: 1px solid #e5e7eb;
-			font-size: 14px;
-			width: 100%;
-		}
+    <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Chi tiết đơn hàng <span id="modal-order-id"
+                            class="text-primary"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Khách hàng:</strong> <span id="modal-customer"></span></p>
+                            <p><strong>Ngày đặt:</strong> <span id="modal-date"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Tổng tiền:</strong> <span id="modal-price" class="fw-bold text-danger"></span>
+                            </p>
+                            <p><strong>Thanh toán:</strong> <span id="modal-payment-status"></span></p>
+                        </div>
+                    </div>
 
-		.order-filter-bar input:focus,
-		.order-filter-bar select:focus {
-			outline: none;
-			border-color: #6366f1;
-		}
+                    <hr>
 
-		/* Responsive: màn hình nhỏ → 2 hàng */
-		@media (max-width: 1024px) {
-			.order-filter-bar {
-				grid-template-columns: 1fr 1fr;
-			}
-		}
+                    <div class="bg-light p-3 rounded mb-3">
+                        <label class="form-label fw-bold">Cập nhật trạng thái đơn hàng:</label>
+                        <div class="d-flex gap-2">
+                            <select id="modal-status-select" class="form-select">
+                                <option value="pending">Chờ xử lý (Pending)</option>
+                                <option value="processing">Đang xử lý (Processing)</option>
+                                <option value="shipped">Đang giao / Đã phục vụ (Shipped)</option>
+                                <option value="completed">Hoàn thành (Completed)</option>
+                                <option value="cancelled">Đã hủy (Cancelled)</option>
+                            </select>
+                            <button id="btn-save-status" class="btn btn-primary text-nowrap">
+                                <i class="fa fa-save"></i> Lưu
+                            </button>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold">Thông tin chi tiết dịch vụ:</h6>
+                    <div id="modal-items-list" class="border p-2 rounded"
+                        style="background: #fafafa; min-height: 100px;">
+                        <p class="text-muted small">Đang tải dữ liệu...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/datatables.min.js"></script>
+    <script src="js/circle-progress.min.js"></script>
+    <script src="js/jquery-jvectormap.js"></script>
+    <script src="js/jvector-map.js"></script>
+    <script src="js/slickslider.min.js"></script>
+    <script src="js/main.js"></script>
 
 
-		.sherah-table__status {
-			display: inline-block;
-			padding: 6px 14px;
-			border-radius: 20px;
-			font-size: 13px;
-			font-weight: 600;
-			text-transform: capitalize;
-			line-height: 1;
-			white-space: nowrap;
-		}
+    <script>
+        // --- CONFIG & STATE ---
+        // Tự động nhận diện localhost hoặc server thật
+        const API_BASE = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+            ? "http://localhost:5135/api"
+            : "/api";
 
-		/* Payment Status */
-		.status-paid {
-			background: #06f5a1;
-			color: #12b76a;
-		}
+        const endpoints = {
+            bookings: `${API_BASE}/bookings/list`,
+            detail: (id) => `${API_BASE}/bookings/${id}/detail`,
+            updateStatus: (id) => `${API_BASE}/bookings/${id}/status`,
+            delete: (id) => `${API_BASE}/bookings/${id}`
+        };
 
-		.status-unpaid {
-			background: #fff4e5;
-			color: #f79009;
-		}
+        let state = {
+            data: [],
+            filteredData: [],
+            currentPage: 1,
+            pageSize: 10,
+            sort: { field: 'createdAt', dir: 'desc' }
+        };
 
-		/* Booking Status */
-		.status-pending {
-			background: #fef3c7;
-			color: #b45309;
-		}
+        let currentBookingId = null;
 
-		.status-completed {
-			background: #e0f2fe;
-			color: #0284c7;
-		}
+        // DOM Elements
+        const els = {
+            tableBody: document.getElementById('order-table-body'),
+            loading: document.getElementById('loading-spinner'),
+            pagination: document.getElementById('pagination'),
+            count: document.getElementById('showing-count'),
+            filters: {
+                search: document.getElementById('search-input'),
+                status: document.getElementById('status-filter'),
+                payment: document.getElementById('payment-filter'),
+                dateFrom: document.getElementById('date-from'),
+                dateTo: document.getElementById('date-to')
+            }
+        };
 
-		.status-cancelled {
-			background: #fee2e2;
-			color: #b91c1c;
-		}
-	</style>
+        // --- 1. DATA FETCHING ---
+        function init() {
+            setLoading(true);
+            // Gọi API trực tiếp, không cần Header Authorization
+            fetch(endpoints.bookings)
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        state.data = res.data || [];
+                        processData();
+                        applyFilters();
+                    } else {
+                        els.tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">${res.message || 'Lỗi tải dữ liệu'}</td></tr>`;
+                    }
+                })
+                .catch(err => {
+                    console.error('Error fetching bookings:', err);
+                    els.tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">Lỗi kết nối Server</td></tr>`;
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
 
+        // --- 2. PROCESSING DATA ---
+        function processData() {
+            state.data = state.data.map(item => ({
+                ...item,
+                searchStr: `${item.bookingId} ${item.customerName || ''}`.toLowerCase(),
+                timestamp: item.createdAt ? new Date(item.createdAt).getTime() : 0,
+                statusRaw: (item.bookingStatus || 'pending').toLowerCase(),
+                paymentRaw: (item.paymentStatus || 'unpaid').toLowerCase()
+            }));
+        }
 
-	<!-- sherah Scripts -->
-	<script src="js/jquery.min.js"></script>
-	<script src="js/jquery-migrate.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/charts.js"></script>
-	<script src="js/datatables.min.js"></script>
-	<script src="js/circle-progress.min.js"></script>
-	<script src="js/jquery-jvectormap.js"></script>
-	<script src="js/jvector-map.js"></script>
-	<script src="js/slickslider.min.js"></script>
-	<script src="js/main.js"></script>
-	<script src="js/auth-header.js"></script>
+        // --- 3. FILTER & SORT LOGIC ---
+        function applyFilters() {
+            let result = [...state.data];
 
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
+            // Filter Search
+            const searchVal = els.filters.search.value.trim().toLowerCase();
+            if (searchVal) result = result.filter(o => o.searchStr.includes(searchVal));
 
-			/* ================= API BASE ================= */
-			const API_BASE =
-				location.hostname === "localhost" || location.hostname === "127.0.0.1"
-					? "http://localhost:5135/api"
-					: "/api";
+            // Filter Status
+            const statusVal = els.filters.status.value;
+            if (statusVal) result = result.filter(o => o.statusRaw === statusVal);
 
-			let bookings = [];
-			const tbody = document.querySelector('.sherah-table__body');
+            // Filter Payment
+            const paymentVal = els.filters.payment.value;
+            if (paymentVal) result = result.filter(o => o.paymentRaw === paymentVal);
 
-			const customerInput = document.getElementById('filterCustomer');
-			const statusSelect = document.getElementById('filterStatus');
-			const fromDate = document.getElementById('filterFrom');
-			const toDate = document.getElementById('filterTo');
-			const sortSelect = document.getElementById('sortBy');
+            // Filter Date
+            const dFrom = els.filters.dateFrom.value ? new Date(els.filters.dateFrom.value).setHours(0, 0, 0, 0) : null;
+            const dTo = els.filters.dateTo.value ? new Date(els.filters.dateTo.value).setHours(23, 59, 59, 999) : null;
 
-			/* ================= FETCH BOOKINGS ================= */
-			fetch(`${API_BASE}/bookings/list`)
-				.then(res => res.json())
-				.then(res => {
-					if (!res.success || !Array.isArray(res.data)) return;
-					bookings = res.data;
-					render();
-				})
-				.catch(err => console.error('Fetch bookings failed:', err));
+            if (dFrom || dTo) {
+                result = result.filter(o => {
+                    if (!o.timestamp) return false;
+                    if (dFrom && o.timestamp < dFrom) return false;
+                    if (dTo && o.timestamp > dTo) return false;
+                    return true;
+                });
+            }
 
-			function render() {
-				let data = [...bookings];
+            // Sort
+            const { field, dir } = state.sort;
+            result.sort((a, b) => {
+                let va = a[field], vb = b[field];
+                if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+                if (va < vb) return dir === 'asc' ? -1 : 1;
+                if (va > vb) return dir === 'asc' ? 1 : -1;
+                return 0;
+            });
 
-				if (customerInput && customerInput.value) {
-					data = data.filter(b =>
-						(b.customerName || '').toLowerCase()
-							.includes(customerInput.value.toLowerCase())
-					);
-				}
+            state.filteredData = result;
 
-				if (statusSelect && statusSelect.value) {
-					data = data.filter(b =>
-						(b.bookingStatus || '').toLowerCase() === statusSelect.value
-					);
-				}
+            // Reset page if needed
+            const totalPages = Math.ceil(result.length / state.pageSize);
+            if (state.currentPage > totalPages) state.currentPage = 1 || 1;
 
-				if (fromDate && fromDate.value) {
-					data = data.filter(b =>
-						new Date(b.createdAt) >= new Date(fromDate.value)
-					);
-				}
+            renderTable();
+            renderPagination();
+            updateSortUI();
+        }
 
-				if (toDate && toDate.value) {
-					data = data.filter(b =>
-						new Date(b.createdAt) <= new Date(toDate.value + 'T23:59:59')
-					);
-				}
+        // --- 4. RENDER UI ---
+        function renderTable() {
+            const { filteredData, currentPage, pageSize } = state;
+            const start = (currentPage - 1) * pageSize;
+            const pageData = filteredData.slice(start, start + pageSize);
 
-				if (sortSelect && sortSelect.value) {
-					switch (sortSelect.value) {
-						case 'date_desc':
-							data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-							break;
-						case 'date_asc':
-							data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-							break;
-						case 'price_desc':
-							data.sort((a, b) => b.totalPrice - a.totalPrice);
-							break;
-						case 'price_asc':
-							data.sort((a, b) => a.totalPrice - b.totalPrice);
-							break;
-					}
-				}
+            els.count.textContent = filteredData.length;
+            els.tableBody.innerHTML = '';
 
-				tbody.innerHTML = '';
-				data.forEach(b => {
-					tbody.innerHTML += `
-					<tr>
-						<td>#${b.bookingId}</td>
-						<td>${b.customerName}</td>
-						<td>${new Date(b.createdAt).toLocaleString()}</td>
-						<td>
-							<div class="sherah-table__status status-${(b.paymentStatus || '').toLowerCase()}">
-								${b.paymentStatus}
-							</div>
-						</td>
-						<td>${(b.totalPrice || 0).toLocaleString()} đ</td>
-						<td>${b.paymentMethod}</td>
-						<td>
-							<div class="sherah-table__status status-${(b.bookingStatus || '').toLowerCase()}">
-								${b.bookingStatus}
-							</div>
-						</td>
-						<td>View</td>
-					</tr>
-				`;
-				});
-			}
+            if (pageData.length === 0) {
+                els.tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-muted">Không tìm thấy đơn hàng nào</td></tr>`;
+                return;
+            }
 
-			[customerInput, statusSelect, fromDate, toDate, sortSelect]
-				.filter(el => el !== null)
-				.forEach(el => el.addEventListener('input', render));
+            const formatMoney = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-		});
-	</script>
+            pageData.forEach(item => {
+                let statusClass = 'badge-warning';
+                if (['completed', 'shipped', 'success'].includes(item.statusRaw)) statusClass = 'badge-success';
+                else if (['cancelled', 'failed'].includes(item.statusRaw)) statusClass = 'badge-danger';
+                else if (['processing', 'confirmed'].includes(item.statusRaw)) statusClass = 'badge-info';
 
+                let payClass = item.paymentRaw === 'success' ? 'badge-success' : (item.paymentRaw === 'failed' ? 'badge-danger' : 'badge-warning');
 
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                <td><a href="javascript:void(0)" onclick="openDetailModal(${item.bookingId})" class="fw-bold text-primary">#${item.bookingId}</a></td>
+                <td><span class="fw-bold">${item.customerName || 'Khách vãng lai'}</span></td>
+                <td>
+                    ${new Date(item.createdAt).toLocaleDateString('vi-VN')}
+                    <small class="d-block text-muted">${new Date(item.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</small>
+                </td>
+                <td class="text-center"><span class="badge ${payClass}">${item.paymentStatus}</span></td>
+                <td class="text-end fw-bold">${formatMoney(item.totalPrice)}</td>
+                <td class="text-center"><span class="badge ${statusClass}">${item.bookingStatus}</span></td>
+                <td class="text-end">
+                    <button class="btn btn-sm btn-light border" onclick="openDetailModal(${item.bookingId})"><i class="fa fa-eye text-primary"></i></button>
+                    <button class="btn btn-sm btn-light border ms-1" onclick="deleteBooking(${item.bookingId})"><i class="fa fa-trash text-danger"></i></button>
+                </td>
+            `;
+                els.tableBody.appendChild(tr);
+            });
+        }
 
+        function renderPagination() {
+            const total = state.filteredData.length;
+            const pageCount = Math.ceil(total / state.pageSize);
+            els.pagination.innerHTML = '';
+            if (pageCount <= 1) return;
 
+            const createBtn = (page, text, isActive = false) =>
+                `<button class="pagination-btn ${isActive ? 'active' : ''}" onclick="gotoPage(${page})">${text}</button>`;
 
-	<script>
-		async function loadLayout() {
-			const headerRes = await fetch("header.html");
-			document.getElementById("header-container").innerHTML = await headerRes.text();
+            let html = createBtn(state.currentPage - 1, '&lt;');
+            for (let i = 1; i <= pageCount; i++) {
+                if (i === 1 || i === pageCount || (i >= state.currentPage - 1 && i <= state.currentPage + 1)) {
+                    html += createBtn(i, i, i === state.currentPage);
+                } else if (i === state.currentPage - 2 || i === state.currentPage + 2) {
+                    html += `<span class="mx-1">...</span>`;
+                }
+            }
+            html += createBtn(state.currentPage + 1, '&gt;');
+            els.pagination.innerHTML = html;
+        }
 
-			const dashRes = await fetch("dashboard.html");
-			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+        // --- 5. ACTIONS (DETAIL, UPDATE, DELETE) ---
+        function openDetailModal(id) {
+            currentBookingId = id;
+            const modalEl = document.getElementById('orderDetailModal');
+            const modal = new bootstrap.Modal(modalEl);
 
-			initSherahLayout();
+            document.getElementById('modal-items-list').innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary"></div></div>';
+            document.getElementById('modal-order-id').innerText = '#' + id;
 
-			// ✅ quan trọng: gọi sau khi header đã có trong DOM
-			if (window.loadAuthToHeader) window.loadAuthToHeader();
-		}
-	</script>
+            modal.show();
 
-	<script>
-		document.addEventListener("DOMContentLoaded", () => {
-			loadLayout();
-		});
-	</script>
+            // Fetch Detail - Không Token
+            fetch(endpoints.detail(id))
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success && res.data) {
+                        const d = res.data;
+                        document.getElementById('modal-customer').innerText = d.customerName || 'N/A';
+                        document.getElementById('modal-date').innerText = new Date(d.createdAt).toLocaleString('vi-VN');
+                        document.getElementById('modal-price').innerText = d.totalPrice.toLocaleString('vi-VN') + ' đ';
+                        document.getElementById('modal-payment-status').innerText = d.paymentStatus || 'Unknown';
+
+                        const statusSelect = document.getElementById('modal-status-select');
+                        if (statusSelect) statusSelect.value = (d.bookingStatus || 'pending').toLowerCase();
+
+                        // Render Items
+                        let htmlItems = '<div class="d-flex flex-column gap-3">';
+                        const items = d.items || [];
+
+                        if (items.length > 0) {
+                            items.forEach(item => {
+                                let dateInfo = '';
+                                if (item.startDate && item.endDate) {
+                                    dateInfo = `<div class="small text-muted"><i class="fa fa-calendar-alt"></i> ${item.startDate} - ${item.endDate}</div>`;
+                                }
+                                // Fallback ảnh
+                                let imgUrl = (item.imageUrl && item.imageUrl.trim() !== "") ? item.imageUrl : 'https://placehold.co/100x100?text=No+Img';
+
+                                htmlItems += `
+                            <div class="d-flex align-items-center border p-2 rounded bg-white">
+                                <img src="${imgUrl}" alt="Img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 15px;" 
+                                     onerror="this.src='https://placehold.co/100x100?text=Err'">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0 fw-bold">${item.productName || 'Service'}</h6>
+                                    <small class="text-primary">${item.variantName || ''}</small>
+                                    ${dateInfo}
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold">${(item.price || 0).toLocaleString()} đ</div>
+                                    <small class="text-muted">x${item.quantity || 1}</small>
+                                </div>
+                            </div>`;
+                            });
+                        } else {
+                            htmlItems += `<div class="text-center text-muted p-3">Không có dịch vụ.</div>`;
+                        }
+                        htmlItems += '</div>';
+                        document.getElementById('modal-items-list').innerHTML = htmlItems;
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('modal-items-list').innerHTML = '<p class="text-danger text-center">Lỗi tải chi tiết!</p>';
+                });
+        }
+
+        // Nút Lưu trạng thái
+        const btnSave = document.getElementById('btn-save-status');
+        if (btnSave) {
+            btnSave.addEventListener('click', () => {
+                if (!currentBookingId) return;
+                const newStatus = document.getElementById('modal-status-select').value;
+
+                btnSave.disabled = true;
+                btnSave.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+
+                fetch(endpoints.updateStatus(currentBookingId), {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }, // Chỉ cần Content-Type
+                    body: JSON.stringify({ status: newStatus })
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            alert('Cập nhật thành công!');
+                            const itemIndex = state.data.findIndex(x => x.bookingId == currentBookingId);
+                            if (itemIndex > -1) {
+                                state.data[itemIndex].bookingStatus = newStatus;
+                                state.data[itemIndex].statusRaw = newStatus.toLowerCase();
+                                applyFilters();
+                            }
+                            bootstrap.Modal.getInstance(document.getElementById('orderDetailModal')).hide();
+                        } else {
+                            alert('Lỗi: ' + res.message);
+                        }
+                    })
+                    .catch(err => alert('Lỗi kết nối!'))
+                    .finally(() => {
+                        btnSave.disabled = false;
+                        btnSave.innerHTML = 'Lưu thay đổi';
+                    });
+            });
+        }
+
+        // Xóa đơn hàng
+        function deleteBooking(id) {
+            if (!confirm(`Xóa đơn hàng #${id}?`)) return;
+
+            fetch(endpoints.delete(id), { method: 'DELETE' })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        state.data = state.data.filter(item => item.bookingId !== id);
+                        applyFilters();
+                        alert('Đã xóa!');
+                    } else {
+                        alert('Xóa thất bại: ' + res.message);
+                    }
+                })
+                .catch(err => alert('Lỗi kết nối!'));
+        }
+
+        // --- 6. HELPERS & EVENTS ---
+        function setLoading(isLoading) {
+            if (els.loading) els.loading.style.display = isLoading ? 'flex' : 'none';
+            if (els.tableBody) els.tableBody.style.display = isLoading ? 'none' : 'table-row-group';
+        }
+
+        function gotoPage(page) {
+            if (page < 1) page = 1;
+            state.currentPage = page;
+            renderTable();
+            renderPagination();
+        }
+
+        function sortBy(field) {
+            state.sort.dir = (state.sort.field === field && state.sort.dir === 'asc') ? 'desc' : 'asc';
+            state.sort.field = field;
+            applyFilters();
+        }
+
+        function updateSortUI() {
+            document.querySelectorAll('.sortable .sort-indicator').forEach(el => el.textContent = '');
+            const activeTh = document.querySelector(`.sortable[data-sort="${state.sort.field}"]`);
+            if (activeTh) {
+                const icon = activeTh.querySelector('.sort-indicator');
+                if (icon) icon.textContent = state.sort.dir === 'asc' ? ' ▲' : ' ▼';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            Object.values(els.filters).forEach(input => {
+                if (!input) return;
+                input.addEventListener(input.tagName === 'SELECT' ? 'change' : 'input', () => {
+                    state.currentPage = 1;
+                    applyFilters();
+                });
+            });
+            document.querySelectorAll('.sortable').forEach(th => th.addEventListener('click', () => sortBy(th.dataset.sort)));
+        });
+    </script>
+
+    <script>
+        async function loadLayout() {
+            try {
+                const [headerRes, dashRes] = await Promise.all([
+                    fetch("header.html"),
+                    fetch("dashboard.html")
+                ]);
+
+                if (headerRes.ok) document.getElementById("header-container").innerHTML = await headerRes.text();
+                if (dashRes.ok) document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+
+                if (typeof initSherahLayout === 'function') initSherahLayout();
+            } catch (e) {
+                console.warn("Layout files not found.");
+            }
+        }
+        loadLayout();
+    </script>
 
 
 </body>
-
-<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/order-list by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:14 GMT -->
 
 </html>

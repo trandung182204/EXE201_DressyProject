@@ -1,477 +1,605 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
 
-<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/customer-list by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:09 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
-
 <head>
-	<!-- Meta Tags -->
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="keywords" content="Site keywords here">
-	<meta name="description" content="#">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sherah eCommerce Admin Dashboard">
+    <title>Sherah - Product List Management</title>
 
-	<!-- Site Title -->
-	<title>Sherah - HTML eCommerce Dashboard Template</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
-	<!-- Font -->
-	<link
-		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
-		rel="stylesheet">
+    <link rel="icon" href="img/favicon.png">
 
-	<!-- Fav Icon -->
-	<link rel="icon" href="img/favicon.png">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome-all.min.css">
+    <link rel="stylesheet" href="css/charts.min.css">
+    <link rel="stylesheet" href="css/datatables.min.css">
+    <link rel="stylesheet" href="css/jvector-map.css">
+    <link rel="stylesheet" href="css/slickslider.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="style.css">
 
-	<!-- sherah Stylesheet -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/font-awesome-all.min.css">
-	<link rel="stylesheet" href="css/charts.min.css">
-	<link rel="stylesheet" href="css/datatables.min.css">
-	<link rel="stylesheet" href="css/jvector-map.css">
-	<link rel="stylesheet" href="css/slickslider.min.css">
-	<link rel="stylesheet" href="css/jquery-ui.css">
-	<link rel="stylesheet" href="css/reset.css">
-	<link rel="stylesheet" href="style.css">
+    <style>
+        /* --- 1. Filter Toolbar Styles --- */
+        .filter-toolbar {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
 
+        .filter-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .filter-input {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            width: 100%;
+            transition: all 0.3s;
+            background-color: #fff;
+        }
+
+        .filter-input:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+            outline: none;
+        }
+
+        /* --- 2. Table Styles --- */
+        .table-responsive {
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            overflow-x: auto;
+        }
+        
+        .sherah-table__head th {
+            font-weight: 600;
+            color: #333;
+            background: #f9fafb;
+            padding: 15px;
+            border-bottom: 2px solid #eee;
+            white-space: nowrap;
+        }
+
+        .sherah-table__body td {
+            vertical-align: middle;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* Product Info Cell */
+        .product-info-cell {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product-img-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            background: #f9f9f9;
+            flex-shrink: 0;
+            display: flex; /* Căn giữa nội dung nếu ảnh lỗi */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-details h6 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            line-height: 1.2;
+        }
+        
+        .product-details small {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .badge-type {
+            background: #f3f4f6;
+            color: #4b5563;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        /* --- 3. Status Select --- */
+        .status-select {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            text-align: center;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 120px;
+        }
+        .status-available { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+        .status-unavailable { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+        /* --- 4. Pagination & Sort --- */
+        .pagination-btn {
+            border: 1px solid #ddd;
+            background: #fff;
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .pagination-btn:hover:not(:disabled) { background: #f3f4f6; }
+        .pagination-btn.active { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+        .pagination-btn:disabled { color: #ccc; cursor: not-allowed; }
+
+        .sortable { cursor: pointer; user-select: none; }
+        .sortable:hover { background-color: #f1f5f9; }
+        .sort-indicator { margin-left: 5px; font-size: 10px; }
+    </style>
 </head>
 
 <body id="sherah-dark-light">
 
-	<div class="sherah-body-area">
-		<!-- sherah Admin Menu -->
-		<div id="header-container"></div>
-		<!-- End sherah Admin Menu -->
-		<div id="dashboard-container"></div>
-		<!-- End Header -->
+    <div class="sherah-body-area">
+        <div id="header-container"></div>
+        <div id="dashboard-container"></div>
 
-		<!-- sherah Dashboard -->
-		<section class="sherah-adashboard sherah-show">
-			<div class="container">
-				<div class="row">
-					<div class="col-12">
-						<div class="sherah-body">
-							<!-- Dashboard Inner -->
-							<div class="sherah-dsinner">
-								<div class="row">
-									<div class="col-12">
-										<div class="sherah-breadcrumb mg-top-30">
-											<h2 class="sherah-breadcrumb__title">Pages</h2>
-											<ul class="sherah-breadcrumb__list">
-												<li><a href="#">Home</a></li>
-												<li class="active"><a href='product-list.html'>Product List</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="sherah-table sherah-page-inner sherah-border sherah-default-bg mg-top-25">
-									<!-- Filter, Search, and Page Controls -->
-									<div style="display: flex; gap: 16px; align-items: center; margin-bottom: 12px;">
-										<div>
-											<input id="filter-product-name" type="text"
-												placeholder="Filter by product name..."
-												style="padding: 4px 8px; border-radius: 4px; border: 1px solid #ccc;">
-										</div>
-										<div>
-											<input id="filter-provider-name" type="text"
-												placeholder="Filter by provider name..."
-												style="padding: 4px 8px; border-radius: 4px; border: 1px solid #ccc;">
-										</div>
-									</div>
-									<table id="sherah-table__vendor" class="sherah-table__main sherah-table__main-v3">
-										<!-- sherah Table Head -->
-										<thead class="sherah-table__head">
-											<tr>
-												<th class="sherah-table__column-2 sherah-table__h2">Image</th>
-												<th class="sherah-table__column-3 sherah-table__h2 sortable"
-													data-sort="fullName">Product Name <span
-														class="sort-indicator"></span></th>
-												<th class="sherah-table__column-3 sherah-table__h3 sortable"
-													data-sort="email">Provider Name <span class="sort-indicator"></span>
-												</th>
-												<th class="sherah-table__column-5 sherah-table__h5 sortable"
-													data-sort="phone">Product Type <span class="sort-indicator"></span>
-												</th>
-												<th class="sherah-table__column-7 sherah-table__h6 sortable"
-													data-sort="status">Status <span class="sort-indicator"></span></th>
-												<th class="sherah-table__column-8 sherah-table__h7 sortable"
-													data-sort="createdAt">Create At <span class="sort-indicator"></span>
-												</th>
-											</tr>
-										</thead>
-										<tbody class="sherah-table__body" id="product-table-body">
-											<!-- User rows will be injected here by JS -->
-										</tbody>
-									</table>
-									<!-- Pagination Controls -->
-									<div id="product-pagination"
-										style="display: flex; justify-content: flex-end; align-items: center; margin-top: 12px;">
-									</div>
-								</div>
-							</div>
-							<!-- End Dashboard Inner -->
-						</div>
-					</div>
+        <section class="sherah-adashboard sherah-show">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sherah-body">
+                            <div class="sherah-dsinner">
+                                
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="sherah-breadcrumb mg-top-30">
+                                            <h2 class="sherah-breadcrumb__title">Quản lý sản phẩm</h2>
+                                            <ul class="sherah-breadcrumb__list">
+                                                <li><a href="#">Trang chủ</a></li>
+                                                <li class="active"><a href='product-list.html'>Danh sách sản phẩm</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="sherah-page-inner mg-top-25">
+                                    
+                                    <div class="filter-toolbar">
+                                        <div class="row g-3 align-items-end">
+                                            <div class="col-lg-3 col-md-6 col-12">
+                                                <label class="filter-label">Tìm kiếm</label>
+                                                <input id="search-input" type="text" class="filter-input" placeholder="Tên sản phẩm, NCC...">
+                                            </div>
 
-				</div>
-			</div>
-		</section>
-		<!-- End sherah Dashboard -->
+                                            <div class="col-lg-2 col-md-6 col-6">
+                                                <label class="filter-label">Loại sản phẩm</label>
+                                                <select id="type-filter" class="filter-input">
+                                                    <option value="">Tất cả loại</option>
+                                                    </select>
+                                            </div>
 
-	</div>
+                                            <div class="col-lg-2 col-md-6 col-6">
+                                                <label class="filter-label">Trạng thái</label>
+                                                <select id="status-filter" class="filter-input">
+                                                    <option value="">Tất cả</option>
+                                                    <option value="AVAILABLE">Available (Sẵn sàng)</option>
+                                                    <option value="UNAVAILABLE">Unavailable (Hết hàng)</option>
+                                                </select>
+                                            </div>
 
-	<!-- sherah Scripts -->
-	<script src="js/jquery.min.js"></script>
-	<script src="js/jquery-migrate.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/charts.js"></script>
-	<script src="js/datatables.min.js"></script>
-	<script src="js/circle-progress.min.js"></script>
-	<script src="js/jquery-jvectormap.js"></script>
-	<script src="js/jvector-map.js"></script>
-	<script src="js/slickslider.min.js"></script>
-	<script src="js/main.js"></script>
-	<script src="js/auth-header.js"></script>
-	
-	<script>
-		const API_BASE =
-			location.hostname === "localhost" || location.hostname === "127.0.0.1"
-				? "http://localhost:5135/api"
-				: "/api";
+                                            <div class="col-lg-3 col-md-6 col-12">
+                                                <label class="filter-label">Ngày tạo</label>
+                                                <div class="d-flex gap-2" style="gap:5px">
+                                                    <input type="date" id="date-from" class="filter-input" title="Từ ngày">
+                                                    <input type="date" id="date-to" class="filter-input" title="Đến ngày">
+                                                </div>
+                                            </div>
 
+                                            <div class="col-lg-2 col-md-12 col-12 text-end">
+                                                <button id="btn-reset" class="btn btn-light border w-100" style="padding: 9px;" onclick="resetFilters()">
+                                                    <i class="fa fa-sync"></i> Làm mới
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
 
-		const productApiBase = `${API_BASE}/Products`;
-		const providerApiBase = `${API_BASE}/Providers`;
-		const productImagesApiBase = `${API_BASE}/ProductImages`;
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="sherah-table__head">
+                                                <tr>
+                                                    <th class="sortable" data-sort="name" style="width: 35%;">
+                                                        Sản phẩm <span class="sort-indicator"></span>
+                                                    </th>
+                                                    <th class="sortable" data-sort="providerName">
+                                                        Nhà cung cấp <span class="sort-indicator"></span>
+                                                    </th>
+                                                    <th class="sortable text-center" data-sort="status">
+                                                        Trạng thái <span class="sort-indicator"></span>
+                                                    </th>
+                                                    <th class="sortable text-end" data-sort="createdAt">
+                                                        Ngày tạo <span class="sort-indicator"></span>
+                                                    </th>
+                                                    <th class="text-end">Hành động</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="sherah-table__body" id="product-table-body">
+                                                </tbody>
+                                        </table>
+                                    </div>
 
+                                    <div class="d-flex justify-content-between align-items-center mt-4">
+                                        <div class="text-muted small">
+                                            Hiển thị <span id="showing-count" style="font-weight:bold;">0</span> sản phẩm
+                                        </div>
+                                        <div id="pagination" class="d-flex">
+                                            </div>
+                                    </div>
 
-		let allProducts = [];
-		let allProviders = [];
-		let allProductImages = [];
+                                </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
-		let currentProductPage = 1;
-		const productPageSize = 6;
-		let currentProductSort = { field: '', dir: '' };
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/datatables.min.js"></script>
+    <script src="js/circle-progress.min.js"></script>
+    <script src="js/jquery-jvectormap.js"></script>
+    <script src="js/jvector-map.js"></script>
+    <script src="js/slickslider.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth-header.js"></script>
 
-		/* ================= UPDATE PRODUCT STATUS ================= */
-		function updateProductStatus(productId, status) {
-			fetch(`${productApiBase}/${productId}/status`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ status: status })
-			})
-				.then(res => res.json())
-				.then(res => {
-					if (!res.success) {
-						alert('Failed to update status: ' + (res.message || 'Unknown error'));
-					} else {
-						fetchProducts();
-					}
-				})
-				.catch(err => alert('Failed to update status: ' + err));
-		}
+    <script>
+        async function loadLayout() {
+            try {
+                const headerRes = await fetch("header.html");
+                if(headerRes.ok) document.getElementById("header-container").innerHTML = await headerRes.text();
 
-		/* ================= RENDER PRODUCTS ================= */
-		function renderProducts(products) {
-			const tbody = document.getElementById('product-table-body');
-			if (!tbody) return;
+                const dashRes = await fetch("dashboard.html");
+                if(dashRes.ok) document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
-			tbody.innerHTML = '';
+                if (typeof initSherahLayout === 'function') initSherahLayout();
+                if (window.loadAuthToHeader) window.loadAuthToHeader();
+            } catch (e) {
+                console.error("Layout loading error:", e);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", () => { loadLayout(); });
+    </script>
 
-			products.forEach(product => {
-				let imgHtml = '';
-				let imgUrl = '';
+    <script>
+        // --- CONFIG & STATE ---
+        const API_BASE = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+                ? "http://localhost:5135/api"
+                : "/api";
+        const endpoints = {
+            products: `${API_BASE}/Products`,
+            providers: `${API_BASE}/Providers`,
+            images: `${API_BASE}/ProductImages`
+        };
 
-				if (product.productImages && Array.isArray(product.productImages) && product.productImages.length > 0) {
-					imgUrl = product.productImages[0].imageUrl || product.productImages[0].ImageUrl;
-				} else {
-					const foundImg = allProductImages.find(img => img.productId === product.id);
-					if (foundImg) imgUrl = foundImg.imageUrl || foundImg.ImageUrl;
-				}
+        let allProducts = [];
+        let allProviders = [];
+        let allImages = [];
+        
+        let currentPage = 1;
+        const pageSize = 6;
+        let currentSort = { field: 'createdAt', dir: 'desc' };
 
-				if (imgUrl) {
-					imgHtml = `<img src="${imgUrl}" alt="${product.name}" style="width:128px;height:128px;object-fit:cover;border-radius:8px;">`;
-				}
+        // DOM Elements
+        const filters = {
+            search: document.getElementById('search-input'),
+            type: document.getElementById('type-filter'),
+            status: document.getElementById('status-filter'),
+            dateFrom: document.getElementById('date-from'),
+            dateTo: document.getElementById('date-to')
+        };
 
-				let providerName = '';
-				if (product.provider && (product.provider.brandName || product.provider.BrandName)) {
-					providerName = product.provider.brandName || product.provider.BrandName;
-				} else if (product.providerId) {
-					const foundProvider = allProviders.find(p => p.id === product.providerId);
-					if (foundProvider) providerName = foundProvider.brandName || foundProvider.BrandName || '';
-				}
+        // --- 1. DATA FETCHING ---
+        function fetchData() {
+            Promise.all([
+                fetch(endpoints.products).then(res => res.json()),
+                fetch(endpoints.providers).then(res => res.json()),
+                fetch(endpoints.images).then(res => res.json())
+            ]).then(([prodRes, provRes, imgRes]) => {
+                if (prodRes.success) allProducts = prodRes.data || [];
+                if (provRes.success) allProviders = provRes.data || [];
+                if (imgRes.success) allImages = imgRes.data || [];
+                
+                populateTypeFilter(); 
+                applyFiltersAndSort();
+            }).catch(err => console.error('Error fetching data:', err));
+        }
 
-				const statusVal = (product.status || product.Status || '').toUpperCase();
-				let statusClass = '';
-				if (statusVal === 'AVAILABLE') statusClass = 'status-available';
-				else if (statusVal === 'UNAVAILABLE') statusClass = 'status-unavailable';
+        // --- 2. HELPERS ---
+        function getProductImage(productId, product) {
+            let img = null;
+            // Ưu tiên ảnh trong object product (nếu API trả về lồng nhau)
+            if (product.productImages && product.productImages.length > 0) {
+                img = product.productImages[0].imageUrl || product.productImages[0].ImageUrl;
+            }
+            
+            // Nếu không có, tìm trong mảng ảnh rời
+            if (!img) {
+                const found = allImages.find(i => i.productId === productId);
+                if (found) img = found.imageUrl || found.ImageUrl;
+            }
 
-				const tr = document.createElement('tr');
-				tr.innerHTML = `
-				<td>${imgHtml}</td>
-				<td>${product.name || ''}</td>
-				<td>${providerName}</td>
-				<td>${product.productType || product.ProductType || ''}</td>
-				<td>
-					<select class="status-select ${statusClass}"
-						onchange="updateProductStatus(${product.id}, this.value)">
-						<option value="AVAILABLE" ${statusVal === 'AVAILABLE' ? 'selected' : ''}>Available</option>
-						<option value="UNAVAILABLE" ${statusVal === 'UNAVAILABLE' ? 'selected' : ''}>Unavailable</option>
-					</select>
-				</td>
-				<td>
-					${product.createdAt
-						? new Date(product.createdAt).toLocaleDateString()
-						: (product.CreatedAt ? new Date(product.CreatedAt).toLocaleDateString() : '')}
-				</td>
-			`;
-				tbody.appendChild(tr);
-			});
-		}
+            // Nếu vẫn không có hoặc chuỗi rỗng, trả về null để render xử lý
+            return (img && img.trim() !== "") ? img : null;
+        }
 
-		/* ================= PAGINATION ================= */
-		function renderProductPagination(total, page, pageSize) {
-			const pageCount = Math.ceil(total / pageSize);
-			const pagination = document.getElementById('product-pagination');
-			if (!pagination) return;
+        function getProviderName(providerId, product) {
+            if (product.provider) return product.provider.brandName || product.provider.BrandName || 'Unknown';
+            const found = allProviders.find(p => p.id === providerId);
+            return found ? (found.brandName || found.BrandName) : '--';
+        }
 
-			pagination.innerHTML = '';
-			if (pageCount <= 1) return;
+        function populateTypeFilter() {
+            const types = [...new Set(allProducts.map(p => p.productType || p.ProductType).filter(Boolean))];
+            const select = filters.type;
+            select.innerHTML = '<option value="">Tất cả loại</option>';
+            types.sort().forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                select.appendChild(opt);
+            });
+        }
 
-			let html = '';
-			html += `<button ${page === 1 ? 'disabled' : ''} onclick="gotoProductPage(${page - 1})">&lt;</button>`;
-			for (let i = 1; i <= pageCount; i++) {
-				html += `<button ${i === page ? 'style="font-weight:bold; background:#eee;"' : ''} onclick="gotoProductPage(${i})">${i}</button>`;
-			}
-			html += `<button ${page === pageCount ? 'disabled' : ''} onclick="gotoProductPage(${page + 1})">&gt;</button>`;
-			pagination.innerHTML = html;
-		}
+        // --- 3. FILTER & SORT LOGIC ---
+        function applyFiltersAndSort() {
+            let result = allProducts.map(p => ({
+                ...p,
+                finalProviderName: getProviderName(p.providerId, p),
+                finalImage: getProductImage(p.id, p),
+                finalType: p.productType || p.ProductType || '',
+                finalStatus: (p.status || p.Status || 'UNAVAILABLE').toUpperCase(),
+                finalDate: p.createdAt || p.CreatedAt
+            }));
 
-		function gotoProductPage(page) {
-			currentProductPage = page;
-			renderProductTable();
-		}
+            // Filter Logic (Search, Type, Status, Date)
+            const searchVal = filters.search.value.trim().toLowerCase();
+            if (searchVal) {
+                result = result.filter(p => 
+                    (p.name || '').toLowerCase().includes(searchVal) ||
+                    p.finalProviderName.toLowerCase().includes(searchVal)
+                );
+            }
+            const typeVal = filters.type.value;
+            if (typeVal) result = result.filter(p => p.finalType === typeVal);
+            
+            const statusVal = filters.status.value;
+            if (statusVal) result = result.filter(p => p.finalStatus === statusVal);
 
-		/* ================= SORT ================= */
-		function sortProductBy(field) {
-			if (currentProductSort.field === field) {
-				currentProductSort.dir = currentProductSort.dir === 'asc' ? 'desc' : 'asc';
-			} else {
-				currentProductSort.field = field;
-				currentProductSort.dir = 'asc';
-			}
-			renderProductTable();
-			updateProductSortIndicators();
-		}
+            if (filters.dateFrom.value || filters.dateTo.value) {
+                const dFrom = filters.dateFrom.value ? new Date(filters.dateFrom.value).setHours(0,0,0,0) : null;
+                const dTo = filters.dateTo.value ? new Date(filters.dateTo.value).setHours(23,59,59,999) : null;
+                result = result.filter(p => {
+                    if (!p.finalDate) return false;
+                    const time = new Date(p.finalDate).getTime();
+                    if (dFrom && time < dFrom) return false;
+                    if (dTo && time > dTo) return false;
+                    return true;
+                });
+            }
 
-		function updateProductSortIndicators() {
-			document.querySelectorAll('th.product-sortable').forEach(th => {
-				const span = th.querySelector('.sort-indicator');
-				if (!span) return;
-				if (th.dataset.sort === currentProductSort.field) {
-					span.textContent = currentProductSort.dir === 'asc' ? '▲' : '▼';
-				} else {
-					span.textContent = '';
-				}
-			});
-		}
+            // Sort Logic
+            if (currentSort.field) {
+                result.sort((a, b) => {
+                    let va, vb;
+                    if (currentSort.field === 'name') { va = a.name; vb = b.name; }
+                    else if (currentSort.field === 'providerName') { va = a.finalProviderName; vb = b.finalProviderName; }
+                    else if (currentSort.field === 'status') { va = a.finalStatus; vb = b.finalStatus; }
+                    else if (currentSort.field === 'createdAt') { 
+                        va = a.finalDate ? new Date(a.finalDate).getTime() : 0; 
+                        vb = b.finalDate ? new Date(b.finalDate).getTime() : 0; 
+                    }
+                    else { va = a[currentSort.field]; vb = b[currentSort.field]; }
 
-		/* ================= TABLE ================= */
-		function renderProductTable() {
-			let products = allProducts.slice();
+                    if (typeof va === 'string') va = va.toLowerCase();
+                    if (typeof vb === 'string') vb = vb.toLowerCase();
 
-			const filterProductName = document.getElementById('filter-product-name')?.value.trim().toLowerCase();
-			if (filterProductName) {
-				products = products.filter(p => (p.name || '').toLowerCase().includes(filterProductName));
-			}
+                    if (va < vb) return currentSort.dir === 'asc' ? -1 : 1;
+                    if (va > vb) return currentSort.dir === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
 
-			const filterProviderName = document.getElementById('filter-provider-name')?.value.trim().toLowerCase();
-			if (filterProviderName) {
-				products = products.filter(p => {
-					let providerName = '';
-					if (p.provider && (p.provider.brandName || p.provider.BrandName)) {
-						providerName = p.provider.brandName || p.provider.BrandName;
-					} else if (p.providerId) {
-						const foundProvider = allProviders.find(pr => pr.id === p.providerId);
-						if (foundProvider) providerName = foundProvider.brandName || foundProvider.BrandName || '';
-					}
-					return providerName.toLowerCase().includes(filterProviderName);
-				});
-			}
+            // Update Pagination & UI
+            const total = result.length;
+            document.getElementById('showing-count').textContent = total;
+            const start = (currentPage - 1) * pageSize;
+            renderTable(result.slice(start, start + pageSize));
+            renderPagination(total);
+            updateSortIndicators();
+        }
 
-			if (currentProductSort.field) {
-				products.sort((a, b) => {
-					let va = a[currentProductSort.field] || '';
-					let vb = b[currentProductSort.field] || '';
-					if (currentProductSort.field === 'createdAt') {
-						va = va ? new Date(va) : 0;
-						vb = vb ? new Date(vb) : 0;
-					}
-					if (typeof va === 'string') va = va.toLowerCase();
-					if (typeof vb === 'string') vb = vb.toLowerCase();
-					if (va < vb) return currentProductSort.dir === 'asc' ? -1 : 1;
-					if (va > vb) return currentProductSort.dir === 'asc' ? 1 : -1;
-					return 0;
-				});
-			}
+        // --- 4. RENDER UI ---
+        function renderTable(products) {
+            const tbody = document.getElementById('product-table-body');
+            tbody.innerHTML = '';
 
-			const total = products.length;
-			const start = (currentProductPage - 1) * productPageSize;
-			const paged = products.slice(start, start + productPageSize);
+            if (products.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted"><i class="fa fa-box-open fa-2x mb-2"></i><br>Không tìm thấy sản phẩm</td></tr>`;
+                return;
+            }
 
-			renderProducts(paged);
-			renderProductPagination(total, currentProductPage, productPageSize);
-		}
+            // URL ảnh dự phòng online (đảm bảo luôn hiển thị được)
+            const fallbackImg = "https://placehold.co/100x100?text=No+Img"; 
 
-		/* ================= FETCH ================= */
-		function fetchProducts() {
-			Promise.all([
-				fetch(productApiBase).then(res => res.json()),
-				fetch(providerApiBase).then(res => res.json()),
-				fetch(productImagesApiBase).then(res => res.json())
-			]).then(([productsRes, providersRes, imagesRes]) => {
-				if (productsRes.success) allProducts = productsRes.data || [];
-				if (providersRes.success) allProviders = providersRes.data || [];
-				if (imagesRes.success) allProductImages = imagesRes.data || [];
+            products.forEach(p => {
+                const isAvailable = p.finalStatus === 'AVAILABLE';
+                
+                // Logic xử lý ảnh: Nếu p.finalImage null thì dùng fallback ngay lập tức
+                // Nếu p.finalImage có link nhưng link chết -> onerror sẽ bắt
+                const imgSrc = p.finalImage ? p.finalImage : fallbackImg;
 
-				currentProductPage = 1;
-				renderProductTable();
-			}).catch(err => {
-				console.error('Failed to fetch products/providers/images:', err);
-			});
-		}
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="product-info-cell">
+                            <div class="product-img-wrapper">
+                                <img src="${imgSrc}" 
+                                     alt="${p.name}" 
+                                     onerror="this.onerror=null; this.src='${fallbackImg}';"> 
+                            </div>
+                            <div class="product-details">
+                                <h6>${p.name || 'No Name'}</h6>
+                                <span class="badge-type">${p.finalType}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${p.finalProviderName}</td>
+                    <td class="text-center">
+                        <select class="status-select ${isAvailable ? 'status-available' : 'status-unavailable'}" 
+                                onchange="updateStatus(${p.id}, this.value, this)">
+                            <option value="AVAILABLE" ${isAvailable ? 'selected' : ''}>Available</option>
+                            <option value="UNAVAILABLE" ${!isAvailable ? 'selected' : ''}>Unavailable</option>
+                        </select>
+                    </td>
+                    <td class="text-end">
+                        ${p.finalDate ? new Date(p.finalDate).toLocaleDateString('vi-VN') : '--'}
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${p.id})">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
-		document.addEventListener('DOMContentLoaded', function () {
-			fetchProducts();
+        function renderPagination(total) {
+            const pageCount = Math.ceil(total / pageSize);
+            const container = document.getElementById('pagination');
+            container.innerHTML = '';
+            if (pageCount <= 1) return;
 
-			document.getElementById('filter-product-name')?.addEventListener('input', () => {
-				currentProductPage = 1;
-				renderProductTable();
-			});
+            let html = `<button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="gotoPage(${currentPage - 1})">&lt;</button>`;
+            for (let i = 1; i <= pageCount; i++) {
+                if (i === 1 || i === pageCount || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="gotoPage(${i})">${i}</button>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += `<span>...</span>`;
+                }
+            }
+            html += `<button class="pagination-btn" ${currentPage === pageCount ? 'disabled' : ''} onclick="gotoPage(${currentPage + 1})">&gt;</button>`;
+            container.innerHTML = html;
+        }
 
-			document.getElementById('filter-provider-name')?.addEventListener('input', () => {
-				currentProductPage = 1;
-				renderProductTable();
-			});
+        // --- 5. ACTIONS ---
+        function updateStatus(id, newStatus, selectEl) {
+            selectEl.disabled = true;
+            fetch(`${endpoints.products}/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(res => res.json())
+            .then(res => {
+                selectEl.disabled = false;
+                if (res.success) {
+                    const prod = allProducts.find(p => p.id === id);
+                    if(prod) prod.status = newStatus;
+                    selectEl.className = `status-select ${newStatus === 'AVAILABLE' ? 'status-available' : 'status-unavailable'}`;
+                } else {
+                    alert('Lỗi cập nhật: ' + res.message);
+                    selectEl.value = newStatus === 'AVAILABLE' ? 'UNAVAILABLE' : 'AVAILABLE';
+                }
+            })
+            .catch(err => {
+                selectEl.disabled = false;
+                alert('Lỗi kết nối: ' + err);
+            });
+        }
 
-			document.querySelectorAll('th.product-sortable').forEach(th => {
-				th.style.cursor = 'pointer';
-				th.addEventListener('click', () => sortProductBy(th.dataset.sort));
-			});
-		});
-	</script>
+        function deleteProduct(id) {
+            if(!confirm("Bạn có chắc muốn xóa sản phẩm này?")) return;
+            alert("Chức năng xóa đang phát triển (ID: " + id + ")");
+        }
 
-	<script>
-		async function loadLayout() {
-			const headerRes = await fetch("header.html");
-			document.getElementById("header-container").innerHTML = await headerRes.text();
+        function gotoPage(p) { currentPage = p; applyFiltersAndSort(); }
+        
+        function resetFilters() {
+            filters.search.value = '';
+            filters.type.value = '';
+            filters.status.value = '';
+            filters.dateFrom.value = '';
+            filters.dateTo.value = '';
+            currentPage = 1;
+            applyFiltersAndSort();
+        }
 
-			const dashRes = await fetch("dashboard.html");
-			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+        function sortBy(field) {
+            if (currentSort.field === field) {
+                currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.field = field;
+                currentSort.dir = 'asc';
+            }
+            applyFiltersAndSort();
+        }
 
-			initSherahLayout();
+        function updateSortIndicators() {
+            document.querySelectorAll('.sortable .sort-indicator').forEach(span => span.textContent = '');
+            const th = document.querySelector(`.sortable[data-sort="${currentSort.field}"]`);
+            if (th) {
+                th.querySelector('.sort-indicator').textContent = currentSort.dir === 'asc' ? ' ▲' : ' ▼';
+            }
+        }
 
-			// ✅ quan trọng: gọi sau khi header đã có trong DOM
-			if (window.loadAuthToHeader) window.loadAuthToHeader();
-		}
-	</script>
-
-	<script>
-		document.addEventListener("DOMContentLoaded", () => {
-			loadLayout();
-		});
-	</script>
-
-	<style>
-		/* --- CSS cho Role (Quyền hạn) --- */
-		.role-badge {
-			display: inline-block;
-			padding: 5px 10px;
-			border-radius: 15px;
-			font-size: 12px;
-			font-weight: 600;
-			text-transform: capitalize;
-			margin-right: 5px;
-			margin-bottom: 5px;
-		}
-
-		/* Màu sắc riêng cho từng Role */
-		.role-admin {
-			background-color: #ffebee;
-			/* Nền đỏ nhạt */
-			color: #c62828;
-			/* Chữ đỏ đậm */
-			border: 1px solid #ffcdd2;
-		}
-
-		.role-provider {
-			background-color: #e3f2fd;
-			/* Nền xanh dương nhạt */
-			color: #1565c0;
-			/* Chữ xanh dương đậm */
-			border: 1px solid #bbdefb;
-		}
-
-		.role-customer {
-			background-color: #e8f5e9;
-			/* Nền xanh lá nhạt */
-			color: #2e7d32;
-			/* Chữ xanh lá đậm */
-			border: 1px solid #c8e6c9;
-		}
-
-		/* Fallback cho role lạ */
-		.role-default {
-			background-color: #f5f5f5;
-			color: #616161;
-			border: 1px solid #e0e0e0;
-		}
-
-		/* --- CSS cho Status Select (Trạng thái) --- */
-		.status-select {
-			padding: 8px 18px;
-			border-radius: 8px;
-			font-weight: 600;
-			font-size: 15px;
-			cursor: pointer;
-			outline: none;
-			border: 1.5px solid #bdbdbd;
-			transition: all 0.3s ease;
-			appearance: none;
-			-webkit-appearance: none;
-			text-align: center;
-			background: #f7f7f7;
-			color: #333;
-			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-			min-width: 120px;
-		}
-
-		.status-select.status-available {
-			background-color: #e8f5e9;
-			color: #1b5e20;
-			border-color: #43a047;
-		}
-
-		.status-select.status-unavailable {
-			background-color: #e8f5e9;
-			color: #ed1a48;
-			border-color: #ed1a48;
-		}
-
-		.status-select:hover {
-			opacity: 0.97;
-			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
-		}
-	</style>
-
-
-
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            Object.values(filters).forEach(el => {
+                el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', () => {
+                    currentPage = 1;
+                    applyFiltersAndSort();
+                });
+            });
+            document.querySelectorAll('.sortable').forEach(th => {
+                th.addEventListener('click', () => sortBy(th.dataset.sort));
+            });
+        });
+    </script>
 </body>
-
-<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/customer-list by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:10 GMT -->
-
 </html>
