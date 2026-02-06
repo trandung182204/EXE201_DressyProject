@@ -15,6 +15,7 @@ public interface IAuthService
 {
     Task<AuthResponse> RegisterAsync(RegisterRequest req);
     Task<AuthResponse> LoginAsync(LoginRequest req);
+    Task ChangePasswordAsync(long userId, ChangePasswordRequest req);
 }
 
 public class AuthService : IAuthService
@@ -255,6 +256,42 @@ public class AuthService : IAuthService
             "customer" => "../index.html",
             _ => "../index.html"
         };
+    }
+    public async Task ChangePasswordAsync(long userId, ChangePasswordRequest req)
+    {
+        // normalize input
+        req.OldPassword = (req.OldPassword ?? "").Trim();
+        req.NewPassword = (req.NewPassword ?? "").Trim();
+        req.ConfirmPassword = (req.ConfirmPassword ?? "").Trim();
+
+        // validate
+        if (string.IsNullOrWhiteSpace(req.OldPassword))
+            throw new Exception("Old password is required");
+
+        if (string.IsNullOrWhiteSpace(req.NewPassword))
+            throw new Exception("New password is required");
+
+        if (req.NewPassword != req.ConfirmPassword)
+            throw new Exception("Confirm password does not match");
+
+        if (req.OldPassword == req.NewPassword)
+            throw new Exception("New password must be different from old password");
+
+        // load user
+        var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+        if (user == null)
+            throw new Exception("User not found");
+
+        // verify old password (đồng bộ với LoginAsync)
+        var verify = _hasher.VerifyHashedPassword(user, user.PasswordHash, req.OldPassword);
+        if (verify == PasswordVerificationResult.Failed)
+            throw new Exception("Old password is incorrect");
+
+        // set new password hash (đồng bộ với RegisterAsync)
+        user.PasswordHash = _hasher.HashPassword(user, req.NewPassword);
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
     }
 
 }

@@ -146,6 +146,7 @@
   <script src="js/jvector-map.js"></script>
   <script src="js/flex-slider.html"></script>
   <script src="js/main.js"></script>
+  <script src="js/auth-header.js"></script>
   <script>
     $('.button.plus').on('click', function () {
       // var $qty = $('.input-number');
@@ -167,22 +168,19 @@
     });
   </script>
   <script>
-    async function loadLayout() {
-      // Load header
-      const headerRes = await fetch("header.html");
-      document.getElementById("header-container").innerHTML =
-        await headerRes.text();
+		async function loadLayout() {
+			const headerRes = await fetch("header.html");
+			document.getElementById("header-container").innerHTML = await headerRes.text();
 
-      // Load dashboard / sidebar
-      const dashRes = await fetch("dashboard.html");
-      document.getElementById("dashboard-container").innerHTML =
-        await dashRes.text();
+			const dashRes = await fetch("dashboard.html");
+			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
-      initSherahLayout();
-    }
+			initSherahLayout();
 
-    loadLayout();
-  </script>
+			// ✅ quan trọng: gọi sau khi header đã có trong DOM
+			if (window.loadAuthToHeader) window.loadAuthToHeader();
+		}
+	</script>
   <script>
     // ===== CONFIG =====
     const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
@@ -371,6 +369,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
+      
       const productId = getProductIdFromUrl();
       if (!productId) {
         alert("Thiếu id trên URL. Ví dụ: product-detail.html?id=123");
@@ -385,6 +384,7 @@
         console.error(err);
         alert(err?.message || "Lỗi khi tải chi tiết sản phẩm");
       }
+      loadLayout();
     });
   </script>
 
