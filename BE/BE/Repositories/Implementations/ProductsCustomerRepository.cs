@@ -11,6 +11,9 @@ public class ProductsCustomerRepository : IProductsCustomerRepository
     private readonly ApplicationDbContext _db;
     public ProductsCustomerRepository(ApplicationDbContext db) => _db = db;
 
+    private static string? BuildFileUrl(long? fileId)
+        => fileId == null ? null : $"/api/media-files/{fileId}";
+
     public async Task<PagedResult<ProductListCustomerItemDto>> GetListingAsync(ProductListQuery q)
     {
         var query = _db.Products
@@ -72,7 +75,19 @@ public class ProductsCustomerRepository : IProductsCustomerRepository
                 Id = p.Id,
                 Name = p.Name,
                 CategoryName = p.Category != null ? p.Category.Name : null,
-                ThumbnailUrl = p.ProductImages.Select(i => i.ImageUrl).FirstOrDefault(),
+
+                // ✅ CHANGED: ImageUrl -> ImageFileId (+ optional url runtime)
+                ThumbnailFileId = p.ProductImages
+                    .OrderBy(i => i.Id)
+                    .Select(i => i.ImageFileId)
+                    .FirstOrDefault(),
+
+                // OPTIONAL: nếu DTO có field ThumbnailUrl thì bật dòng này
+                ThumbnailUrl = p.ProductImages
+                    .OrderBy(i => i.Id)
+                    .Select(i => BuildFileUrl(i.ImageFileId))
+                    .FirstOrDefault(),
+
                 MinPricePerDay = p.ProductVariants.Min(v => (decimal?)v.PricePerDay),
                 CreatedAt = p.CreatedAt,
                 Sizes = p.ProductVariants.Where(v => v.SizeLabel != null).Select(v => v.SizeLabel!).Distinct().ToList(),
@@ -112,7 +127,19 @@ public class ProductsCustomerRepository : IProductsCustomerRepository
             Description = product.Description,
             Status = product.Status,
             CreatedAt = product.CreatedAt,
-            ImageUrls = product.ProductImages.Select(i => i.ImageUrl).ToList(),
+
+            // ✅ CHANGED: ImageUrl -> ImageFileId (+ optional url runtime)
+            ImageFileIds = product.ProductImages
+                .OrderBy(i => i.Id)
+                .Select(i => i.ImageFileId)
+                .ToList(),
+
+            // OPTIONAL: nếu DTO có field ImageUrls thì bật dòng này
+            ImageUrls = product.ProductImages
+                .OrderBy(i => i.Id)
+                .Select(i => BuildFileUrl(i.ImageFileId))
+                .ToList(),
+
             Variants = product.ProductVariants.Select(v => new ProductVariantDetailDto
             {
                 Id = v.Id,

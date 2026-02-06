@@ -15,13 +15,14 @@ public partial class Users
 
     public string? Phone { get; set; }
 
-    public string? AvatarUrl { get; set; }
-
     public string? Status { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+    public long? AvatarFileId { get; set; }
+
+    public virtual MediaFiles? AvatarFile { get; set; }
 
     public virtual ICollection<Bookings> Bookings { get; set; } = new List<Bookings>();
 

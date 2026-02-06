@@ -10,9 +10,6 @@ public partial class Providers
     public long? UserId { get; set; }
 
     public string? BrandName { get; set; }
-
-    public string? LogoUrl { get; set; }
-
     public string? Description { get; set; }
 
     public string? ProviderType { get; set; }
@@ -24,6 +21,9 @@ public partial class Providers
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+    public long? LogoFileId { get; set; }
+
+    public virtual MediaFiles? LogoFile { get; set; }
 
     public virtual ICollection<Products> Products { get; set; } = new List<Products>();
 

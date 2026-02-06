@@ -34,7 +34,18 @@ namespace BE.Controllers
             if (provider == null)
                 return NotFound(new { success = false, message = "Provider not found" });
 
-            return Ok(new { success = true, data = provider, message = "Fetched successfully" });
+            // ✅ OPTIONAL: trả thêm url runtime để FE render ảnh
+            var logoUrl = provider.LogoFileId != null
+                ? $"/api/media-files/{provider.LogoFileId}"
+                : null;
+
+            return Ok(new
+            {
+                success = true,
+                data = provider,
+                logoUrl,
+                message = "Fetched successfully"
+            });
         }
 
         [HttpPut("me")]
@@ -65,21 +76,38 @@ namespace BE.Controllers
             if (!string.IsNullOrWhiteSpace(dto.BrandName))
                 provider.BrandName = dto.BrandName.Trim();
 
-            // Cho phép clear description/logo bằng cách gửi "" (tuỳ bạn)
+            // Cho phép clear description bằng cách gửi "" (tuỳ bạn)
             if (dto.Description != null)
                 provider.Description = string.IsNullOrWhiteSpace(dto.Description) ? null : dto.Description.Trim();
 
-            if (dto.LogoUrl != null)
-                provider.LogoUrl = string.IsNullOrWhiteSpace(dto.LogoUrl) ? null : dto.LogoUrl.Trim();
-
-            // Nếu cho provider tự đổi status thì mở:
-            // if (!string.IsNullOrWhiteSpace(dto.Status)) provider.Status = dto.Status.Trim().ToUpper();
+            // ✅ CHANGED: LogoUrl -> LogoFileId (cho phép clear = null)
+            // Quy ước:
+            // - dto.LogoFileId = null => clear logo
+            // - dto.LogoFileId > 0 => set logo
+            // - dto.LogoFileId = 0 hoặc âm => ignore (tránh set rác)
+            if (dto.LogoFileId.HasValue)
+            {
+                if (dto.LogoFileId.Value > 0)
+                    provider.LogoFileId = dto.LogoFileId.Value;
+                else
+                    provider.LogoFileId = null; // nếu muốn "0" nghĩa là clear
+            }
 
             provider.UpdatedAt = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
 
-            return Ok(new { success = true, data = provider, message = "Updated successfully" });
+            var logoUrl = provider.LogoFileId != null
+                ? $"/api/media-files/{provider.LogoFileId}"
+                : null;
+
+            return Ok(new
+            {
+                success = true,
+                data = provider,
+                logoUrl,
+                message = "Updated successfully"
+            });
         }
 
         private async Task<long> ResolveProviderIdAsync()

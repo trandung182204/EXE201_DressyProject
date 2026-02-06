@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
 
-<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/upload-product by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:14 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
-
 <head>
     <!-- Meta Tags -->
     <meta charset="utf-8">
@@ -34,6 +30,7 @@
     <link rel="stylesheet" href="css/jquery-ui.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="style.css">
+
     <style>
         #imagePreviewRow {
             display: flex;
@@ -76,6 +73,56 @@
             line-height: 26px;
             font-weight: 700;
         }
+
+        /* ===== NEW: variants table ===== */
+        .variants-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .variants-table-wrap {
+            overflow: auto;
+        }
+
+        table.variants-table {
+            width: 100%;
+            min-width: 720px;
+            border-collapse: collapse;
+        }
+
+        table.variants-table th,
+        table.variants-table td {
+            padding: 10px;
+            border-bottom: 1px solid #f2f2f2;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .v-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e8e8e8;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .v-remove {
+            background: #eee !important;
+            color: #333 !important;
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .form-msg {
+            margin-top: 12px;
+            font-size: 13px;
+        }
     </style>
 
 </head>
@@ -83,19 +130,14 @@
 <body id="sherah-dark-light">
 
     <div class="sherah-body-area">
-        <!-- sherah Admin Menu -->
         <div id="header-container"></div>
-        <!-- End sherah Admin Menu -->
         <div id="dashboard-container"></div>
-        <!-- End Header -->
 
-        <!-- sherah Dashboard -->
         <section class="sherah-adashboard sherah-show">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="sherah-body">
-                            <!-- Dashboard Inner -->
                             <div class="sherah-dsinner">
                                 <div class="row">
                                     <div class="col-12">
@@ -108,8 +150,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                    class="sherah-page-inner sherah-border sherah-basic-page sherah-default-bg mg-top-25 p-0">
+
+                                <div class="sherah-page-inner sherah-border sherah-basic-page sherah-default-bg mg-top-25 p-0">
                                     <form id="uploadProductForm" class="sherah-wc__form-main" action="#"
                                         onsubmit="return false;">
                                         <div class="row">
@@ -120,25 +162,22 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Product
-                                                                    Title</label>
+                                                                <label class="sherah-wc__form-label">Product Title</label>
                                                                 <div class="form-group__input">
                                                                     <input id="name" class="sherah-wc__form-input"
                                                                         placeholder="Type here" type="text" name="name">
-
                                                                 </div>
                                                             </div>
                                                         </div>
+
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Price per
-                                                                    day</label>
+                                                                <label class="sherah-wc__form-label">Price per day</label>
                                                                 <div class="form-group__input">
                                                                     <input id="pricePerDay"
                                                                         class="sherah-wc__form-input"
                                                                         placeholder="Type here" type="number"
                                                                         name="pricePerDay">
-
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -151,10 +190,10 @@
                                                                         class="sherah-wc__form-input"
                                                                         placeholder="Type here"
                                                                         name="description"></textarea>
-
                                                                 </div>
                                                             </div>
                                                         </div>
+
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-group">
                                                                 <label class="sherah-wc__form-label">Category*</label>
@@ -163,21 +202,18 @@
                                                                         class="sherah-wc__form-input" name="categoryId">
                                                                         <option value="">-- Select category --</option>
                                                                     </select>
-
-
                                                                 </div>
                                                             </div>
                                                         </div>
+
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Product
-                                                                    Type</label>
+                                                                <label class="sherah-wc__form-label">Product Type</label>
                                                                 <div class="form-group__input">
                                                                     <select id="productType"
                                                                         class="sherah-wc__form-input"
                                                                         name="productType">
                                                                         <option value="OUTFIT">OUTFIT</option>
-
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -187,28 +223,16 @@
                                                 </div>
                                                 <!-- End Product Info -->
                                             </div>
+
                                             <div class="col-lg-6 col-12">
-                                                <!-- Organization -->
-                                                <!-- End Organization -->
                                                 <!-- Specification -->
                                                 <div class="product-form-box sherah-border mg-top-30">
                                                     <h4 class="form-title m-0">Specification</h4>
+
                                                     <div class="row">
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Stock</label>
-                                                                <div class="form-group__input">
-                                                                    <input id="quantity" class="sherah-wc__form-input"
-                                                                        placeholder="Type here" type="number"
-                                                                        name="quantity">
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6 col-md-6 col-12">
-                                                            <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Deposit
-                                                                    Amount</label>
+                                                                <label class="sherah-wc__form-label">Deposit Amount</label>
                                                                 <div class="form-group__input">
                                                                     <input id="depositAmount"
                                                                         class="sherah-wc__form-input"
@@ -217,125 +241,48 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
-                                                        <div class="col-lg-6 col-md-6 col-12">
-                                                            <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Size</label>
-                                                                <div class="checkbox-group">
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check size-check" value="S"
-                                                                            id="sizeS" autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="sizeS">S</label>
-
-                                                                    </div>
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check size-check" value="M"
-                                                                            id="sizeM" autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="sizeM">M</label>
-                                                                    </div>
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check size-check" value="X"
-                                                                            id="sizeX" autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="sizeX">X</label>
-                                                                    </div>
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check size-check" value="XL"
-                                                                            id="sizeXL" autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="sizeXL">XL</label>
-                                                                    </div>
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check size-check" value="2X"
-                                                                            id="size2X" autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="size2X">2X</label>
-                                                                    </div>
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check size-check" value="3X"
-                                                                            id="size3X" autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="size3X">3X</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6 col-md-6 col-12">
-                                                            <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Colors</label>
-                                                                <div class="checkbox-group">
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check color-check" value="White"
-                                                                            data-code="#FFFFFF" id="colorWhite"
-                                                                            autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="colorWhite">White</label>
-                                                                    </div>
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check color-check" value="Black"
-                                                                            data-code="#000000" id="colorBlack"
-                                                                            autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="colorBlack">Black</label>
-
-                                                                    </div>
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check color-check"
-                                                                            value="Harlequin" data-code="#3A5FCD"
-                                                                            id="colorHarlequin" autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="colorHarlequin">Harlequin</label>
-                                                                    </div>
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check color-check" value="Red"
-                                                                            data-code="#FF0000" id="colorRed"
-                                                                            autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="colorRed">Red</label>
-                                                                    </div>
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check color-check" value="Yellow"
-                                                                            data-code="#FFFF00" id="colorYellow"
-                                                                            autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="colorYellow">Yellow</label>
-                                                                    </div>
-                                                                    <div class="checkbox-group__single">
-                                                                        <input type="checkbox"
-                                                                            class="btn-check color-check" value="Blue"
-                                                                            data-code="#0000FF" id="colorBlue"
-                                                                            autocomplete="off">
-                                                                        <label class="checkbox-group__single--label"
-                                                                            for="colorBlue">Blue</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>
+
+                                                    <!-- ✅ NEW: Variants table (thay cho Size/Colors checkbox + Stock) -->
+                                                    <div class="variants-toolbar">
+                                                        <label class="sherah-wc__form-label" style="margin:0;">Variants</label>
+                                                        <button id="btnAddVariant" type="button"
+                                                            class="sherah-btn sherah-btn__primary"
+                                                            style="padding:10px 14px;">
+                                                            + Add variant
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="variants-table-wrap">
+                                                        <table class="variants-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="width: 22%;">Size</th>
+                                                                    <th style="width: 26%;">Color name</th>
+                                                                    <th style="width: 18%;">Color code</th>
+                                                                    <th style="width: 18%;">Quantity</th>
+                                                                    <th style="width: 16%;"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="variantsBody"></tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <p class="form-msg" style="color:#666;">
+                                                        Nhập theo từng dòng: <b>Size → Color → Quantity</b>. Nếu có nhiều size/màu, bấm <b>Add variant</b>.
+                                                    </p>
                                                 </div>
                                                 <!-- End Specification -->
                                             </div>
                                         </div>
+
+                                        <!-- Images -->
                                         <div class="product-form-box sherah-border mg-top-30">
                                             <div class="form-group">
                                                 <div class="image-upload-group" id="imagePreviewRow">
 
                                                     <!-- Ô upload (luôn nằm cuối) -->
-                                                    <div
-                                                        class="image-upload-group__single image-upload-group__single--upload">
+                                                    <div class="image-upload-group__single image-upload-group__single--upload">
                                                         <input type="file" class="btn-check" id="input-img1" multiple
                                                             accept="image/*" autocomplete="off">
                                                         <label class="image-upload-label" for="input-img1">
@@ -362,23 +309,21 @@
                                             </div>
                                         </div>
 
-                                        <div class=" mg-top-40 sherah-dflex sherah-dflex-gap-30 justify-content-end">
-                                            <button type="submit" class="sherah-btn sherah-btn__primary">Publish
-                                                Product</button>
-                                            <button class="sherah-btn sherah-btn__third">Cancel</button>
+                                        <p id="formMsg" class="form-msg"></p>
+
+                                        <div class="mg-top-40 sherah-dflex sherah-dflex-gap-30 justify-content-end">
+                                            <button type="submit" class="sherah-btn sherah-btn__primary">Publish Product</button>
+                                            <button class="sherah-btn sherah-btn__third" type="button" onclick="window.location.href='products.html'">Cancel</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                            <!-- End Dashboard Inner -->
                         </div>
                     </div>
-
 
                 </div>
             </div>
         </section>
-        <!-- End sherah Dashboard -->
 
     </div>
 
@@ -397,133 +342,19 @@
     <script src="js/auth-header.js"></script>
 
     <script>
-        jQuery(document).ready(function ($) {
-            $('[data-countdown]').each(function () {
-                var $this = $(this), finalDate = $(this).data('countdown');
-                $this.countdown(finalDate, function (event) {
-                    $this.html(event.strftime(' %H : %M : %S'));
-                });
-            });
-        });
-    </script>
-    <script>
-        const el1 = document.getElementById('myChart_Side_One');
-        if (el1) {
-            const ctx_side_two = el1.getContext('2d');
-            const myChart_Side_One = new Chart(ctx_side_two, {
-                type: 'doughnut',
+        async function loadLayout() {
+            const headerRes = await fetch("header.html");
+            document.getElementById("header-container").innerHTML = await headerRes.text();
 
-                data: {
-                    labels: [
-                        'Total Sold',
-                        'Total Cancel',
-                        'Total Cancel',
-                        'Total Planding'
-                    ],
-                    datasets: [{
-                        label: 'My First Dataset',
-                        data: [16, 16, 16, 30],
-                        backgroundColor: [
-                            '#5356FB',
-                            '#F539F8',
-                            '#FFC210',
-                            '#E3E4FE'
-                        ],
-                        hoverOffset: 2,
-                        borderWidth: 0,
-                    }]
-                },
+            const dashRes = await fetch("dashboard.html");
+            document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
-                options: {
+            initSherahLayout();
 
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            display: false,
-                        },
-                        title: {
-                            display: false,
-                            text: 'Sell History'
-                        }
-                    }
-                }
-
-            });
-        }
-        const el2 = document.getElementById('myChart_Side_Two');
-        if (el2) {
-            const ctx_side_three = el2.getContext('2d');
-            const myChart_Side_Two = new Chart(ctx_side_three, {
-                type: 'line',
-
-                data: {
-                    labels: ['12:00 AM', '04:00 AM', '08:00 AM'],
-                    datasets: [{
-                        label: 'Visitor',
-                        data: [40, 90, 10],
-                        backgroundColor: '#D8D8FE',
-                        borderColor: '#5356FB',
-                        pointRadius: 3,
-                        pointBackgroundColor: '#5356FB',
-                        pointBorderColor: '#5356FB',
-                        borderWidth: 4,
-                        tension: 0.9,
-                        fill: true,
-                        fillColor: '#fff',
-
-                    }]
-                },
-
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false,
-                                drawBorder: false,
-                            },
-
-                        },
-                        y: {
-                            grid: {
-                                display: false,
-                                drawBorder: false,
-                            },
-                            ticks: {
-                                display: false
-                            }
-                        },
-                    },
-
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            display: false,
-                        },
-                        title: {
-                            display: false,
-                            text: 'Visitor: 2k'
-                        }
-                    }
-                }
-            });
+            if (window.loadAuthToHeader) window.loadAuthToHeader();
         }
     </script>
-    <script>
-		async function loadLayout() {
-			const headerRes = await fetch("header.html");
-			document.getElementById("header-container").innerHTML = await headerRes.text();
 
-			const dashRes = await fetch("dashboard.html");
-			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
-
-			initSherahLayout();
-
-			// ✅ quan trọng: gọi sau khi header đã có trong DOM
-			if (window.loadAuthToHeader) window.loadAuthToHeader();
-		}
-	</script>
     <script>
         // ===== CONFIG =====
         const isLocal =
@@ -552,13 +383,19 @@
             window.location.href = LOGIN_URL;
         }
 
-        function getCheckedValues(selector) {
-            return Array.from(document.querySelectorAll(selector)).filter(el => el.checked).map(el => el.value);
+        function setMsg(text, ok = true) {
+            const el = document.getElementById("formMsg");
+            if (!el) return;
+            el.textContent = text || "";
+            el.style.color = ok ? "green" : "red";
         }
-        function getCheckedColors() {
-            return Array.from(document.querySelectorAll(".color-check"))
-                .filter(el => el.checked)
-                .map(el => ({ name: el.value, code: el.dataset.code || null }));
+
+        async function safeFetch(url, options) {
+            try {
+                return await fetch(url, options);
+            } catch (e) {
+                throw new Error(`Fetch lỗi tại: ${url} | ${e.message || e}`);
+            }
         }
 
         // ===== MULTI PICK + PREVIEW (CỘNG DỒN) =====
@@ -568,7 +405,6 @@
             const row = document.getElementById("imagePreviewRow");
             const uploadTile = row.querySelector(".image-upload-group__single--upload");
 
-            // xoá preview cũ (giữ uploadTile)
             row.querySelectorAll(".preview-tile").forEach(el => el.remove());
 
             selectedFiles.forEach((file, idx) => {
@@ -609,43 +445,134 @@
                     if (!f.type.startsWith("image/")) continue;
                     if (selectedFiles.length >= MAX_FILES) break;
 
-                    // tránh add trùng (cùng tên + size + lastModified)
                     const dup = selectedFiles.some(x => x.name === f.name && x.size === f.size && x.lastModified === f.lastModified);
                     if (!dup) selectedFiles.push(f);
                 }
 
-                input.value = ""; // quan trọng để lần sau chọn tiếp vẫn fire change
+                input.value = "";
                 renderPreviews();
             });
         }
 
-        // ===== API: UPLOAD =====
-        async function uploadImages(files) {
-            if (!files || files.length === 0) return [];
+        // ===== NEW: VARIANTS TABLE (Size -> Color -> Quantity) =====
+        function addVariantRow(initial = {}) {
+            const tbody = document.getElementById("variantsBody");
+            if (!tbody) return;
 
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td><input class="v-input v-size" type="text" placeholder="S/M/L..." value="${initial.sizeLabel ?? ""}"></td>
+                <td><input class="v-input v-colorName" type="text" placeholder="Red/Blue..." value="${initial.colorName ?? ""}"></td>
+                <td><input class="v-input v-colorCode" type="text" placeholder="#FF0000" value="${initial.colorCode ?? ""}"></td>
+                <td><input class="v-input v-qty" type="number" min="0" placeholder="0" value="${initial.quantity ?? ""}"></td>
+                <td><button type="button" class="v-remove">Remove</button></td>
+            `;
+
+            tr.querySelector(".v-remove").addEventListener("click", () => {
+                tr.remove();
+            });
+
+            tbody.appendChild(tr);
+        }
+
+        function setupVariantsUI() {
+            const btn = document.getElementById("btnAddVariant");
+            if (btn) btn.addEventListener("click", () => addVariantRow());
+
+            // mặc định 1 dòng
+            addVariantRow();
+        }
+
+        function collectVariantsFromTable() {
+            const tbody = document.getElementById("variantsBody");
+            const rows = Array.from(tbody?.querySelectorAll("tr") || []);
+
+            const pricePerDay = Number(document.getElementById("pricePerDay")?.value);
+            const depositAmount = Number(document.getElementById("depositAmount")?.value || 0);
+
+            if (!pricePerDay || Number.isNaN(pricePerDay) || pricePerDay <= 0) {
+                throw new Error("Vui lòng nhập Price per day > 0");
+            }
+            if (Number.isNaN(depositAmount) || depositAmount < 0) {
+                throw new Error("Deposit Amount không hợp lệ");
+            }
+
+            const variants = rows.map(r => {
+                const sizeLabel = r.querySelector(".v-size")?.value?.trim() || "";
+                const colorName = r.querySelector(".v-colorName")?.value?.trim() || "";
+                const colorCode = r.querySelector(".v-colorCode")?.value?.trim() || null;
+                const quantity = Number(r.querySelector(".v-qty")?.value || 0);
+
+                return {
+                    sizeLabel,
+                    colorName,
+                    colorCode,
+                    quantity,
+                    pricePerDay,
+                    depositAmount,
+                    status: true
+                };
+            });
+
+            const nonEmpty = variants.filter(v =>
+                v.sizeLabel || v.colorName || (v.quantity != null && v.quantity > 0)
+            );
+
+            if (nonEmpty.length === 0) throw new Error("Vui lòng nhập ít nhất 1 variant.");
+
+            // validate theo yêu cầu: size -> color -> quantity
+            for (const v of nonEmpty) {
+                if (!v.sizeLabel) throw new Error("Variant thiếu Size.");
+                if (!v.colorName) throw new Error("Variant thiếu Color name.");
+                if (v.quantity == null || Number.isNaN(v.quantity) || v.quantity < 0) throw new Error("Variant quantity không hợp lệ.");
+            }
+
+            return nonEmpty;
+        }
+
+        // ===== API: UPLOAD FILE -> RETURN fileIds =====
+        async function uploadOneFile(file) {
             const token = getToken();
             if (!isValidJwt(token)) {
                 localStorage.removeItem("token");
                 goLogin();
-                return [];
+                throw new Error("Token không hợp lệ. Vui lòng đăng nhập lại.");
             }
 
             const fd = new FormData();
-            files.forEach(f => fd.append("files", f));
 
-            const res = await safeFetch(`${API_BASE}/api/uploads/images`, {
+            // ✅ CHỈNH NẾU BE KHÁC FIELD:
+            // Nếu BE nhận "file" thì giữ nguyên. Nếu BE nhận "files" thì đổi thành fd.append("files", file)
+            fd.append("file", file);
+
+            // ✅ CHỈNH NẾU BE KHÁC ENDPOINT:
+            // Mặc định: /api/media-files/upload
+            const res = await safeFetch(`${API_BASE}/api/media-files/upload`, {
                 method: "POST",
                 headers: { Authorization: `Bearer ${token}` },
                 body: fd
             });
 
-            if (!res.ok) {
-                const t = await res.text();
-                throw new Error("Upload ảnh thất bại: " + t);
-            }
+            const payload = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(payload?.message || "Upload ảnh thất bại");
 
-            const data = await res.json();
-            return data.urls || [];
+            const id = payload?.data?.id ?? payload?.id ?? payload?.data?.fileId ?? payload?.fileId;
+            if (!id) throw new Error("Upload OK nhưng không nhận được fileId");
+            return Number(id);
+        }
+
+        async function uploadImagesToFileIds(files) {
+            if (!files || files.length === 0) return [];
+
+            setMsg("Đang upload ảnh...", true);
+
+            const ids = [];
+            for (const f of files) {
+                const id = await uploadOneFile(f);
+                ids.push(id);
+            }
+            return ids;
         }
 
         // ===== API: CREATE PRODUCT =====
@@ -672,53 +599,27 @@
             return payload;
         }
 
-        function buildDtoFromForm(imageUrls) {
+        // ===== DTO FROM FORM (NEW DB) =====
+        function buildDtoFromForm(imageFileIds) {
             const name = document.getElementById("name")?.value?.trim();
             const categoryId = Number(document.getElementById("categoryId")?.value);
             const productType = document.getElementById("productType")?.value || "OUTFIT";
             const description = document.getElementById("description")?.value?.trim() || null;
 
-            const pricePerDay = Number(document.getElementById("pricePerDay")?.value);
-            const depositAmount = Number(document.getElementById("depositAmount")?.value || 0);
-            const totalStock = Number(document.getElementById("quantity")?.value);
-
-            const sizes = getCheckedValues(".size-check");
-            const colors = getCheckedColors();
-
             if (!name) throw new Error("Vui lòng nhập Product Title");
             if (!categoryId || Number.isNaN(categoryId)) throw new Error("Vui lòng chọn Category");
-            if (!pricePerDay || Number.isNaN(pricePerDay)) throw new Error("Vui lòng nhập Price per day");
-            if (Number.isNaN(totalStock) || totalStock < 1) throw new Error("Vui lòng nhập Stock >= 1");
-            if (sizes.length === 0) throw new Error("Vui lòng chọn ít nhất 1 Size");
-            if (colors.length === 0) throw new Error("Vui lòng chọn ít nhất 1 Color");
 
-            // dồn stock vào variant đầu tiên
-            const variants = [];
-            let remaining = totalStock;
-
-            for (const s of sizes) {
-                for (const c of colors) {
-                    const q = remaining > 0 ? remaining : 0;
-                    remaining = 0;
-
-                    variants.push({
-                        sizeLabel: s,
-                        colorName: c.name,
-                        colorCode: c.code,
-                        quantity: q,
-                        pricePerDay,
-                        depositAmount,
-                        status: true
-                    });
-                }
-            }
+            const variants = collectVariantsFromTable();
 
             return {
                 categoryId,
                 name,
                 productType,
                 description,
-                imageUrls: imageUrls || [],
+
+                // ✅ NEW: DB lưu fileId thay vì url
+                imageFileIds: imageFileIds || [],
+
                 variants
             };
         }
@@ -734,43 +635,37 @@
                 if (submitBtn) submitBtn.disabled = true;
 
                 try {
-                    // 1) upload ảnh từ selectedFiles (cộng dồn nhiều lần chọn)
-                    const uploadedUrls = await uploadImages(selectedFiles);
+                    setMsg("", true);
+
+                    // 1) upload ảnh từ selectedFiles -> fileIds
+                    const uploadedFileIds = await uploadImagesToFileIds(selectedFiles);
 
                     // 2) build dto
-                    const dto = buildDtoFromForm(uploadedUrls);
+                    const dto = buildDtoFromForm(uploadedFileIds);
 
                     // 3) create product
+                    setMsg("Đang tạo sản phẩm...", true);
                     const result = await createProduct(dto);
-                    alert(result?.message || "Created successfully");
-                    window.location.href = "products.html";
+
+                    setMsg(result?.message || "Created successfully ✅", true);
+                    setTimeout(() => (window.location.href = "products.html"), 600);
                 } catch (err) {
                     console.error(err);
-
                     const msg = (err?.message || "").toLowerCase();
 
-                    // ✅ Nếu là lỗi fetch (BE đã lưu DB nhưng FE không nhận response)
+                    // nếu fetch fail nhưng BE đã xử lý xong (trường hợp hiếm)
                     if (msg.includes("failed to fetch") || msg.includes("fetch lỗi tại")) {
                         alert("Tạo sản phẩm thành công");
                         window.location.href = "products.html";
                         return;
                     }
 
-                    // ❌ các lỗi khác thì vẫn báo lỗi thật
+                    setMsg(err?.message || "Lỗi tạo sản phẩm", false);
                     alert(err?.message || "Lỗi tạo sản phẩm");
-                }
-                finally {
+                } finally {
                     if (submitBtn) submitBtn.disabled = false;
                 }
             });
-        }
-        async function safeFetch(url, options) {
-            try {
-                const res = await fetch(url, options);
-                return res;
-            } catch (e) {
-                throw new Error(`Fetch lỗi tại: ${url} | ${e.message || e}`);
-            }
         }
 
         function normalizeCategories(payload) {
@@ -845,15 +740,15 @@
         document.addEventListener("DOMContentLoaded", () => {
             loadLayout();
             bindImagePicker();
+
+            // ✅ NEW
+            setupVariantsUI();
+
             wireSubmit();
             initCategoryDropdown();
         });
     </script>
 
-
-
 </body>
-
-<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/upload-product by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:14 GMT -->
 
 </html>

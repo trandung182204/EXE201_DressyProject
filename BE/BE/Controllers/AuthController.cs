@@ -100,5 +100,25 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { message = ex.Message });
         }
     }
+    [HttpPut("change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest req)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)
+                              ?? User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null || !long.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized(new { message = "Invalid token: missing user ID" });
+
+            await _auth.ChangePasswordAsync(userId, req);
+            return Ok(new { success = true, message = "Password changed successfully" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { success = false, message = ex.Message });
+        }
+    }
 }
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,613 +17,724 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    #imagePreviewRow{
-      display:flex; gap:12px; align-items:center; flex-wrap:nowrap;
-      overflow-x:auto; padding-bottom:6px;
+    #imagePreviewRow {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 6px;
     }
-    .preview-tile{ width:120px; height:120px; border-radius:12px; overflow:hidden;
-      position:relative; flex:0 0 auto; border:1px solid #e8e8e8; background:#fff; }
-    .preview-tile img{ width:100%; height:100%; object-fit:cover; display:block; }
-    .preview-remove{
-      position:absolute; top:6px; right:6px; width:26px; height:26px; border-radius:50%;
-      border:none; cursor:pointer; background:rgba(0,0,0,.6); color:#fff; line-height:26px; font-weight:700;
+
+    .preview-tile {
+      width: 120px;
+      height: 120px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      flex: 0 0 auto;
+      border: 1px solid #e8e8e8;
+      background: #fff;
     }
-    .preview-badge{
-      position:absolute; left:6px; bottom:6px; padding:2px 6px; font-size:11px;
-      background:rgba(0,0,0,.6); color:#fff; border-radius:8px;
+
+    .preview-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .preview-remove {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: rgba(0, 0, 0, .6);
+      color: #fff;
+      line-height: 26px;
+      font-weight: 700;
+    }
+
+    /* ===== NEW: variants table ===== */
+    .variants-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .variants-table-wrap {
+      overflow: auto;
+    }
+
+    table.variants-table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+    }
+
+    table.variants-table th,
+    table.variants-table td {
+      padding: 10px;
+      border-bottom: 1px solid #f2f2f2;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .v-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .v-remove {
+      background: #eee !important;
+      color: #333 !important;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .form-msg {
+      margin-top: 12px;
+      font-size: 13px;
     }
   </style>
 </head>
 
 <body id="sherah-dark-light">
-<div class="sherah-body-area">
-  <div id="header-container"></div>
-  <div id="dashboard-container"></div>
+  <div class="sherah-body-area">
+    <div id="header-container"></div>
+    <div id="dashboard-container"></div>
 
-  <section class="sherah-adashboard sherah-show">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="sherah-body">
-            <div class="sherah-dsinner">
+    <section class="sherah-adashboard sherah-show">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="sherah-body">
+              <div class="sherah-dsinner">
 
-              <div class="row">
-                <div class="col-12">
-                  <div class="sherah-breadcrumb mg-top-30">
-                    <h2 class="sherah-breadcrumb__title">Edit Product</h2>
-                    <ul class="sherah-breadcrumb__list">
-                      <li><a href="#">Home</a></li>
-                      <li class="active"><a href="products.html">Edit Product</a></li>
-                    </ul>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="sherah-breadcrumb mg-top-30">
+                      <h2 class="sherah-breadcrumb__title">Edit Product</h2>
+                      <ul class="sherah-breadcrumb__list">
+                        <li><a href="#">Home</a></li>
+                        <li class="active"><a href="products.html">Edit Product</a></li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
+
+                <div class="sherah-page-inner sherah-border sherah-basic-page sherah-default-bg mg-top-25 p-0">
+                  <form id="editProductForm" class="sherah-wc__form-main" action="#" onsubmit="return false;">
+                    <div class="row">
+                      <div class="col-lg-6 col-12">
+                        <div class="product-form-box sherah-border mg-top-30">
+                          <h4 class="form-title m-0">Basic Information</h4>
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="form-group">
+                                <label class="sherah-wc__form-label">Product Title</label>
+                                <div class="form-group__input">
+                                  <input id="name" class="sherah-wc__form-input" placeholder="Type here" type="text"
+                                    name="name">
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                              <div class="form-group">
+                                <label class="sherah-wc__form-label">Price per day</label>
+                                <div class="form-group__input">
+                                  <input id="pricePerDay" class="sherah-wc__form-input" placeholder="Type here"
+                                    type="number" name="pricePerDay">
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-12">
+                              <div class="form-group">
+                                <label class="sherah-wc__form-label">Description</label>
+                                <div class="form-group__input">
+                                  <textarea id="description" class="sherah-wc__form-input" placeholder="Type here"
+                                    name="description"></textarea>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                              <div class="form-group">
+                                <label class="sherah-wc__form-label">Category*</label>
+                                <div class="form-group__input">
+                                  <input id="categoryId" class="sherah-wc__form-input" placeholder="CategoryId (number)"
+                                    type="number" name="categoryId">
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                              <div class="form-group">
+                                <label class="sherah-wc__form-label">Product Type</label>
+                                <div class="form-group__input">
+                                  <select id="productType" class="sherah-wc__form-input" name="productType">
+                                    <option value="OUTFIT">OUTFIT</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-12">
+                              <div class="form-group">
+                                <label class="sherah-wc__form-label">Status</label>
+                                <div class="form-group__input">
+                                  <select id="status" class="sherah-wc__form-input" name="status">
+                                    <option value="AVAILABLE">AVAILABLE</option>
+                                    <option value="UNAVAILABLE">UNAVAILABLE</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-12">
+                        <div class="product-form-box sherah-border mg-top-30">
+                          <h4 class="form-title m-0">Specification</h4>
+                          <div class="row">
+
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                              <div class="form-group">
+                                <label class="sherah-wc__form-label">Deposit Amount</label>
+                                <div class="form-group__input">
+                                  <input id="depositAmount" class="sherah-wc__form-input" placeholder="Type here"
+                                    type="number" name="depositAmount">
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Size -->
+                            <!-- ✅ Variants table (giống upload) -->
+                            <div class="variants-toolbar">
+                              <label class="sherah-wc__form-label" style="margin:0;">Variants</label>
+                              <button id="btnAddVariant" type="button" class="sherah-btn sherah-btn__primary"
+                                style="padding:10px 14px;">
+                                + Add variant
+                              </button>
+                            </div>
+
+                            <div class="variants-table-wrap">
+                              <table class="variants-table">
+                                <thead>
+                                  <tr>
+                                    <th style="width: 22%;">Size</th>
+                                    <th style="width: 26%;">Color name</th>
+                                    <th style="width: 18%;">Color code</th>
+                                    <th style="width: 18%;">Quantity</th>
+                                    <th style="width: 16%;"></th>
+                                  </tr>
+                                </thead>
+                                <tbody id="variantsBody"></tbody>
+                              </table>
+                            </div>
+
+
+                            <p class="form-msg" style="color:#666;">
+                              Nhập theo từng dòng: <b>Size → Color → Quantity</b>. Nếu có nhiều size/màu, bấm <b>Add
+                                variant</b>.
+                            </p>
+
+
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Images -->
+                    <div class="product-form-box sherah-border mg-top-30">
+                      <div class="form-group">
+                        <div class="image-upload-group" id="imagePreviewRow">
+                          <div class="image-upload-group__single image-upload-group__single--upload">
+                            <input type="file" class="btn-check" id="input-img1" multiple accept="image/*"
+                              autocomplete="off">
+                            <label class="image-upload-label" for="input-img1">
+                              <span>image upload</span>
+                            </label>
+                          </div>
+                        </div>
+                        <small class="text-muted">Ảnh hiện có = badge “EXISTING”, ảnh mới chọn = badge “NEW”.</small>
+                      </div>
+                    </div>
+
+                    <div class="mg-top-40 sherah-dflex sherah-dflex-gap-30 justify-content-end">
+                      <button id="btnSubmit" type="submit" class="sherah-btn sherah-btn__primary">Update
+                        Product</button>
+                      <a href="products.html" class="sherah-btn sherah-btn__third">Cancel</a>
+                    </div>
+
+                  </form>
+                </div>
+
               </div>
-
-              <div class="sherah-page-inner sherah-border sherah-basic-page sherah-default-bg mg-top-25 p-0">
-                <form id="editProductForm" class="sherah-wc__form-main" action="#" onsubmit="return false;">
-                  <div class="row">
-                    <div class="col-lg-6 col-12">
-                      <div class="product-form-box sherah-border mg-top-30">
-                        <h4 class="form-title m-0">Basic Information</h4>
-                        <div class="row">
-                          <div class="col-12">
-                            <div class="form-group">
-                              <label class="sherah-wc__form-label">Product Title</label>
-                              <div class="form-group__input">
-                                <input id="name" class="sherah-wc__form-input" placeholder="Type here" type="text" name="name">
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="col-lg-6 col-md-6 col-12">
-                            <div class="form-group">
-                              <label class="sherah-wc__form-label">Price per day</label>
-                              <div class="form-group__input">
-                                <input id="pricePerDay" class="sherah-wc__form-input" placeholder="Type here" type="number" name="pricePerDay">
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="col-12">
-                            <div class="form-group">
-                              <label class="sherah-wc__form-label">Description</label>
-                              <div class="form-group__input">
-                                <textarea id="description" class="sherah-wc__form-input" placeholder="Type here" name="description"></textarea>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="col-lg-6 col-md-6 col-12">
-                            <div class="form-group">
-                              <label class="sherah-wc__form-label">Category*</label>
-                              <div class="form-group__input">
-                                <input id="categoryId" class="sherah-wc__form-input" placeholder="CategoryId (number)" type="number" name="categoryId">
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="col-lg-6 col-md-6 col-12">
-                            <div class="form-group">
-                              <label class="sherah-wc__form-label">Product Type</label>
-                              <div class="form-group__input">
-                                <select id="productType" class="sherah-wc__form-input" name="productType">
-                                  <option value="OUTFIT">OUTFIT</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="col-12">
-                            <div class="form-group">
-                              <label class="sherah-wc__form-label">Status</label>
-                              <div class="form-group__input">
-                                <select id="status" class="sherah-wc__form-input" name="status">
-                                  <option value="AVAILABLE">AVAILABLE</option>
-                                  <option value="UNAVAILABLE">UNAVAILABLE</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-lg-6 col-12">
-                      <div class="product-form-box sherah-border mg-top-30">
-                        <h4 class="form-title m-0">Specification</h4>
-                        <div class="row">
-                          <div class="col-lg-6 col-md-6 col-12">
-                            <div class="form-group">
-                              <label class="sherah-wc__form-label">Stock (Tổng)</label>
-                              <div class="form-group__input">
-                                <input id="quantity" class="sherah-wc__form-input" placeholder="Type here" type="number" name="quantity">
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="col-lg-6 col-md-6 col-12">
-                            <div class="form-group">
-                              <label class="sherah-wc__form-label">Deposit Amount</label>
-                              <div class="form-group__input">
-                                <input id="depositAmount" class="sherah-wc__form-input" placeholder="Type here" type="number" name="depositAmount">
-                              </div>
-                            </div>
-                          </div>
-
-                          <!-- Size -->
-                          <div class="col-lg-6 col-md-6 col-12">
-                            <div class="form-group">
-                              <label class="sherah-wc__form-label">Size</label>
-                              <div class="checkbox-group">
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check size-check" value="S" id="sizeS" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="sizeS">S</label>
-                                </div>
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check size-check" value="M" id="sizeM" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="sizeM">M</label>
-                                </div>
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check size-check" value="X" id="sizeX" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="sizeX">X</label>
-                                </div>
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check size-check" value="XL" id="sizeXL" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="sizeXL">XL</label>
-                                </div>
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check size-check" value="2X" id="size2X" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="size2X">2X</label>
-                                </div>
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check size-check" value="3X" id="size3X" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="size3X">3X</label>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <!-- Color -->
-                          <div class="col-lg-6 col-md-6 col-12">
-                            <div class="form-group">
-                              <label class="sherah-wc__form-label">Colors</label>
-                              <div class="checkbox-group">
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check color-check" value="White" data-code="#FFFFFF" id="colorWhite" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="colorWhite">White</label>
-                                </div>
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check color-check" value="Black" data-code="#000000" id="colorBlack" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="colorBlack">Black</label>
-                                </div>
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check color-check" value="Harlequin" data-code="#3A5FCD" id="colorHarlequin" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="colorHarlequin">Harlequin</label>
-                                </div>
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check color-check" value="Red" data-code="#FF0000" id="colorRed" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="colorRed">Red</label>
-                                </div>
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check color-check" value="Yellow" data-code="#FFFF00" id="colorYellow" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="colorYellow">Yellow</label>
-                                </div>
-                                <div class="checkbox-group__single">
-                                  <input type="checkbox" class="btn-check color-check" value="Blue" data-code="#0000FF" id="colorBlue" autocomplete="off">
-                                  <label class="checkbox-group__single--label" for="colorBlue">Blue</label>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Images -->
-                  <div class="product-form-box sherah-border mg-top-30">
-                    <div class="form-group">
-                      <div class="image-upload-group" id="imagePreviewRow">
-                        <div class="image-upload-group__single image-upload-group__single--upload">
-                          <input type="file" class="btn-check" id="input-img1" multiple accept="image/*" autocomplete="off">
-                          <label class="image-upload-label" for="input-img1">
-                            <span>image upload</span>
-                          </label>
-                        </div>
-                      </div>
-                      <small class="text-muted">Ảnh hiện có = badge “EXISTING”, ảnh mới chọn = badge “NEW”.</small>
-                    </div>
-                  </div>
-
-                  <div class="mg-top-40 sherah-dflex sherah-dflex-gap-30 justify-content-end">
-                    <button id="btnSubmit" type="submit" class="sherah-btn sherah-btn__primary">Update Product</button>
-                    <a href="products.html" class="sherah-btn sherah-btn__third">Cancel</a>
-                  </div>
-
-                </form>
-              </div>
-
             </div>
           </div>
+
         </div>
-
       </div>
-    </div>
-  </section>
-</div>
+    </section>
+  </div>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery-migrate.js"></script>
-<script src="js/jquery-ui.min.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/main.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/main.js"></script>
 
-<script>
-  async function loadLayout() {
-    const headerRes = await fetch("header.html");
-    document.getElementById("header-container").innerHTML = await headerRes.text();
+  <script>
+    async function loadLayout() {
+      const headerRes = await fetch("header.html");
+      document.getElementById("header-container").innerHTML = await headerRes.text();
 
-    const dashRes = await fetch("dashboard.html");
-    document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+      const dashRes = await fetch("dashboard.html");
+      document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
-    initSherahLayout();
-  }
-  loadLayout();
-</script>
+      initSherahLayout();
+    }
+    loadLayout();
+  </script>
 
-<script>
-  // ===== CONFIG =====
-  const isLocal =
-            location.hostname === "localhost" ||
-            location.hostname === "127.0.0.1";
-        const API_BASE = isLocal ? "http://localhost:5135" : "";
-        const LOGIN_URL = new URL(
-            "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
-            location.href
-        ).href;
-  // ===== TOKEN =====
-  function getToken() {
-    let raw = localStorage.getItem("token") || "";
-    raw = raw.replace(/\s+/g, "").trim();
-    if (raw.toLowerCase().startsWith("bearer")) raw = raw.slice(6).replace(/\s+/g, "").trim();
-    raw = raw.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "");
-    const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
-    return m ? m[1] : "";
-  }
-  function isValidJwt(t){ return !!t && t.split(".").length === 3; }
-  function goLogin(){
-    localStorage.setItem("redirect_after_login", window.location.href);
-    window.location.href = LOGIN_URL;
-  }
+  <script>
+    // ===== CONFIG =====
+    const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    const API_BASE = isLocal ? "http://localhost:5135" : "";
+    const LOGIN_URL = new URL(
+      "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
+      location.href
+    ).href;
 
-  function getQueryId(){
-    const usp = new URLSearchParams(window.location.search);
-    const id = Number(usp.get("id"));
-    return Number.isNaN(id) ? 0 : id;
-  }
+    const FALLBACK_IMG = "img/product-img1.png";
 
-  function getCheckedValues(selector){
-    return Array.from(document.querySelectorAll(selector)).filter(el => el.checked).map(el => el.value);
-  }
-  function getCheckedColors(){
-    return Array.from(document.querySelectorAll(".color-check"))
-      .filter(el => el.checked)
-      .map(el => ({ name: el.value, code: el.dataset.code || null }));
-  }
+    // ===== TOKEN =====
+    function getToken() {
+      let raw = localStorage.getItem("token") || "";
+      raw = raw.replace(/\s+/g, "").trim();
+      if (raw.toLowerCase().startsWith("bearer")) raw = raw.slice(6).replace(/\s+/g, "").trim();
+      raw = raw.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "");
+      const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
+      return m ? m[1] : "";
+    }
+    function isValidJwt(t) { return !!t && t.split(".").length === 3; }
+    function goLogin() {
+      localStorage.setItem("redirect_after_login", window.location.href);
+      window.location.href = LOGIN_URL;
+    }
 
-  async function safeFetch(url, options){
-    try { return await fetch(url, options); }
-    catch(e){ throw new Error(`Fetch lỗi tại: ${url} | ${e.message || e}`); }
-  }
+    function getQueryId() {
+      const usp = new URLSearchParams(window.location.search);
+      const id = Number(usp.get("id") || usp.get("productId"));
+      return Number.isNaN(id) ? 0 : id;
+    }
 
-  // ===== Image state =====
-  let existingImageUrls = [];     // ảnh đã có (URL)
-  let selectedFiles = [];         // ảnh mới chọn (File)
+    async function safeFetch(url, options) {
+      try { return await fetch(url, options); }
+      catch (e) { throw new Error(`Fetch lỗi tại: ${url} | ${e.message || e}`); }
+    }
 
-  function renderPreviews(){
-    const row = document.getElementById("imagePreviewRow");
-    const uploadTile = row.querySelector(".image-upload-group__single--upload");
-    row.querySelectorAll(".preview-tile").forEach(el => el.remove());
+    // ===== IMAGE STATE =====
+    // existingImages = [{ fileId: 123, url: "http://.../api/media-files/123" }]
+    let existingImages = [];
+    let selectedFiles = [];
 
-    // EXISTING urls
-    existingImageUrls.forEach((url, idx) => {
-      const tile = document.createElement("div");
-      tile.className = "preview-tile";
+    function renderPreviews() {
+      const row = document.getElementById("imagePreviewRow");
+      if (!row) return;
+      const uploadTile = row.querySelector(".image-upload-group__single--upload");
+      row.querySelectorAll(".preview-tile").forEach(el => el.remove());
 
-      const img = document.createElement("img");
-      img.src = url;
-      img.onerror = () => img.src = "img/product-img1.png";
+      // EXISTING
+      existingImages.forEach((it, idx) => {
+        const tile = document.createElement("div");
+        tile.className = "preview-tile";
 
-      const badge = document.createElement("div");
-      badge.className = "preview-badge";
-      badge.textContent = "EXISTING";
+        const img = document.createElement("img");
+        img.src = it.url;
+        img.onerror = () => img.src = FALLBACK_IMG;
 
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "preview-remove";
-      btn.textContent = "×";
-      btn.addEventListener("click", () => {
-        existingImageUrls.splice(idx, 1);
-        renderPreviews();
+        const badge = document.createElement("div");
+        badge.className = "preview-badge";
+        badge.textContent = "EXISTING";
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "preview-remove";
+        btn.textContent = "×";
+        btn.addEventListener("click", () => {
+          existingImages.splice(idx, 1);
+          renderPreviews();
+        });
+
+        tile.appendChild(img);
+        tile.appendChild(badge);
+        tile.appendChild(btn);
+        row.insertBefore(tile, uploadTile);
       });
 
-      tile.appendChild(img);
-      tile.appendChild(badge);
-      tile.appendChild(btn);
-      row.insertBefore(tile, uploadTile);
-    });
+      // NEW
+      selectedFiles.forEach((file, idx) => {
+        const tile = document.createElement("div");
+        tile.className = "preview-tile";
 
-    // NEW files
-    selectedFiles.forEach((file, idx) => {
-      const tile = document.createElement("div");
-      tile.className = "preview-tile";
+        const img = document.createElement("img");
+        const blob = URL.createObjectURL(file);
+        img.src = blob;
+        img.onload = () => URL.revokeObjectURL(blob);
+        img.onerror = () => img.src = FALLBACK_IMG;
 
-      const img = document.createElement("img");
-      const blob = URL.createObjectURL(file);
-      img.src = blob;
-      img.onload = () => URL.revokeObjectURL(blob);
+        const badge = document.createElement("div");
+        badge.className = "preview-badge";
+        badge.textContent = "NEW";
 
-      const badge = document.createElement("div");
-      badge.className = "preview-badge";
-      badge.textContent = "NEW";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "preview-remove";
+        btn.textContent = "×";
+        btn.addEventListener("click", () => {
+          selectedFiles.splice(idx, 1);
+          renderPreviews();
+        });
 
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "preview-remove";
-      btn.textContent = "×";
-      btn.addEventListener("click", () => {
-        selectedFiles.splice(idx, 1);
+        tile.appendChild(img);
+        tile.appendChild(badge);
+        tile.appendChild(btn);
+        row.insertBefore(tile, uploadTile);
+      });
+    }
+
+    function bindImagePicker() {
+      const input = document.getElementById("input-img1");
+      if (!input) return;
+
+      input.addEventListener("change", () => {
+        const files = Array.from(input.files || []);
+        if (!files.length) return;
+
+        const MAX_FILES = 10;
+        for (const f of files) {
+          if (!f.type.startsWith("image/")) continue;
+          if (selectedFiles.length >= MAX_FILES) break;
+
+          const dup = selectedFiles.some(x => x.name === f.name && x.size === f.size && x.lastModified === f.lastModified);
+          if (!dup) selectedFiles.push(f);
+        }
+
+        input.value = "";
         renderPreviews();
       });
+    }
 
-      tile.appendChild(img);
-      tile.appendChild(badge);
-      tile.appendChild(btn);
-      row.insertBefore(tile, uploadTile);
-    });
-  }
+    // ===== UPLOAD IMAGES -> fileIds =====
+    async function uploadOneImage(file) {
+      const token = getToken();
+      if (!isValidJwt(token)) { localStorage.removeItem("token"); goLogin(); return null; }
 
-  function bindImagePicker(){
-    const input = document.getElementById("input-img1");
-    if (!input) return;
+      const fd = new FormData();
+      fd.append("file", file);
 
-    input.addEventListener("change", () => {
-      const files = Array.from(input.files || []);
-      if (!files.length) return;
+      const res = await safeFetch(`${API_BASE}/api/media-files/upload`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd
+      });
 
-      const MAX_FILES = 10;
-      for (const f of files){
-        if (!f.type.startsWith("image/")) continue;
-        if (selectedFiles.length >= MAX_FILES) break;
-        const dup = selectedFiles.some(x => x.name === f.name && x.size === f.size && x.lastModified === f.lastModified);
-        if (!dup) selectedFiles.push(f);
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(payload?.message || "Upload ảnh thất bại");
+
+      const fileId = payload?.data?.fileId ?? payload?.fileId ?? payload?.data?.id ?? payload?.id;
+      if (!fileId) throw new Error("Upload ảnh OK nhưng không nhận được fileId");
+      return Number(fileId);
+    }
+
+    async function uploadImages(files) {
+      if (!files || !files.length) return [];
+      const ids = [];
+      for (const f of files) {
+        const id = await uploadOneImage(f);
+        if (id) ids.push(id);
+      }
+      return ids;
+    }
+
+    // ===== VARIANTS TABLE (QUAN TRỌNG: LƯU variantId) =====
+    function addVariantRow(initial = {}) {
+      const tbody = document.getElementById("variantsBody");
+      if (!tbody) return;
+
+      const tr = document.createElement("tr");
+
+      // ✅ lưu id của variant ở data-vid
+      const vid = initial.id ?? initial.Id ?? 0;
+      tr.dataset.vid = String(vid || 0);
+
+      tr.innerHTML = `
+      <td><input class="v-input v-size" type="text" placeholder="S/M/L..." value="${initial.sizeLabel ?? initial.SizeLabel ?? ""}"></td>
+      <td><input class="v-input v-colorName" type="text" placeholder="Red/Blue..." value="${initial.colorName ?? initial.ColorName ?? ""}"></td>
+      <td><input class="v-input v-colorCode" type="text" placeholder="#FF0000" value="${initial.colorCode ?? initial.ColorCode ?? ""}"></td>
+      <td><input class="v-input v-qty" type="number" min="0" placeholder="0" value="${initial.quantity ?? initial.Quantity ?? ""}"></td>
+      <td><button type="button" class="v-remove">Remove</button></td>
+    `;
+
+      tr.querySelector(".v-remove").addEventListener("click", () => tr.remove());
+      tbody.appendChild(tr);
+    }
+
+    function setupVariantsUI() {
+      const btn = document.getElementById("btnAddVariant");
+      if (btn) btn.addEventListener("click", () => addVariantRow({ id: 0 }));
+    }
+
+    function collectVariantsFromTable() {
+      const tbody = document.getElementById("variantsBody");
+      const rows = Array.from(tbody?.querySelectorAll("tr") || []);
+
+      const pricePerDay = Number(document.getElementById("pricePerDay")?.value);
+      const depositAmount = Number(document.getElementById("depositAmount")?.value || 0);
+
+      if (!pricePerDay || Number.isNaN(pricePerDay) || pricePerDay <= 0) {
+        throw new Error("Vui lòng nhập Price per day > 0");
+      }
+      if (Number.isNaN(depositAmount) || depositAmount < 0) {
+        throw new Error("Deposit Amount không hợp lệ");
       }
 
-      input.value = "";
-      renderPreviews();
-    });
-  }
+      const variants = rows.map(tr => {
+        const id = Number(tr.dataset.vid || 0);
 
-  async function uploadImages(files){
-    if (!files || !files.length) return [];
-    const token = getToken();
-    if (!isValidJwt(token)) { localStorage.removeItem("token"); goLogin(); return []; }
+        const sizeLabel = tr.querySelector(".v-size")?.value?.trim() || "";
+        const colorName = tr.querySelector(".v-colorName")?.value?.trim() || "";
+        const colorCode = tr.querySelector(".v-colorCode")?.value?.trim() || null;
+        const quantity = Number(tr.querySelector(".v-qty")?.value || 0);
 
-    const fd = new FormData();
-    files.forEach(f => fd.append("files", f));
-
-    const res = await safeFetch(`${API_BASE}/api/uploads/images`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: fd
-    });
-
-    if (!res.ok){
-      const t = await res.text();
-      throw new Error("Upload ảnh thất bại: " + t);
-    }
-    const data = await res.json().catch(() => ({}));
-    return data.urls || [];
-  }
-
-  // ===== Load product detail =====
-  let variantMap = new Map(); // key = `${size}|${color}` => {id,...}
-
-  function keyOf(sizeLabel, colorName){ return `${sizeLabel || ""}|${colorName || ""}`; }
-
-  function setCheckedByValues(selector, values){
-    const set = new Set(values);
-    document.querySelectorAll(selector).forEach(el => {
-      el.checked = set.has(el.value);
-    });
-  }
-
-  async function loadProductDetail(productId){
-    const token = getToken();
-    if (!isValidJwt(token)) { localStorage.removeItem("token"); goLogin(); return; }
-
-    const res = await safeFetch(`${API_BASE}/api/provider/products/${productId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }
-    });
-
-    if (res.status === 401) { localStorage.removeItem("token"); goLogin(); return; }
-    if (!res.ok) { throw new Error(await res.text()); }
-
-    const payload = await res.json();
-    const d = payload?.data;
-
-    // basic
-    document.getElementById("name").value = d?.name || "";
-    document.getElementById("description").value = d?.description || "";
-    document.getElementById("categoryId").value = d?.categoryId || "";
-    document.getElementById("productType").value = d?.productType || "OUTFIT";
-    document.getElementById("status").value = d?.status || "AVAILABLE";
-
-    // images
-    existingImageUrls = Array.isArray(d?.imageUrls) ? d.imageUrls.filter(Boolean) : [];
-    selectedFiles = [];
-    renderPreviews();
-
-    // variants -> map + tick size/color
-    variantMap = new Map();
-    const variants = Array.isArray(d?.variants) ? d.variants : [];
-    const sizes = new Set();
-    const colors = new Set();
-
-    let pricePerDay = null;
-    let depositAmount = null;
-    let totalQty = 0;
-
-    variants.forEach(v => {
-      sizes.add(v.sizeLabel);
-      colors.add(v.colorName);
-      variantMap.set(keyOf(v.sizeLabel, v.colorName), v);
-
-      totalQty += Number(v.quantity || 0);
-
-      // lấy theo variant đầu tiên để fill form
-      if (pricePerDay === null && v.pricePerDay != null) pricePerDay = Number(v.pricePerDay);
-      if (depositAmount === null && v.depositAmount != null) depositAmount = Number(v.depositAmount);
-    });
-
-    setCheckedByValues(".size-check", Array.from(sizes).filter(Boolean));
-    setCheckedByValues(".color-check", Array.from(colors).filter(Boolean));
-
-    document.getElementById("pricePerDay").value = pricePerDay ?? "";
-    document.getElementById("depositAmount").value = depositAmount ?? 0;
-    document.getElementById("quantity").value = totalQty; // tổng stock
-  }
-
-  // ===== Build PUT dto =====
-  function buildUpdateDtoFromForm(imageUrls){
-    const name = document.getElementById("name")?.value?.trim();
-    const categoryId = Number(document.getElementById("categoryId")?.value);
-    const productType = document.getElementById("productType")?.value || "OUTFIT";
-    const description = document.getElementById("description")?.value?.trim() || null;
-    const status = document.getElementById("status")?.value || "AVAILABLE";
-
-    const pricePerDay = Number(document.getElementById("pricePerDay")?.value);
-    const depositAmount = Number(document.getElementById("depositAmount")?.value || 0);
-    const totalStock = Number(document.getElementById("quantity")?.value);
-
-    const sizes = getCheckedValues(".size-check");
-    const colors = getCheckedColors();
-
-    if (!name) throw new Error("Vui lòng nhập Product Title");
-    if (!categoryId || Number.isNaN(categoryId)) throw new Error("Vui lòng nhập CategoryId (number)");
-    if (!pricePerDay || Number.isNaN(pricePerDay)) throw new Error("Vui lòng nhập Price per day");
-    if (Number.isNaN(totalStock) || totalStock < 0) throw new Error("Vui lòng nhập Stock >= 0");
-    if (sizes.length === 0) throw new Error("Vui lòng chọn ít nhất 1 Size");
-    if (colors.length === 0) throw new Error("Vui lòng chọn ít nhất 1 Color");
-
-    // giống upload page: dồn stock vào variant đầu tiên
-    const variants = [];
-    let remaining = totalStock;
-
-    for (const s of sizes){
-      for (const c of colors){
-        const q = remaining > 0 ? remaining : 0;
-        remaining = 0;
-
-        const existed = variantMap.get(keyOf(s, c.name));
-        variants.push({
-          id: existed?.id || 0,
-          sizeLabel: s,
-          colorName: c.name,
-          colorCode: c.code,
-          quantity: q,
+        return {
+          id: id > 0 ? id : null,
+          sizeLabel,
+          colorName,
+          colorCode,
+          quantity,
           pricePerDay,
           depositAmount,
           status: true
+        };
+      });
+
+      const nonEmpty = variants.filter(v => v.sizeLabel || v.colorName || (v.quantity != null && v.quantity > 0));
+      if (nonEmpty.length === 0) throw new Error("Vui lòng nhập ít nhất 1 variant.");
+
+      for (const v of nonEmpty) {
+        if (!v.sizeLabel) throw new Error("Variant thiếu Size.");
+        if (!v.colorName) throw new Error("Variant thiếu Color name.");
+        if (v.quantity == null || Number.isNaN(v.quantity) || v.quantity < 0) {
+          throw new Error("Variant quantity không hợp lệ.");
+        }
+      }
+
+      // chặn trùng size+color
+      const seen = new Set();
+      for (const v of nonEmpty) {
+        const k = `${v.sizeLabel}||${v.colorName}`;
+        if (seen.has(k)) throw new Error(`Bị trùng variant: ${v.sizeLabel} - ${v.colorName}`);
+        seen.add(k);
+      }
+
+      return nonEmpty;
+    }
+
+
+    // ===== LOAD PRODUCT DETAIL =====
+    async function loadProductDetail(productId) {
+      const token = getToken();
+      if (!isValidJwt(token)) { localStorage.removeItem("token"); goLogin(); return; }
+
+      const res = await safeFetch(`${API_BASE}/api/provider/products/${productId}`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }
+      });
+
+      if (res.status === 401) { localStorage.removeItem("token"); goLogin(); return; }
+      if (!res.ok) throw new Error(await res.text());
+
+      const payload = await res.json().catch(() => ({}));
+      const d = payload?.data || payload;
+
+      // basic
+      document.getElementById("name").value = d?.name ?? d?.Name ?? "";
+      document.getElementById("description").value = d?.description ?? d?.Description ?? "";
+      document.getElementById("categoryId").value = d?.categoryId ?? d?.CategoryId ?? "";
+      document.getElementById("productType").value = (d?.productType ?? d?.ProductType ?? "OUTFIT");
+      document.getElementById("status").value = (d?.status ?? d?.Status ?? "AVAILABLE");
+
+      // images
+      const fileIdsRaw = d?.imageFileIds ?? d?.ImageFileIds ?? [];
+      let ids = Array.isArray(fileIdsRaw) ? fileIdsRaw.filter(x => x != null).map(Number) : [];
+      existingImages = ids.map(fid => ({ fileId: fid, url: `${API_BASE}/api/media-files/${fid}` }));
+      selectedFiles = [];
+      renderPreviews();
+
+      // variants
+      const tbody = document.getElementById("variantsBody");
+      if (!tbody) throw new Error("Không tìm thấy #variantsBody trong HTML");
+      tbody.innerHTML = "";
+
+      const variants = Array.isArray(d?.variants ?? d?.Variants) ? (d.variants ?? d.Variants) : [];
+
+      let pricePerDay = null;
+      let depositAmount = null;
+
+      if (variants.length) {
+        variants.forEach(v => {
+          // set giá theo variant đầu tiên
+          if (pricePerDay === null && (v?.pricePerDay ?? v?.PricePerDay) != null) {
+            pricePerDay = Number(v.pricePerDay ?? v.PricePerDay);
+          }
+          if (depositAmount === null && (v?.depositAmount ?? v?.DepositAmount) != null) {
+            depositAmount = Number(v.depositAmount ?? v.DepositAmount);
+          }
+          addVariantRow(v); // ✅ truyền cả Id vào row
         });
+      } else {
+        addVariantRow({ id: 0 });
       }
+
+      document.getElementById("pricePerDay").value = pricePerDay ?? "";
+      document.getElementById("depositAmount").value = depositAmount ?? 0;
     }
 
-    return {
-      categoryId,
-      name,
-      productType,
-      description,
-      status,
-      imageUrls: imageUrls || [],
-      variants
-    };
-  }
+    // ===== BUILD UPDATE DTO (đúng DTO UpdateProviderProductDto) =====
+    function buildUpdateDtoFromForm(finalImageFileIds) {
+      const name = document.getElementById("name")?.value?.trim();
+      const categoryId = Number(document.getElementById("categoryId")?.value);
+      const productType = document.getElementById("productType")?.value || "OUTFIT";
+      const description = document.getElementById("description")?.value?.trim() || null;
+      const status = document.getElementById("status")?.value || "AVAILABLE";
 
-  async function updateProduct(productId, dto){
-    const token = getToken();
-    if (!isValidJwt(token)) { localStorage.removeItem("token"); goLogin(); return null; }
+      if (!name) throw new Error("Vui lòng nhập Product Title");
+      if (!categoryId || Number.isNaN(categoryId)) throw new Error("Vui lòng nhập CategoryId");
 
-    const res = await safeFetch(`${API_BASE}/api/provider/products/${productId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json"
-      },
-      body: JSON.stringify(dto)
-    });
+      const variants = collectVariantsFromTable();
 
-    const payload = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(payload?.message || "Update sản phẩm thất bại");
-    return payload;
-  }
+      return {
+        categoryId,
+        name,
+        productType,
+        description,
+        status,
+        imageFileIds: finalImageFileIds || [],
+        variants
+      };
+    }
 
-  function wireSubmit(productId){
-    const form = document.getElementById("editProductForm");
-    const btn = document.getElementById("btnSubmit");
-    if (!form) return;
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (btn) btn.disabled = true;
+    async function updateProduct(productId, dto) {
+      const token = getToken();
+      if (!isValidJwt(token)) { localStorage.removeItem("token"); goLogin(); return null; }
 
-      try{
-        // 1) upload ảnh mới
-        const uploadedUrls = await uploadImages(selectedFiles);
+      const res = await safeFetch(`${API_BASE}/api/provider/products/${productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json"
+        },
+        body: JSON.stringify(dto)
+      });
 
-        // 2) merge ảnh: existing (đã remove nếu có) + uploaded
-        const finalImageUrls = [...existingImageUrls, ...uploadedUrls];
+      // ✅ đọc text trước (nhiều khi BE trả plain text)
+      const text = await res.text();
+      let payload = {};
+      try { payload = text ? JSON.parse(text) : {}; } catch { payload = { message: text }; }
 
-        // 3) build dto
-        const dto = buildUpdateDtoFromForm(finalImageUrls);
+      if (!res.ok) {
+        // show message rõ
+        throw new Error(payload?.message || payload?.error || text || "Update sản phẩm thất bại");
+      }
 
-        // 4) PUT
-        const result = await updateProduct(productId, dto);
-        alert(result?.message || "Updated successfully");
+      return payload;
+    }
+
+
+    function wireSubmit(productId) {
+      const form = document.getElementById("editProductForm");
+      const btn = document.getElementById("btnSubmit");
+      if (!form) return;
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (btn) btn.disabled = true;
+
+        try {
+          // 1) upload ảnh mới => fileIds
+          const uploadedFileIds = await uploadImages(selectedFiles);
+
+          // 2) merge ảnh existing + new
+          const existingFileIds = existingImages.map(x => x.fileId);
+          const finalFileIds = [...existingFileIds, ...uploadedFileIds];
+
+          // 3) build dto
+          const dto = buildUpdateDtoFromForm(finalFileIds);
+
+          // debug nhanh nếu cần:
+          // console.log("UPDATE DTO =>", dto);
+
+          // 4) PUT
+          const result = await updateProduct(productId, dto);
+          alert(result?.message || "Updated successfully");
+          window.location.href = "products.html";
+        } catch (err) {
+          console.error(err);
+          alert(err?.message || "Lỗi update sản phẩm");
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      bindImagePicker();
+
+      const productId = getQueryId();
+      if (!productId) {
+        alert("Thiếu productId trên URL. Ví dụ: edit-product.html?id=26");
         window.location.href = "products.html";
-      }catch(err){
+        return;
+      }
+
+      try {
+        await loadProductDetail(productId); // ✅ load variants + gắn id vào row
+        setupVariantsUI();                  // ✅ bind nút Add variant
+        wireSubmit(productId);
+      } catch (err) {
         console.error(err);
-        alert(err?.message || "Lỗi update sản phẩm");
-      }finally{
-        if (btn) btn.disabled = false;
+        alert(err?.message || "Không tải được sản phẩm");
+        window.location.href = "products.html";
       }
     });
-  }
+  </script>
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    bindImagePicker();
 
-    const productId = getQueryId();
-    if (!productId){
-      alert("Thiếu productId trên URL. Ví dụ: edit-product.html?id=26");
-      window.location.href = "products.html";
-      return;
-    }
 
-    try{
-      await loadProductDetail(productId);
-      wireSubmit(productId);
-    }catch(err){
-      console.error(err);
-      alert(err?.message || "Không tải được sản phẩm");
-      window.location.href = "products.html";
-    }
-  });
-</script>
 </body>
+
 </html>

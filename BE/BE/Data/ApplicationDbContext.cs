@@ -58,6 +58,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Users> Users { get; set; }
 
+    public DbSet<MediaFiles> MediaFiles { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
 
@@ -187,7 +189,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.ProviderId)
                   .HasColumnName("provider_id");
 
- 
+
             entity.HasOne(e => e.Provider)
                   .WithMany()
                   .HasForeignKey(e => e.ProviderId)
@@ -255,22 +257,30 @@ public partial class ApplicationDbContext : DbContext
         });
 
         modelBuilder.Entity<ProductImages>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__product___3213E83F68A92C8A");
+{
+    entity.HasKey(e => e.Id).HasName("PK__product___3213E83F68A92C8A");
 
-            entity.ToTable("product_images");
+    entity.ToTable("product_images");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.ImageUrl)
-                .HasMaxLength(500)
-                .UseCollation("Vietnamese_100_CI_AI")
-                .HasColumnName("image_url");
-            entity.Property(e => e.ProductId).HasColumnName("product_id");
+    entity.Property(e => e.Id).HasColumnName("id");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.ProductImages)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK__product_i__produ__0C85DE4D");
-        });
+    // CHANGED: image_url -> image_file_id
+    entity.Property(e => e.ImageFileId)
+        .HasColumnName("image_file_id");
+
+    entity.Property(e => e.ProductId).HasColumnName("product_id");
+
+    entity.HasOne(d => d.Product).WithMany(p => p.ProductImages)
+        .HasForeignKey(d => d.ProductId)
+        .HasConstraintName("FK__product_i__produ__0C85DE4D");
+
+    // NEW: FK sang media_files
+    entity.HasOne(d => d.ImageFile)
+        .WithMany()
+        .HasForeignKey(d => d.ImageFileId)
+        .HasConstraintName("fk_product_images_file");
+});
+
 
         modelBuilder.Entity<ProductRatingSummary>(entity =>
         {
@@ -484,10 +494,16 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("provider_feedbacks");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AttachmentUrl)
-                .HasMaxLength(500)
-                .UseCollation("Vietnamese_100_CI_AI")
-                .HasColumnName("attachment_url");
+            // CHANGED: attachment_url -> attachment_file_id
+            entity.Property(e => e.AttachmentFileId)
+                .HasColumnName("attachment_file_id");
+
+            // NEW: FK sang media_files
+            entity.HasOne(d => d.AttachmentFile)
+                .WithMany()
+                .HasForeignKey(d => d.AttachmentFileId)
+                .HasConstraintName("fk_provider_feedbacks_attachment_file");
+
             entity.Property(e => e.BookingId).HasColumnName("booking_id");
             entity.Property(e => e.Content)
                 .UseCollation("Vietnamese_100_CI_AI")
@@ -597,10 +613,16 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Description)
                 .UseCollation("Vietnamese_100_CI_AI")
                 .HasColumnName("description");
-            entity.Property(e => e.LogoUrl)
-                .HasMaxLength(500)
-                .UseCollation("Vietnamese_100_CI_AI")
-                .HasColumnName("logo_url");
+            // CHANGED: logo_url -> logo_file_id
+            entity.Property(e => e.LogoFileId)
+                .HasColumnName("logo_file_id");
+
+            // NEW: FK sang media_files
+            entity.HasOne(d => d.LogoFile)
+                .WithMany()
+                .HasForeignKey(d => d.LogoFileId)
+                .HasConstraintName("fk_providers_logo_file");
+
             entity.Property(e => e.ProviderType)
                 .HasMaxLength(20)
                 .UseCollation("Vietnamese_100_CI_AI")
@@ -670,10 +692,16 @@ public partial class ApplicationDbContext : DbContext
             entity.HasIndex(e => e.Email, "UQ__users__AB6E61647FE709C5").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AvatarUrl)
-                .HasMaxLength(500)
-                .UseCollation("Vietnamese_100_CI_AI")
-                .HasColumnName("avatar_url");
+            // CHANGED: avatar_url -> avatar_file_id
+            entity.Property(e => e.AvatarFileId)
+                .HasColumnName("avatar_file_id");
+
+            // NEW: FK sang media_files
+            entity.HasOne(d => d.AvatarFile)
+                .WithMany()
+                .HasForeignKey(d => d.AvatarFileId)
+                .HasConstraintName("fk_users_avatar_file");
+
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(sysdatetime())")
                 .HasColumnName("created_at");
@@ -720,6 +748,34 @@ public partial class ApplicationDbContext : DbContext
                         j.IndexerProperty<int>("RoleId").HasColumnName("role_id");
                     });
         });
+        modelBuilder.Entity<MediaFiles>(entity =>
+{
+    entity.HasKey(e => e.Id).HasName("PK__media_files__id");
+
+    entity.ToTable("media_files");
+
+    entity.Property(e => e.Id).HasColumnName("id");
+
+    entity.Property(e => e.FileName)
+        .HasMaxLength(255)
+        .UseCollation("Vietnamese_100_CI_AI")
+        .HasColumnName("file_name");
+
+    entity.Property(e => e.MimeType)
+        .HasMaxLength(100)
+        .UseCollation("Vietnamese_100_CI_AI")
+        .HasColumnName("mime_type");
+
+    entity.Property(e => e.FileSize)
+        .HasColumnName("file_size");
+
+    entity.Property(e => e.Data)
+        .HasColumnName("data");
+
+    entity.Property(e => e.CreatedAt)
+        .HasColumnName("created_at");
+});
+
 
         OnModelCreatingPartial(modelBuilder);
     }

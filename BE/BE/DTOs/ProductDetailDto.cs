@@ -13,7 +13,12 @@ namespace BE.DTOs
         public string? Status { get; set; }
         public DateTime? CreatedAt { get; set; }
 
+        // CHANGED: trả id file (DB không lưu link nữa)
+        public List<long?> ImageFileIds { get; set; } = new();
+
+        // OPTIONAL: FE vẫn cần hiển thị ảnh -> BE sinh URL runtime (không lưu DB)
         public List<string?> ImageUrls { get; set; } = new();
+
         public List<ProductVariantDetailDto> Variants { get; set; } = new();
     }
 

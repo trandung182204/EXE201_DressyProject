@@ -146,6 +146,7 @@
   <script src="js/jvector-map.js"></script>
   <script src="js/flex-slider.html"></script>
   <script src="js/main.js"></script>
+  <script src="js/auth-header.js"></script>
   <script>
     $('.button.plus').on('click', function () {
       // var $qty = $('.input-number');
@@ -167,46 +168,37 @@
     });
   </script>
   <script>
-    async function loadLayout() {
-      // Load header
-      const headerRes = await fetch("header.html");
-      document.getElementById("header-container").innerHTML =
-        await headerRes.text();
+		async function loadLayout() {
+			const headerRes = await fetch("header.html");
+			document.getElementById("header-container").innerHTML = await headerRes.text();
 
-      // Load dashboard / sidebar
-      const dashRes = await fetch("dashboard.html");
-      document.getElementById("dashboard-container").innerHTML =
-        await dashRes.text();
+			const dashRes = await fetch("dashboard.html");
+			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
-      initSherahLayout();
-    }
+			initSherahLayout();
 
-    loadLayout();
-  </script>
+			// ✅ quan trọng: gọi sau khi header đã có trong DOM
+			if (window.loadAuthToHeader) window.loadAuthToHeader();
+		}
+	</script>
   <script>
     // ===== CONFIG =====
-    const isLocal =
-      location.hostname === "localhost" ||
-      location.hostname === "127.0.0.1";
+    const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
     const API_BASE = isLocal ? "http://127.0.0.1:5135" : "";
-
     const LOGIN_URL = new URL(
       "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
       location.href
     ).href;
+
     const FALLBACK_IMG = "img/product-detail.png";
 
     function getToken() {
       let raw = localStorage.getItem("token") || "";
       raw = raw.replace(/\s+/g, "").trim();
-
       if (raw.toLowerCase().startsWith("bearer")) {
-        raw = raw.slice(6);
-        raw = raw.replace(/\s+/g, "").trim();
+        raw = raw.slice(6).replace(/\s+/g, "").trim();
       }
-
       raw = raw.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "");
-
       const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
       return m ? m[1] : "";
     }
@@ -220,15 +212,12 @@
       window.location.href = LOGIN_URL;
     }
 
-    // ===== URL PARAM =====
     function getProductIdFromUrl() {
       const params = new URLSearchParams(window.location.search);
-      // products.html đang dùng ?id=...
       const id = params.get("id") || params.get("productId");
       return id ? Number(id) : null;
     }
 
-    // ===== HELPERS =====
     function safeText(v) {
       return v === null || v === undefined ? "" : String(v);
     }
@@ -244,70 +233,109 @@
       return [...new Set((arr || []).filter(x => x !== null && x !== undefined && String(x).trim() !== ""))];
     }
 
-    function renderGallery(imageUrls) {
-      const urls = (Array.isArray(imageUrls) && imageUrls.length ? imageUrls : [FALLBACK_IMG])
-        .map(u => u || FALLBACK_IMG);
+    // Build full URL (handle "/api/..." or "http...")
+    function toAbsUrl(u) {
+      if (!u) return "";
+      if (/^https?:\/\//i.test(u)) return u;
+      if (u.startsWith("/")) return API_BASE + u;
+      return API_BASE + "/" + u;
+    }
+
+    // Ưu tiên ImageUrls từ BE, fallback ImageFileIds
+    function resolveImageUrlsFromDetail(p) {
+      const urlsRaw = p?.imageUrls || p?.ImageUrls;       // tùy JSON serializer
+      const fileIdsRaw = p?.imageFileIds || p?.ImageFileIds;
+
+      let urls = [];
+      if (Array.isArray(urlsRaw) && urlsRaw.length) {
+        urls = urlsRaw.filter(Boolean).map(toAbsUrl);
+      } else if (Array.isArray(fileIdsRaw) && fileIdsRaw.length) {
+        urls = fileIdsRaw
+          .filter(x => x !== null && x !== undefined)
+          .map(fid => `${API_BASE}/api/media-files/${fid}`);
+      }
+
+      // fallback nếu vẫn rỗng
+      if (!urls.length) urls = [FALLBACK_IMG];
+      return urls;
+    }
+
+    // Bootstrap 4 uses data-toggle, not data-bs-toggle
+    function renderGallery(urls) {
+      const list = (Array.isArray(urls) && urls.length ? urls : [FALLBACK_IMG]).map(u => u || FALLBACK_IMG);
 
       const $thumbs = $("#pills-tab");
       const $tabs = $("#pills-tabContent");
       $thumbs.empty();
       $tabs.empty();
 
-      urls.forEach((url, idx) => {
+      list.forEach((url, idx) => {
         const tabId = `pills-img-${idx}`;
         const isActive = idx === 0;
 
         $thumbs.append(`
-        <li class="single-thumbs" role="presentation">
-          <a class="${isActive ? "active" : ""}" id="${tabId}-tab"
-             data-bs-toggle="pill" href="#${tabId}" role="tab"
-             aria-controls="${tabId}" aria-selected="${isActive ? "true" : "false"}">
-            <img src="${url}" alt="thumbs" onerror="this.src='${FALLBACK_IMG}'">
-          </a>
-        </li>
-      `);
+      <li class="nav-item single-thumbs" role="presentation">
+        <a class="nav-link ${isActive ? "active" : ""}" id="${tabId}-tab"
+           data-toggle="pill" href="#${tabId}" role="tab"
+           aria-controls="${tabId}" aria-selected="${isActive ? "true" : "false"}">
+          <img src="${url}" alt="thumb" onerror="this.onerror=null;this.src='${FALLBACK_IMG}'">
+        </a>
+      </li>
+    `);
 
         $tabs.append(`
-        <div class="tab-pane fade ${isActive ? "show active" : ""}" id="${tabId}" role="tabpanel" aria-labelledby="${tabId}-tab">
-          <div class="single-product-image">
-            <img src="${url}" alt="product" onerror="this.src='${FALLBACK_IMG}'">
-          </div>
+      <div class="tab-pane fade ${isActive ? "show active" : ""}" id="${tabId}"
+           role="tabpanel" aria-labelledby="${tabId}-tab">
+        <div class="single-product-image">
+          <img src="${url}" alt="product" onerror="this.onerror=null;this.src='${FALLBACK_IMG}'">
         </div>
-      `);
+      </div>
+    `);
       });
+
+
+      $thumbs.off("click", "a[data-toggle='pill']");
+      $thumbs.on("click", "a[data-toggle='pill']", function (e) {
+        e.preventDefault();
+        $(this).tab("show"); // Bootstrap 4 tab plugin
+      });
+
+
+      $thumbs.find("a.nav-link.active").trigger("click");
     }
 
+
     function fillProductDetail(p) {
-      $("#pd-name").text(p?.name ?? "--");
-      $("#pd-desc").text(p?.description ?? "--");
-      $("#pd-category").text(p?.categoryName ?? "--");
+      $("#pd-name").text(p?.name ?? p?.Name ?? "--");
+      $("#pd-desc").text(p?.description ?? p?.Description ?? "--");
+      $("#pd-category").text(p?.categoryName ?? p?.CategoryName ?? "--");
 
-      const variants = Array.isArray(p?.variants) ? p.variants : [];
+      const variants = Array.isArray(p?.variants || p?.Variants) ? (p.variants || p.Variants) : [];
 
-      // tổng tồn kho
-      const totalQty = variants.reduce((sum, v) => sum + (Number(v?.quantity) || 0), 0);
+      const totalQty = variants.reduce((sum, v) => sum + (Number(v?.quantity ?? v?.Quantity) || 0), 0);
       $("#pd-stock").text(`${totalQty} In stock`);
 
-      // giá min pricePerDay
-      const prices = variants.map(v => v?.pricePerDay).filter(x => x !== null && x !== undefined);
-      const minPrice = prices.length ? Math.min(...prices.map(Number)) : null;
+      const prices = variants
+        .map(v => v?.pricePerDay ?? v?.PricePerDay)
+        .filter(x => x !== null && x !== undefined)
+        .map(Number)
+        .filter(n => !Number.isNaN(n));
+
+      const minPrice = prices.length ? Math.min(...prices) : null;
       $("#pd-price").text(minPrice !== null ? formatMoney(minPrice) : "--");
 
-      // meta size/color
-      const sizes = uniqueNonEmpty(variants.map(v => v?.sizeLabel));
-      const colors = uniqueNonEmpty(variants.map(v => v?.colorName));
-      const colorCodes = uniqueNonEmpty(variants.map(v => v?.colorCode));
+      const sizes = uniqueNonEmpty(variants.map(v => v?.sizeLabel ?? v?.SizeLabel));
+      const colors = uniqueNonEmpty(variants.map(v => v?.colorName ?? v?.ColorName));
 
       $("#pd-sizes").text(sizes.length ? sizes.join(", ") : "--");
       $("#pd-colors").text(colors.length ? colors.join(", ") : "--");
-      $("#pd-colorcodes").text(colorCodes.length ? colorCodes.join(", ") : "--");
 
-      renderGallery(p?.imageUrls);
+      const imgUrls = resolveImageUrlsFromDetail(p);
+      renderGallery(imgUrls);
     }
 
     async function fetchProductDetail(productId) {
       const token = getToken();
-
       if (!isValidJwt(token)) {
         alert("Token không hợp lệ / bị lỗi. Vui lòng đăng nhập lại.");
         localStorage.removeItem("token");
@@ -337,15 +365,11 @@
       }
 
       const payload = await res.json().catch(() => ({}));
-      // BE controller của bạn trả: { success: true, data: detail, message: ... }
-      if (payload && payload.success && payload.data) return payload.data;
-
-      // fallback nếu BE trả thẳng object
-      return payload;
+      return (payload && payload.success && payload.data) ? payload.data : payload;
     }
 
-    // ===== INIT =====
     document.addEventListener("DOMContentLoaded", async () => {
+      
       const productId = getProductIdFromUrl();
       if (!productId) {
         alert("Thiếu id trên URL. Ví dụ: product-detail.html?id=123");
@@ -360,8 +384,10 @@
         console.error(err);
         alert(err?.message || "Lỗi khi tải chi tiết sản phẩm");
       }
+      loadLayout();
     });
   </script>
+
 
 </body>
 
