@@ -62,10 +62,10 @@
                                 <div class="row mg-top-30">
                                     <div class="col-12 sherah-flex-between">
                                         <div class="sherah-breadcrumb">
-                                            <h2 class="sherah-breadcrumb__title">Products</h2>
+                                            <h2 class="sherah-breadcrumb__title">Danh sách sản phẩm</h2>
                                             <ul class="sherah-breadcrumb__list">
-                                                <li><a href="#">Home</a></li>
-                                                <li class="active"><a href="products.html">Shop</a></li>
+                                                <li><a href="#">Trang chủ</a></li>
+                                                <li class="active"><a href="products.html">Danh sách sản phẩm</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -75,31 +75,30 @@
                                     <!-- LEFT SIDEBAR (giữ nguyên template) -->
                                     <div class="col-xxl-3 col-lg-4 col-12">
                                         <div class="sherah-product-sidebar sherah-default-bg mg-top-30">
-                                            <h4 class="sherah-product-sidebar__title sherah-border-btm">Product
-                                                Categories</h4>
+                                            <h4 class="sherah-product-sidebar__title sherah-border-btm">Danh mục sản phẩm</h4>
                                             <ul class="sherah-product-sidebar__list" id="categoryList">
                                                 <!-- JS sẽ render -->
                                             </ul>
                                             <div style="margin-top:12px;">
                                                 <button id="btnToggleAddCat" class="sherah-btn" style="width:100%;">
-                                                    + Add category
+                                                    + Thêm danh mục
                                                 </button>
 
                                                 <form id="addCatForm" style="display:none; margin-top:10px;"
                                                     onsubmit="return false;">
-                                                    <input id="catNameInput" type="text" placeholder="Category name..."
+                                                    <input id="catNameInput" type="text" placeholder="Tên danh mục..."
                                                         style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
 
-                                                    <textarea id="catDescInput" placeholder="Description (optional)"
+                                                    <textarea id="catDescInput" placeholder="Mô tả (tùy chọn)"
                                                         style="width:100%; margin-top:8px; padding:10px; border:1px solid #ddd; border-radius:8px;"
                                                         rows="2"></textarea>
 
                                                     <div style="display:flex; gap:8px; margin-top:10px;">
                                                         <button id="btnCreateCat" class="sherah-btn" type="button"
-                                                            style="flex:1;">Create</button>
+                                                            style="flex:1;">Tạo</button>
                                                         <button id="btnCancelCat" class="sherah-btn" type="button"
                                                             style="flex:1; background:#eee; color:#333;">
-                                                            Cancel
+                                                            Hủy
                                                         </button>
                                                     </div>
 
@@ -111,13 +110,13 @@
                                         </div>
 
                                         <div class="sherah-product-sidebar sherah-default-bg mg-top-30">
-                                            <h4 class="sherah-product-sidebar__title sherah-border-btm">Price Range</h4>
+                                            <h4 class="sherah-product-sidebar__title sherah-border-btm">Khoảng giá</h4>
                                             <div class="price-filter">
                                                 <div class="price-filter-inner">
                                                     <div id="slider-range"></div>
                                                     <div class="price_slider_amount">
                                                         <div class="label-input">
-                                                            <span>Range:</span>
+                                                            <span>Khoảng:</span>
                                                             <input type="text" id="amount" name="price"
                                                                 placeholder="Add Your Price" />
                                                         </div>
@@ -131,7 +130,7 @@
                                     <div class="col-xxl-9 col-lg-8 col-12">
                                         <div class="sherah-breadcrumb__right mg-top-30">
                                             <div class="sherah-breadcrumb__right--first">
-                                                <div class="sherah-header__form sherah-header__form--product">
+                                                <div class="sherah-header__form sherah-h    eader__form--product">
                                                     <form class="sherah-header__form-inner" action="#"
                                                         onsubmit="return false;">
                                                         <button class="search-btn" type="button">
@@ -143,7 +142,7 @@
                                                             </svg>
                                                         </button>
                                                         <input id="searchInput" name="s" value="" type="text"
-                                                            placeholder="Search products...">
+                                                            placeholder="Tìm kiếm sản phẩm...">
                                                     </form>
                                                 </div>
                                                 <p id="resultCount">Loading...</p>
@@ -547,7 +546,7 @@
                                 </svg>
                             </a>
 
-                            <a href="product-detail.html?id=${id}" class="sherah-btn default">Detail</a>
+                            <a href="product-detail.html?id=${id}" class="sherah-btn default">Chi tiết</a>
 
                             <a href="#" data-delete-id="${id}" class="sherah-table__action sherah-color2 sherah-color2__bg--offset">
                                 <svg class="sherah-color2__fill" xmlns="http://www.w3.org/2000/svg" width="16.247" height="18.252" viewBox="0 0 16.247 18.252">
