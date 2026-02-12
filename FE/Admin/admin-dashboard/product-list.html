@@ -316,6 +316,9 @@
             images: `${API_BASE}/ProductImages`
         };
 
+        // API_HOST is API_BASE without trailing '/api' so we can prefix media URLs
+        const API_HOST = (typeof API_BASE === 'string') ? API_BASE.replace(/\/api\/?$/i, '') : window.location.origin;
+
         let allProducts = [];
         let allProviders = [];
         let allImages = [];
@@ -353,18 +356,26 @@
         function getProductImage(productId, product) {
             let img = null;
             // Ưu tiên ảnh trong object product (nếu API trả về lồng nhau)
-            if (product.productImages && product.productImages.length > 0) {
-                img = product.productImages[0].imageUrl || product.productImages[0].ImageUrl;
+            if (product && Array.isArray(product.productImages) && product.productImages.length > 0) {
+                const pi = product.productImages[0];
+                img = pi.imageUrl || pi.ImageUrl || null;
+                // If product image entry contains a file id, build media URL
+                const fid = pi.fileId || pi.fileID || pi.imageFileId || pi.file_id || pi.id || pi.image_file_id;
+                if (!img && fid) img = API_HOST.replace(/\/$/, '') + "/api/media-files/" + fid;
             }
-            
+
             // Nếu không có, tìm trong mảng ảnh rời
             if (!img) {
-                const found = allImages.find(i => i.productId === productId);
-                if (found) img = found.imageUrl || found.ImageUrl;
+                const found = allImages.find(i => Number(i.productId) === Number(productId));
+                if (found) {
+                    img = found.imageUrl || found.ImageUrl || null;
+                    const fid2 = found.fileId || found.fileID || found.imageFileId || found.file_id || found.id || found.image_file_id;
+                    if (!img && fid2) img = API_HOST.replace(/\/$/, '') + "/api/media-files/" + fid2;
+                }
             }
 
             // Nếu vẫn không có hoặc chuỗi rỗng, trả về null để render xử lý
-            return (img && img.trim() !== "") ? img : null;
+            return (img && String(img).trim() !== "") ? String(img).trim() : null;
         }
 
         function getProviderName(providerId, product) {
@@ -466,12 +477,22 @@
             // URL ảnh dự phòng online (đảm bảo luôn hiển thị được)
             const fallbackImg = "https://placehold.co/100x100?text=No+Img"; 
 
+            // Normalize image URLs so relative paths like '/api/...' load correctly using API_HOST
+            function safeImg(url) {
+                if (!url) return null;
+                url = String(url).trim();
+                if (url.startsWith('http://') || url.startsWith('https://')) return url;
+                if (url.startsWith('//')) return window.location.protocol + url;
+                if (url.startsWith('/')) return API_HOST + url;
+                return API_HOST + '/' + url;
+            }
+
             products.forEach(p => {
                 const isAvailable = p.finalStatus === 'AVAILABLE';
                 
                 // Logic xử lý ảnh: Nếu p.finalImage null thì dùng fallback ngay lập tức
                 // Nếu p.finalImage có link nhưng link chết -> onerror sẽ bắt
-                const imgSrc = p.finalImage ? p.finalImage : fallbackImg;
+                const imgSrc = safeImg(p.finalImage) || fallbackImg;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -553,9 +574,43 @@
             });
         }
 
-        function deleteProduct(id) {
-            if(!confirm("Bạn có chắc muốn xóa sản phẩm này?")) return;
-            alert("Chức năng xóa đang phát triển (ID: " + id + ")");
+        function _readToken() {
+            let raw = localStorage.getItem('token') || '';
+            raw = raw.replace(/\s+/g, '').trim();
+            if (raw.toLowerCase().startsWith('bearer')) raw = raw.slice(6).trim();
+            raw = raw.replace(/^"+|"+$/g, '').replace(/^'+|'+$/g, '');
+            const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
+            return m ? m[1] : (raw || '');
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm("Bạn có chắc muốn xóa sản phẩm này?")) return;
+
+            const url = `${endpoints.products}/${id}`;
+            const token = _readToken();
+
+            try {
+                const res = await fetch(url, {
+                    method: 'DELETE',
+                    headers: Object.assign({ 'Accept': 'application/json' }, token ? { 'Authorization': 'Bearer ' + token } : {})
+                });
+
+                let payload = {};
+                try { payload = await res.json(); } catch(_) { payload = {}; }
+
+                if (res.ok && (payload.success === undefined || payload.success === true)) {
+                    // remove from local array and re-render
+                    allProducts = allProducts.filter(p => Number(p.id) !== Number(id));
+                    applyFiltersAndSort();
+                    alert('Xóa sản phẩm thành công');
+                } else {
+                    const msg = payload?.message || payload?.error || ('HTTP ' + res.status);
+                    alert('Xóa thất bại: ' + msg);
+                }
+            } catch (err) {
+                console.error('Delete product failed', err);
+                alert('Lỗi kết nối khi xóa sản phẩm');
+            }
         }
 
         function gotoPage(p) { currentPage = p; applyFiltersAndSort(); }

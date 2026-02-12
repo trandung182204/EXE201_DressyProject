@@ -422,6 +422,25 @@
             delete: (id) => `${API_BASE}/bookings/${id}`
         };
 
+        // Derive API host (used for building absolute image URLs)
+        const API_HOST = (typeof API_BASE === 'string' && API_BASE.startsWith('http'))
+            ? (API_BASE.endsWith('/api') ? API_BASE.slice(0, -4) : API_BASE)
+            : window.location.origin;
+
+        // Safe image URL helper: returns absolute URL or placeholder
+        function safeImg(url) {
+            if (!url) return 'https://placehold.co/100x100?text=No+Img';
+            if (url.startsWith('http')) return url;
+            if (url.startsWith('/')) return API_HOST + url;
+            return API_HOST + '/' + url;
+        }
+
+                // Build media URL from a file id (like manager page does)
+                function buildMediaUrl(fileId) {
+                    if (!fileId) return null;
+                    return API_HOST.replace(/\/$/, '') + '/api/media-files/' + String(fileId);
+                }
+
         let state = {
             data: [],
             filteredData: [],
@@ -631,8 +650,22 @@
                                 if (item.startDate && item.endDate) {
                                     dateInfo = `<div class="small text-muted"><i class="fa fa-calendar-alt"></i> ${item.startDate} - ${item.endDate}</div>`;
                                 }
-                                // Fallback ảnh
-                                let imgUrl = (item.imageUrl && item.imageUrl.trim() !== "") ? item.imageUrl : 'https://placehold.co/100x100?text=No+Img';
+                                // Fallback ảnh (normalize via safeImg). Also handle numeric/fileId values.
+                                let imgUrl = null;
+                                if (item && item.imageUrl && String(item.imageUrl).trim() !== "") {
+                                    imgUrl = safeImg(item.imageUrl);
+                                } else {
+                                    // possible file id fields from backend
+                                    const fid = item && (item.imageFileId || item.fileId || item.file_id || item.id || item.image_file_id);
+                                    if (fid) imgUrl = buildMediaUrl(fid);
+                                    // also check nested productImage object
+                                    if (!imgUrl && item && item.productImage) {
+                                        const pi = item.productImage;
+                                        const pf = pi.fileId || pi.id || pi.imageFileId || pi.file_id;
+                                        if (pf) imgUrl = buildMediaUrl(pf);
+                                    }
+                                }
+                                if (!imgUrl) imgUrl = 'https://placehold.co/100x100?text=No+Img';
 
                                 htmlItems += `
                             <div class="d-flex align-items-center border p-2 rounded bg-white">
