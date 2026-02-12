@@ -89,6 +89,9 @@ namespace BE.Controllers
         [HttpPut("{id}/status")]
         public async Task<IActionResult> UpdateStatus(long id, [FromBody] UpdateBookingStatusDto dto)
         {
+            if (dto == null || string.IsNullOrWhiteSpace(dto.Status))
+                return BadRequest(new { success = false, message = "Status is required" });
+
             var ok = await _service.UpdateStatusAsync(id, dto.Status);
             if (!ok)
                 return NotFound(new { success = false, message = "Booking not found" });

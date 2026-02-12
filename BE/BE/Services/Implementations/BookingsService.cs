@@ -34,10 +34,13 @@ namespace BE.Services.Implementations
 
         public async Task<bool> UpdateStatusAsync(long id, string status)
         {
+            if (string.IsNullOrWhiteSpace(status)) return false;
+
             await using var conn = new NpgsqlConnection(_connectionString);
             await using var cmd = new NpgsqlCommand("UPDATE bookings SET status = @status WHERE id = @id", conn);
-            cmd.Parameters.AddWithValue("@status", status);
-            cmd.Parameters.AddWithValue("@id", id);
+            // Use explicit parameter types to avoid ambiguity
+            cmd.Parameters.Add("@status", NpgsqlTypes.NpgsqlDbType.Varchar).Value = status;
+            cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Bigint).Value = id;
             await conn.OpenAsync();
             var affected = await cmd.ExecuteNonQueryAsync();
             return affected > 0;
@@ -172,17 +175,20 @@ namespace BE.Services.Implementations
             if (detail == null) return null;
 
             // 2. Lấy danh sách Items
+            // NOTE: booking_items table doesn't have "quantity", "variant_name" or "image_url" columns in current schema.
+            // Join product_variants for variant info and select a product image file id from product_images (first one).
             await using (var cmdItems = new NpgsqlCommand(@"
-                SELECT 
+                SELECT
                     p.name as product_name,
-                    COALESCE(bi.variant_name, '') as variant_name,
-                    bi.quantity,
+                    COALESCE(pv.size_label || ' ' || pv.color_name, '') as variant_name,
+                    1 as quantity,
                     bi.price,
                     bi.start_date,
                     bi.end_date,
-                    COALESCE(bi.image_url, '') as image_url
+                    (SELECT image_file_id FROM product_images WHERE product_id = p.id LIMIT 1) as image_file_id
                 FROM booking_items bi
                 LEFT JOIN products p ON bi.product_id = p.id
+                LEFT JOIN product_variants pv ON bi.product_variant_id = pv.id
                 WHERE bi.booking_id = @id
             ", conn))
             {
@@ -190,19 +196,45 @@ namespace BE.Services.Implementations
                 await using var rdItems = await cmdItems.ExecuteReaderAsync();
                 while (await rdItems.ReadAsync())
                 {
-                    // Xử lý DateOnly từ DateTime của DB trả về
-                    DateOnly? start = rdItems.IsDBNull(4) ? null : DateOnly.FromDateTime(rdItems.GetDateTime(4));
-                    DateOnly? end = rdItems.IsDBNull(5) ? null : DateOnly.FromDateTime(rdItems.GetDateTime(5));
+                    // Read start_date / end_date safely: DB may return DateTime, DateOnly, or string
+                    DateOnly? start = null;
+                    DateOnly? end = null;
+
+                    if (!rdItems.IsDBNull(4))
+                    {
+                        var raw = rdItems.GetValue(4);
+                        if (raw is DateTime dt) start = DateOnly.FromDateTime(dt);
+                        else if (raw is DateOnly d) start = d;
+                        else if (raw is string s && DateTime.TryParse(s, out var dt2)) start = DateOnly.FromDateTime(dt2);
+                    }
+
+                    if (!rdItems.IsDBNull(5))
+                    {
+                        var raw = rdItems.GetValue(5);
+                        if (raw is DateTime dt) end = DateOnly.FromDateTime(dt);
+                        else if (raw is DateOnly d) end = d;
+                        else if (raw is string s && DateTime.TryParse(s, out var dt2)) end = DateOnly.FromDateTime(dt2);
+                    }
+
+                    // Image: read image_file_id (nullable long) and build a URL to MediaFiles endpoint
+                    string imageUrl = string.Empty;
+                    if (!rdItems.IsDBNull(6))
+                    {
+                        var imgVal = rdItems.GetValue(6);
+                        if (imgVal is long l) imageUrl = $"/api/media-files/{l}";
+                        else if (imgVal is int i) imageUrl = $"/api/media-files/{i}";
+                        else if (imgVal is string s && long.TryParse(s, out var lv)) imageUrl = $"/api/media-files/{lv}";
+                    }
 
                     detail.Items.Add(new BookingItemDto
                     {
                         ProductName = rdItems.IsDBNull(0) ? "Unknown" : rdItems.GetString(0),
-                        VariantName = rdItems.GetString(1),
+                        VariantName = rdItems.IsDBNull(1) ? string.Empty : rdItems.GetString(1),
                         Quantity = rdItems.GetInt32(2),
-                        Price = rdItems.GetDecimal(3),
+                        Price = rdItems.IsDBNull(3) ? 0 : rdItems.GetDecimal(3),
                         StartDate = start,
                         EndDate = end,
-                        ImageUrl = rdItems.GetString(6)
+                        ImageUrl = imageUrl
                     });
                 }
             }

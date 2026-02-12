@@ -264,9 +264,7 @@
                                                 <label class="filter-label">Trạng thái đơn</label>
                                                 <select id="status-filter" class="filter-input">
                                                     <option value="">Tất cả</option>
-                                                    <option value="pending">Chờ xử lý (Pending)</option>
-                                                    <option value="processing">Đang xử lý</option>
-                                                    <option value="shipped">Đã giao</option>
+                                                    <option value="pending">Chờ xử lý</option>
                                                     <option value="completed">Hoàn thành</option>
                                                     <option value="cancelled">Đã hủy</option>
                                                 </select>
@@ -374,11 +372,9 @@
                         <label class="form-label fw-bold">Cập nhật trạng thái đơn hàng:</label>
                         <div class="d-flex gap-2">
                             <select id="modal-status-select" class="form-select">
-                                <option value="pending">Chờ xử lý (Pending)</option>
-                                <option value="processing">Đang xử lý (Processing)</option>
-                                <option value="shipped">Đang giao / Đã phục vụ (Shipped)</option>
-                                <option value="completed">Hoàn thành (Completed)</option>
-                                <option value="cancelled">Đã hủy (Cancelled)</option>
+                                <option value="pending">Chờ xử lý </option>
+                                <option value="completed">Hoàn thành </option>
+                                <option value="cancelled">Đã hủy</option>
                             </select>
                             <button id="btn-save-status" class="btn btn-primary text-nowrap">
                                 <i class="fa fa-save"></i> Lưu
@@ -573,7 +569,6 @@
                 <td class="text-center"><span class="badge ${statusClass}">${item.bookingStatus}</span></td>
                 <td class="text-end">
                     <button class="btn btn-sm btn-light border" onclick="openDetailModal(${item.bookingId})"><i class="fa fa-eye text-primary"></i></button>
-                    <button class="btn btn-sm btn-light border ms-1" onclick="deleteBooking(${item.bookingId})"><i class="fa fa-trash text-danger"></i></button>
                 </td>
             `;
                 els.tableBody.appendChild(tr);
@@ -671,7 +666,7 @@
         if (btnSave) {
             btnSave.addEventListener('click', () => {
                 if (!currentBookingId) return;
-                const newStatus = document.getElementById('modal-status-select').value;
+                const newStatus = document.getElementById('modal-status-select').value.toUpperCase();
 
                 btnSave.disabled = true;
                 btnSave.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';

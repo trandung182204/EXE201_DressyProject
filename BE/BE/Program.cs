@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using BE.Data;
 using BE.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -56,6 +57,7 @@ builder.Services.AddControllers()
     {
         opt.JsonSerializerOptions.ReferenceHandler =
             System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
 
 // CORS (giữ đúng policy bạn đang dùng)
