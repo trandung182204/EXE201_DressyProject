@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Site Title -->
-  <title>Sherah - HTML eCommerce Dashboard Template</title>
+  <title>Chi tiết sản phẩm</title>
 
   <!-- Font -->
   <link
@@ -59,11 +59,10 @@
                   <div class="col-12 sherah-flex-between">
                     <!-- Sherah Breadcrumb -->
                     <div class="sherah-breadcrumb">
-                      <h2 class="sherah-breadcrumb__title">Product Details</Details>
-                      </h2>
+                      <h2 class="sherah-breadcrumb__title">Chi tiết sản phẩm</h2>
                       <ul class="sherah-breadcrumb__list">
-                        <li><a href="#">Home</a></li>
-                        <li class="active"><a href='products.html'>Products Details</a></li>
+                        <li><a href="#">Trang chủ</a></li>
+                        <li class="active"><a href='products.html'>Chi tiết sản phẩm</a></li>
                       </ul>
                     </div>
                     <!-- End Sherah Breadcrumb -->
@@ -93,14 +92,14 @@
                         <div class="product-detail-body__deal--rating">
                           <h5 class="sherah-product-card__price" id="pd-price">--</h5>
                           <div class="sherah-product-card__meta sherah-dflex sherah-flex-gap-30">
-                            <div class="sherah-product-card__rating sherah-dflex sherah-flex-gap-5">
+                            <!-- <div class="sherah-product-card__rating sherah-dflex sherah-flex-gap-5">
                               <span class="sherah-color4"><i class="fa fa-star"></i></span>
                               <span class="sherah-color4"><i class="fa fa-star"></i></span>
                               <span class="sherah-color4"><i class="fa fa-star"></i></span>
                               <span class="sherah-color4"><i class="fa fa-star"></i></span>
                               <span class="sherah-color4"><i class="fa fa-star"></i></span>
                               (33)
-                            </div>
+                            </div> -->
                           </div>
                         </div>
                         <p class="product-detail-body__stock sherah-color3" id="pd-stock">--</p>
@@ -110,9 +109,9 @@
                         <div class="sherah-border-btm pd-top-40 mg-btm-40"></div>
                         <div class="sherah-products-meta">
                           <ul class="sherah-products-meta__list">
-                            <li><span class="p-list-title">Category : </span> <span id="pd-category">--</span></li>
-                            <li><span class="p-list-title">Color : </span> <span id="pd-colors">--</span></li>
-                            <li><span class="p-list-title">Size : </span> <span id="pd-sizes">--</span></li>
+                            <li><span class="p-list-title">Danh mục : </span> <span id="pd-category">--</span></li>
+                            <li><span class="p-list-title">Màu sắc : </span> <span id="pd-colors">--</span></li>
+                            <li><span class="p-list-title">Kích thước : </span> <span id="pd-sizes">--</span></li>
 
                           </ul>
                         </div>
@@ -313,7 +312,7 @@
       const variants = Array.isArray(p?.variants || p?.Variants) ? (p.variants || p.Variants) : [];
 
       const totalQty = variants.reduce((sum, v) => sum + (Number(v?.quantity ?? v?.Quantity) || 0), 0);
-      $("#pd-stock").text(`${totalQty} In stock`);
+      $("#pd-stock").text(`${totalQty} sản phẩm có sẵn`);
 
       const prices = variants
         .map(v => v?.pricePerDay ?? v?.PricePerDay)

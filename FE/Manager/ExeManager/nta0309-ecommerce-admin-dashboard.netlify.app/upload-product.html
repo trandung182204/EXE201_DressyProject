@@ -142,10 +142,10 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="sherah-breadcrumb mg-top-30">
-                                            <h2 class="sherah-breadcrumb__title">Upload Product</h2>
+                                            <h2 class="sherah-breadcrumb__title">Tải lên sản phẩm</h2>
                                             <ul class="sherah-breadcrumb__list">
-                                                <li><a href="#">Home</a></li>
-                                                <li class="active"><a href='profile-info.html'>Upload Product</a></li>
+                                                <li><a href="#">Trang chủ</a></li>
+                                                <li class="active"><a href='upload-product.html'>Tải lên sản phẩm</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -158,11 +158,11 @@
                                             <div class="col-lg-6 col-12">
                                                 <!-- Product Info -->
                                                 <div class="product-form-box sherah-border mg-top-30">
-                                                    <h4 class="form-title m-0">Basic Information</h4>
+                                                    <h4 class="form-title m-0">Thông tin cơ bản</h4>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Product Title</label>
+                                                                <label class="sherah-wc__form-label">Tên sản phẩm</label>
                                                                 <div class="form-group__input">
                                                                     <input id="name" class="sherah-wc__form-input"
                                                                         placeholder="Type here" type="text" name="name">
@@ -172,7 +172,7 @@
 
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Price per day</label>
+                                                                <label class="sherah-wc__form-label">Giá mỗi ngày</label>
                                                                 <div class="form-group__input">
                                                                     <input id="pricePerDay"
                                                                         class="sherah-wc__form-input"
@@ -184,7 +184,7 @@
 
                                                         <div class="col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Description</label>
+                                                                <label class="sherah-wc__form-label">Mô tả</label>
                                                                 <div class="form-group__input">
                                                                     <textarea id="description"
                                                                         class="sherah-wc__form-input"
@@ -196,11 +196,11 @@
 
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Category*</label>
+                                                                <label class="sherah-wc__form-label">Danh mục*</label>
                                                                 <div class="form-group__input">
                                                                     <select id="categoryId"
                                                                         class="sherah-wc__form-input" name="categoryId">
-                                                                        <option value="">-- Select category --</option>
+                                                                        <option value="">-- Chọn danh mục --</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -208,12 +208,12 @@
 
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Product Type</label>
+                                                                <label class="sherah-wc__form-label">Loại sản phẩm</label>
                                                                 <div class="form-group__input">
                                                                     <select id="productType"
                                                                         class="sherah-wc__form-input"
                                                                         name="productType">
-                                                                        <option value="OUTFIT">OUTFIT</option>
+                                                                        <option value="OUTFIT">Trang phục</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -227,12 +227,12 @@
                                             <div class="col-lg-6 col-12">
                                                 <!-- Specification -->
                                                 <div class="product-form-box sherah-border mg-top-30">
-                                                    <h4 class="form-title m-0">Specification</h4>
+                                                    <h4 class="form-title m-0">Thông tin chi tiết</h4>
 
                                                     <div class="row">
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Deposit Amount</label>
+                                                                <label class="sherah-wc__form-label">Số tiền cọc</label>
                                                                 <div class="form-group__input">
                                                                     <input id="depositAmount"
                                                                         class="sherah-wc__form-input"
@@ -245,11 +245,11 @@
 
                                                     <!-- ✅ NEW: Variants table (thay cho Size/Colors checkbox + Stock) -->
                                                     <div class="variants-toolbar">
-                                                        <label class="sherah-wc__form-label" style="margin:0;">Variants</label>
+                                                        <h4 class="form-title m-0">Thông số sản phẩm</h4>
                                                         <button id="btnAddVariant" type="button"
                                                             class="sherah-btn sherah-btn__primary"
                                                             style="padding:10px 14px;">
-                                                            + Add variant
+                                                            + Thêm dòng
                                                         </button>
                                                     </div>
 
@@ -257,10 +257,10 @@
                                                         <table class="variants-table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th style="width: 22%;">Size</th>
-                                                                    <th style="width: 26%;">Color name</th>
-                                                                    <th style="width: 18%;">Color code</th>
-                                                                    <th style="width: 18%;">Quantity</th>
+                                                                    <th style="width: 22%;">Kích thước</th>
+                                                                    <th style="width: 26%;">Tên màu</th>
+                                                                    <th style="width: 18%;">Mã màu</th>
+                                                                    <th style="width: 18%;">Số lượng</th>
                                                                     <th style="width: 16%;"></th>
                                                                 </tr>
                                                             </thead>
@@ -269,7 +269,7 @@
                                                     </div>
 
                                                     <p class="form-msg" style="color:#666;">
-                                                        Nhập theo từng dòng: <b>Size → Color → Quantity</b>. Nếu có nhiều size/màu, bấm <b>Add variant</b>.
+                                                        Nhập theo từng dòng: <b>Kích cỡ → tên màu → mã màu → số lượng</b>. Nếu có nhiều size/màu, bấm <b>Thêm dòng</b>.
                                                     </p>
                                                 </div>
                                                 <!-- End Specification -->
@@ -301,7 +301,7 @@
                                                                         transform="translate(-122.238 -52.421)" />
                                                                 </g>
                                                             </svg>
-                                                            <span>image upload</span>
+                                                            <span>Tải ảnh lên</span>
                                                         </label>
                                                     </div>
 
@@ -312,8 +312,8 @@
                                         <p id="formMsg" class="form-msg"></p>
 
                                         <div class="mg-top-40 sherah-dflex sherah-dflex-gap-30 justify-content-end">
-                                            <button type="submit" class="sherah-btn sherah-btn__primary">Publish Product</button>
-                                            <button class="sherah-btn sherah-btn__third" type="button" onclick="window.location.href='products.html'">Cancel</button>
+                                            <button type="submit" class="sherah-btn sherah-btn__primary">Tải lên</button>
+                                            <button class="sherah-btn sherah-btn__third" type="button" onclick="window.location.href='products.html'">Hủy</button>
                                         </div>
                                     </form>
                                 </div>
