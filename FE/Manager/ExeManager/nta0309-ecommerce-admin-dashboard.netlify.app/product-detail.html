@@ -146,6 +146,7 @@
   <script src="js/flex-slider.html"></script>
   <script src="js/main.js"></script>
   <script src="js/auth-header.js"></script>
+  <script src="js/provider-notifications.js"></script>
   <script>
     $('.button.plus').on('click', function () {
       // var $qty = $('.input-number');
@@ -178,6 +179,7 @@
 
 			// ✅ quan trọng: gọi sau khi header đã có trong DOM
 			if (window.loadAuthToHeader) window.loadAuthToHeader();
+      if (window.initProviderNotifications) window.initProviderNotifications();
 		}
 	</script>
   <script>

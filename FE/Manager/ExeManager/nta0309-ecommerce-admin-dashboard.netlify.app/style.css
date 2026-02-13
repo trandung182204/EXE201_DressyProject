@@ -10240,7 +10240,42 @@ body.dark .alert-danger {
 	font-size: 13px;
 	font-weight: 600;
 }
+/* === Fix badge chuông thông báo bị lệch === */
+.sherah-header__dropmenu{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
+/* Cho SVG không tạo khoảng trắng/line-height làm lệch */
+.sherah-header__dropmenu > svg{
+  display: block;
+}
+
+/* Badge số */
+.sherah-header__count{
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(45%, -45%);
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  line-height: 1;
+  font-size: 12px;
+  font-weight: 700;
+
+  /* Viền trắng giúp nổi trên icon (tuỳ thích) */
+  border: 2px solid #fff;
+  box-sizing: border-box;
+}
 /*======================================
 	End Utilities CSS
 ========================================*/

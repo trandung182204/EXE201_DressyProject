@@ -638,6 +638,8 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Verified)
                 .HasDefaultValue(false)
                 .HasColumnName("verified");
+            entity.Property(e => e.LastNotificationSeenAt)
+      .HasColumnName("last_notification_seen_at");
 
             entity.HasOne(d => d.User).WithMany(p => p.Providers)
                 .HasForeignKey(d => d.UserId)

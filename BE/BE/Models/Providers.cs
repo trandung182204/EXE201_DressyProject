@@ -22,6 +22,7 @@ public partial class Providers
 
     public DateTime? UpdatedAt { get; set; }
     public long? LogoFileId { get; set; }
+    public DateTimeOffset? LastNotificationSeenAt { get; set; }
 
     public virtual MediaFiles? LogoFile { get; set; }
 

@@ -198,6 +198,7 @@
     <script src="js/jvector-map.js"></script>
     <script src="js/main.js"></script>
     <script src="js/auth-header.js"></script>
+    <script src="js/provider-notifications.js"></script>
 
     <script>
         async function loadLayout() {
@@ -211,6 +212,7 @@
 
             // ✅ quan trọng: gọi sau khi header đã có trong DOM
             if (window.loadAuthToHeader) window.loadAuthToHeader();
+            if (window.initProviderNotifications) window.initProviderNotifications();
         }
     </script>
 

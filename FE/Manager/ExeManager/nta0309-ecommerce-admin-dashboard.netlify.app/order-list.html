@@ -99,7 +99,7 @@
 											</button>
 											<button id="btn-reset-filter" class="sherah-btn" type="button"
 												style="width:100%; background:#ff4d4f; border-color:#ff4d4f; color:#fff;">
-												Reset
+												Làm mới
 											</button>
 										</div>
 									</div>
@@ -151,6 +151,7 @@
 	<script src="js/jvector-map.js"></script>
 	<script src="js/main.js"></script>
 	<script src="js/auth-header.js"></script>
+	<script src="js/provider-notifications.js"></script>
 
 
 	<script>
@@ -165,6 +166,7 @@
 
 			// ✅ quan trọng: gọi sau khi header đã có trong DOM
 			if (window.loadAuthToHeader) window.loadAuthToHeader();
+			if (window.initProviderNotifications) window.initProviderNotifications();
 		}
 	</script>
 	<script>
@@ -239,19 +241,7 @@
 			return url;
 		}
 
-		async function loadLayout() {
-			const headerRes = await fetch("header.html");
-			document.getElementById("header-container").innerHTML = await headerRes.text();
-
-			const dashRes = await fetch("dashboard.html");
-			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
-
-			// init layout (fullscreen/sidebar/dark-mode from main.js)
-			initSherahLayout();
-
-			// auth header
-			if (window.loadAuthToHeader) window.loadAuthToHeader();
-		}
+		
 
 		let dt;
 

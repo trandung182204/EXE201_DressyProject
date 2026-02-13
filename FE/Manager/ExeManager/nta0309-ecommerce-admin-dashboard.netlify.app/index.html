@@ -389,6 +389,7 @@
 	<script src="js/slickslider.min.js"></script>
 	<script src="js/main.js"></script>
 	<script src="js/auth-header.js"></script>
+	<script src="js/provider-notifications.js"></script>
 
 	<script>
 		$(document).ready(function () {
@@ -848,6 +849,7 @@
 
 			// ✅ quan trọng: gọi sau khi header đã có trong DOM
 			if (window.loadAuthToHeader) window.loadAuthToHeader();
+			if (window.initProviderNotifications) window.initProviderNotifications();
 		}
 	</script>
 	<script>

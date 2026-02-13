@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="css/jquery-ui.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="style.css">
+    
 
     <style>
         #imagePreviewRow {
@@ -340,6 +341,7 @@
     <script src="js/jvector-map.js"></script>
     <script src="js/main.js"></script>
     <script src="js/auth-header.js"></script>
+    <script src="js/provider-notifications.js"></script>
 
     <script>
         async function loadLayout() {
@@ -352,6 +354,7 @@
             initSherahLayout();
 
             if (window.loadAuthToHeader) window.loadAuthToHeader();
+            if (window.initProviderNotifications) window.initProviderNotifications();
         }
     </script>
 
