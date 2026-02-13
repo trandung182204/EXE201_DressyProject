@@ -8061,6 +8061,27 @@ blockquote {
 .sherah-print-template {
 	background: #fff;
 }
+/* Fix logo sidebar (provider) - chống quá to */
+.logo.sherah-sidebar-padding a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 90px;
+	/* chiều cao vùng logo (tùy bạn chỉnh 70-100) */
+	padding: 12px 10px;
+}
+
+.logo.sherah-sidebar-padding .sherah-logo__main {
+	max-width: 500px;
+	/* chỉnh độ rộng tối đa */
+	max-height: 150px;
+	/* chỉnh chiều cao tối đa */
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	/* giữ tỉ lệ, không méo */
+	display: block;
+}
 /*======================================
 	End Utilities CSS
 ========================================*/

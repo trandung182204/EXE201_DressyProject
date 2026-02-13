@@ -265,6 +265,13 @@
 				lengthChange: true,
 				scrollCollapse: true,
 				paging: true,
+
+				order: [[1, "desc"]], 
+
+				columnDefs: [
+					{ targets: 1, type: "date" }
+				],
+
 				language: {
 					paginate: { next: '<i class="fas fa-angle-right"></i>', previous: '<i class="fas fa-angle-left"></i>' },
 					lengthMenu: "Showing _MENU_",
