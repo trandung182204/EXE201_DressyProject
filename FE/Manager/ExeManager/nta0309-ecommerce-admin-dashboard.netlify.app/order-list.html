@@ -76,10 +76,12 @@
 												<th class="sherah-table__column-1 sherah-table__h1">Mã đơn</th>
 
 												<th class="sherah-table__column-3 sherah-table__h3">Ngày tạo</th>
-												<th class="sherah-table__column-4 sherah-table__h4">Trạng thái thanh toán</th>
+												<th class="sherah-table__column-4 sherah-table__h4">Trạng thái thanh
+													toán</th>
 												<th class="sherah-table__column-5 sherah-table__h5">Tổng tiền</th>
 
-												<th class="sherah-table__column-7 sherah-table__h7">Trạng thái đơn hàng</th>
+												<th class="sherah-table__column-7 sherah-table__h7">Trạng thái đơn hàng
+												</th>
 												<th class="sherah-table__column-8 sherah-table__h8">Hành động</th>
 											</tr>
 										</thead>
@@ -243,8 +245,13 @@
 					{
 						data: null,
 						orderable: false,
-						render: function () {
-							return `<a href="#" class="sherah-table__action sherah-color2 sherah-color3__bg--opactity">Xem chi tiết</a>`;
+						render: function (row) {
+							return `
+      <a href="order-details.html?id=${row.bookingId}"
+         class="sherah-table__action sherah-color2 sherah-color3__bg--opactity js-view-order"
+         data-id="${row.bookingId}">
+         Xem chi tiết
+      </a>`;
 						}
 					}
 				]

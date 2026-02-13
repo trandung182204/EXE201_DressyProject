@@ -241,5 +241,122 @@ namespace BE.Services.Implementations
 
             return detail;
         }
+        public async Task<BookingDetailDto?> GetBookingDetailForProviderAsync(long bookingId, long providerId)
+        {
+            BookingDetailDto? detail = null;
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            // 1) Header: chỉ trả booking nếu booking có ít nhất 1 item thuộc provider này
+            // Payment: lấy bản ghi mới nhất theo paid_at DESC (NULLS LAST) và id DESC
+            await using (var cmd = new NpgsqlCommand(@"
+        SELECT 
+            b.id,
+            u.full_name,
+            b.created_at,
+            b.status,
+            COALESCE(pay.status, 'UNPAID') as payment_status,
+            b.total_price
+        FROM bookings b
+        LEFT JOIN users u ON u.id = b.customer_id
+        JOIN booking_items bi ON bi.booking_id = b.id AND bi.provider_id = @providerId
+        LEFT JOIN (
+            SELECT DISTINCT ON (booking_id) booking_id, status
+            FROM payments
+            ORDER BY booking_id, paid_at DESC NULLS LAST, id DESC
+        ) pay ON pay.booking_id = b.id
+        WHERE b.id = @bookingId
+        LIMIT 1
+    ", conn))
+            {
+                cmd.Parameters.AddWithValue("@bookingId", bookingId);
+                cmd.Parameters.AddWithValue("@providerId", providerId);
+
+                await using var rd = await cmd.ExecuteReaderAsync();
+                if (await rd.ReadAsync())
+                {
+                    detail = new BookingDetailDto
+                    {
+                        BookingId = rd.GetInt64(0),
+                        CustomerName = rd.IsDBNull(1) ? "Unknown" : rd.GetString(1),
+                        CreatedAt = rd.GetDateTime(2),
+                        BookingStatus = rd.GetString(3),
+                        PaymentStatus = rd.GetString(4),
+                        TotalPrice = rd.GetDecimal(5),
+                        Items = new List<BookingItemDto>()
+                    };
+                }
+            }
+
+            if (detail == null) return null;
+
+            // 2) Items: chỉ lấy item của provider đang đăng nhập
+            await using (var cmdItems = new NpgsqlCommand(@"
+        SELECT
+            p.name as product_name,
+            COALESCE(pv.size_label || ' ' || pv.color_name, '') as variant_name,
+            1 as quantity,
+            bi.price,
+            bi.start_date,
+            bi.end_date,
+            (SELECT image_file_id FROM product_images WHERE product_id = p.id LIMIT 1) as image_file_id
+        FROM booking_items bi
+        LEFT JOIN products p ON bi.product_id = p.id
+        LEFT JOIN product_variants pv ON bi.product_variant_id = pv.id
+        WHERE bi.booking_id = @bookingId
+          AND bi.provider_id = @providerId
+        ORDER BY bi.id
+    ", conn))
+            {
+                cmdItems.Parameters.AddWithValue("@bookingId", bookingId);
+                cmdItems.Parameters.AddWithValue("@providerId", providerId);
+
+                await using var rdItems = await cmdItems.ExecuteReaderAsync();
+                while (await rdItems.ReadAsync())
+                {
+                    DateOnly? start = null;
+                    DateOnly? end = null;
+
+                    if (!rdItems.IsDBNull(4))
+                    {
+                        var raw = rdItems.GetValue(4);
+                        if (raw is DateTime dt) start = DateOnly.FromDateTime(dt);
+                        else if (raw is DateOnly d) start = d;
+                        else if (raw is string s && DateTime.TryParse(s, out var dt2)) start = DateOnly.FromDateTime(dt2);
+                    }
+
+                    if (!rdItems.IsDBNull(5))
+                    {
+                        var raw = rdItems.GetValue(5);
+                        if (raw is DateTime dt) end = DateOnly.FromDateTime(dt);
+                        else if (raw is DateOnly d) end = d;
+                        else if (raw is string s && DateTime.TryParse(s, out var dt2)) end = DateOnly.FromDateTime(dt2);
+                    }
+
+                    string imageUrl = string.Empty;
+                    if (!rdItems.IsDBNull(6))
+                    {
+                        var imgVal = rdItems.GetValue(6);
+                        if (imgVal is long l) imageUrl = $"/api/media-files/{l}";
+                        else if (imgVal is int i) imageUrl = $"/api/media-files/{i}";
+                        else if (imgVal is string s && long.TryParse(s, out var lv)) imageUrl = $"/api/media-files/{lv}";
+                    }
+
+                    detail.Items.Add(new BookingItemDto
+                    {
+                        ProductName = rdItems.IsDBNull(0) ? "Unknown" : rdItems.GetString(0),
+                        VariantName = rdItems.IsDBNull(1) ? string.Empty : rdItems.GetString(1),
+                        Quantity = rdItems.GetInt32(2),
+                        Price = rdItems.IsDBNull(3) ? 0 : rdItems.GetDecimal(3),
+                        StartDate = start,
+                        EndDate = end,
+                        ImageUrl = imageUrl
+                    });
+                }
+            }
+
+            return detail;
+        }
     }
 }

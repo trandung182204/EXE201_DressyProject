@@ -32,7 +32,7 @@ namespace BE.Controllers
             if (item == null) return NotFound(new { success = false, message = "Not found" });
             return Ok(new { success = true, data = item, message = "Fetched successfully" });
         }
-        
+
         // API Chi tiết theo DTO bạn yêu cầu
         [HttpGet("{id}/detail")]
         public async Task<IActionResult> GetDetail(long id)
@@ -97,6 +97,22 @@ namespace BE.Controllers
                 return NotFound(new { success = false, message = "Booking not found" });
 
             return Ok(new { success = true, message = "Status updated successfully" });
+        }
+        [Authorize(Roles = "provider")]
+        [HttpGet("provider/{id}/detail")]
+        public async Task<IActionResult> GetDetailForProvider(long id)
+        {
+            var providerIdStr = User.FindFirst("providerId")?.Value;
+
+            if (string.IsNullOrWhiteSpace(providerIdStr) || !long.TryParse(providerIdStr, out var providerId))
+                return Unauthorized(new { success = false, message = "Missing providerId in token." });
+
+            var item = await _service.GetBookingDetailForProviderAsync(id, providerId);
+
+            if (item == null)
+                return NotFound(new { success = false, message = "Booking not found (or not belong to provider)." });
+
+            return Ok(new { success = true, data = item, message = "Fetched successfully" });
         }
     }
 }
