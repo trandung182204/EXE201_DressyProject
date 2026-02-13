@@ -68,6 +68,43 @@
 
 									</div>
 								</div>
+								<!-- Filters -->
+								<div class="sherah-page-inner sherah-border sherah-default-bg mg-top-25"
+									style="padding:16px;">
+									<div class="row g-3 align-items-end">
+										<div class="col-lg-3 col-md-6 col-12">
+											<label class="form-label" style="font-weight:600;">Từ ngày</label>
+											<input id="filter-date-from" type="date" class="form-control">
+										</div>
+										<div class="col-lg-3 col-md-6 col-12">
+											<label class="form-label" style="font-weight:600;">Đến ngày</label>
+											<input id="filter-date-to" type="date" class="form-control">
+										</div>
+
+										<div class="col-lg-3 col-md-6 col-12">
+											<label class="form-label" style="font-weight:600;">Trạng thái đơn
+												hàng</label>
+											<select id="filter-status" class="form-control">
+												<option value="">Tất cả</option>
+												<option value="PENDING">PENDING</option>
+												<option value="COMPLETED">COMPLETED</option>
+												<option value="CANCELLED">CANCELLED</option>
+											</select>
+										</div>
+
+										<div class="col-lg-3 col-md-6 col-12 d-flex gap-2">
+											<button id="btn-apply-filter" class="sherah-btn sherah-gbcolor"
+												type="button" style="width:100%;">
+												Lọc
+											</button>
+											<button id="btn-reset-filter" class="sherah-btn" type="button"
+												style="width:100%; background:#ff4d4f; border-color:#ff4d4f; color:#fff;">
+												Reset
+											</button>
+										</div>
+									</div>
+								</div>
+								<!-- End Filters -->
 								<div class="sherah-table sherah-page-inner sherah-border sherah-default-bg mg-top-25">
 									<table id="sherah-table__vendor" class="sherah-table__main sherah-table__main-v3">
 										<!-- sherah Table Head -->
@@ -131,16 +168,36 @@
 		}
 	</script>
 	<script>
-		const isLocal =
-			location.hostname === "localhost" ||
-			location.hostname === "127.0.0.1";
+		function bindThemeToggle() {
+			const btn = document.getElementById("sherah-dark-light-button");
+			const body = document.getElementById("sherah-dark-light") || document.body;
 
+			if (!btn) return;
+
+			// apply theme from storage
+			const saved = localStorage.getItem("sherah_theme") || "light";
+			body.classList.toggle("sherah-dark", saved === "dark");
+
+			// avoid double bind
+			if (btn.dataset.bound === "1") return;
+			btn.dataset.bound = "1";
+
+			btn.addEventListener("click", () => {
+				const isDark = body.classList.toggle("sherah-dark");
+				localStorage.setItem("sherah_theme", isDark ? "dark" : "light");
+			});
+		}
+
+		// Nếu bạn có loadLayout() thì gọi bindThemeToggle sau khi inject header
+		// bindThemeToggle();
+	</script>
+	<script>
+		const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
 		const API_BASE = isLocal ? "http://localhost:5135" : "";
 
 		function getToken() {
 			return localStorage.getItem("token") || "";
 		}
-
 
 		function formatDateTime(iso) {
 			if (!iso) return "";
@@ -166,11 +223,42 @@
 			return `<div class="sherah-table__status sherah-color1 sherah-color1__bg--opactity">${s}</div>`;
 		}
 
+		function buildUrl() {
+			const from = document.getElementById("filter-date-from").value;
+			const to = document.getElementById("filter-date-to").value;
+			const status = document.getElementById("filter-status").value;
+
+			const qs = new URLSearchParams();
+			if (from) qs.set("from", from);
+			if (to) qs.set("to", to);
+			if (status) qs.set("status", status);
+
+			const q = qs.toString();
+			const url = API_BASE + "/api/Bookings/provider" + (q ? `?${q}` : "");
+			console.log("FILTER URL:", url);
+			return url;
+		}
+
+		async function loadLayout() {
+			const headerRes = await fetch("header.html");
+			document.getElementById("header-container").innerHTML = await headerRes.text();
+
+			const dashRes = await fetch("dashboard.html");
+			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+
+			// init layout (fullscreen/sidebar/dark-mode from main.js)
+			initSherahLayout();
+
+			// auth header
+			if (window.loadAuthToHeader) window.loadAuthToHeader();
+		}
+
+		let dt;
+
 		async function bootOrderList() {
 			await loadLayout();
 
-			// init DataTable 1 lần duy nhất, DataTables tự gọi API
-			$("#sherah-table__vendor").DataTable({
+			dt = $("#sherah-table__vendor").DataTable({
 				searching: true,
 				autoWidth: false,
 				info: false,
@@ -178,89 +266,62 @@
 				scrollCollapse: true,
 				paging: true,
 				language: {
-					paginate: {
-						next: '<i class="fas fa-angle-right"></i>',
-						previous: '<i class="fas fa-angle-left"></i>'
-					},
+					paginate: { next: '<i class="fas fa-angle-right"></i>', previous: '<i class="fas fa-angle-left"></i>' },
 					lengthMenu: "Showing _MENU_",
 					searchPlaceholder: "Search...",
 					search: '<span class="sherah-data-table-label">Search</span>',
 				},
-
 				ajax: {
 					url: API_BASE + "/api/Bookings/provider",
 					type: "GET",
-					dataSrc: function (json) {
-						console.log("API JSON:", json); // ✅ debug luôn
-						return json.data || [];
-					},
+					dataSrc: (json) => json.data || [],
 					beforeSend: function (xhr) {
-						const token = getToken();
-						console.log("TOKEN:", token); // ✅ debug luôn
-						xhr.setRequestHeader("Authorization", "Bearer " + token);
+						xhr.setRequestHeader("Authorization", "Bearer " + getToken());
 					},
 					error: function (xhr) {
 						console.error("AJAX error:", xhr.status, xhr.responseText);
 					}
 				},
-
 				columns: [
 					{
 						data: "bookingId",
-						render: function (id) {
-							return `
-              <div class="sherah-language-form__input">
-                
-                <p class="crany-table__product--number">
-                  <a href="#" class="sherah-color1">#${id}</a>
-                </p>
-              </div>
-            `;
-						}
+						render: (id) => `
+            <div class="sherah-language-form__input">
+              <p class="crany-table__product--number">
+                <a href="#" class="sherah-color1">#${id}</a>
+              </p>
+            </div>`
 					},
-					{
-						data: "createdAt",
-						render: function (v) {
-							return `<p class="sherah-table__product-desc">${formatDateTime(v)}</p>`;
-						}
-					},
-					{
-						data: "paymentStatus",
-						render: function (v) {
-							return `<div class="sherah-table__product-content">${paymentHtml(v)}</div>`;
-						}
-					},
-					{
-						data: "providerRevenue",
-						render: function (v) {
-							return `<p class="sherah-table__product-desc">${(v ?? 0).toLocaleString("vi-VN")}</p>`;
-						}
-					},
-					{
-						data: "bookingStatus",
-						render: function (v) {
-							return orderHtml(v);
-						}
-					},
+					{ data: "createdAt", render: (v) => `<p class="sherah-table__product-desc">${formatDateTime(v)}</p>` },
+					{ data: "paymentStatus", render: (v) => `<div class="sherah-table__product-content">${paymentHtml(v)}</div>` },
+					{ data: "providerRevenue", render: (v) => `<p class="sherah-table__product-desc">${(v ?? 0).toLocaleString("vi-VN")}</p>` },
+					{ data: "bookingStatus", render: (v) => orderHtml(v) },
 					{
 						data: null,
 						orderable: false,
-						render: function (row) {
-							return `
-      <a href="order-details.html?id=${row.bookingId}"
-         class="sherah-table__action sherah-color2 sherah-color3__bg--opactity js-view-order"
-         data-id="${row.bookingId}">
-         Xem chi tiết
-      </a>`;
-						}
+						render: (row) => `
+            <a href="order-details.html?id=${row.bookingId}"
+               class="sherah-table__action sherah-color2 sherah-color3__bg--opactity">
+               Xem chi tiết
+            </a>`
 					}
 				]
+			});
+
+			document.getElementById("btn-apply-filter").addEventListener("click", () => {
+				dt.ajax.url(buildUrl()).load();
+			});
+
+			document.getElementById("btn-reset-filter").addEventListener("click", () => {
+				document.getElementById("filter-date-from").value = "";
+				document.getElementById("filter-date-to").value = "";
+				document.getElementById("filter-status").value = "";
+				dt.ajax.url(API_BASE + "/api/Bookings/provider").load();
 			});
 		}
 
 		bootOrderList();
 	</script>
-
 
 
 

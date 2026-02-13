@@ -18,23 +18,23 @@ function initFullscreen() {
    DARK MODE – FIX MINIMAL
 ========================= */
 function initDarkMode() {
+  const body = document.getElementById("sherah-dark-light") || document.body;
   const button = document.getElementById("sherah-dark-light-button");
-  const body = document.getElementById("sherah-dark-light");
 
-  if (!button || !body) return;
+  // ✅ luôn apply trạng thái đã lưu (dù có button hay không)
+  const isDark = localStorage.getItem("isDark") === "true";
+  body.classList.toggle("dark", isDark);
 
-  // Load trạng thái đã lưu
-  if (localStorage.getItem("isDark") === "true") {
-    body.classList.add("dark");
-  }
+  // ✅ chỉ bind click nếu có button
+  if (!button) return;
+
+  if (button.dataset.bound === "1") return;
+  button.dataset.bound = "1";
 
   button.addEventListener("click", () => {
-    body.classList.toggle("dark");
-
-    localStorage.setItem(
-      "isDark",
-      body.classList.contains("dark")
-    );
+    const next = !body.classList.contains("dark");
+    body.classList.toggle("dark", next);
+    localStorage.setItem("isDark", next);
   });
 }
 

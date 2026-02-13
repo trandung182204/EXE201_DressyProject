@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using BE.Models;
 using BE.DTOs;
 using System.Threading.Tasks;
+using System;
 
 namespace BE.Controllers
 {
@@ -72,16 +73,22 @@ namespace BE.Controllers
             return Ok(new { success = true, data, message = "Fetched successfully" });
         }
 
-        [Authorize(Roles = "provider")]
+
+
+        [Authorize(Roles = "provider,PROVIDER")]
         [HttpGet("provider")]
-        public async Task<IActionResult> GetBookingsForProvider()
+        public async Task<IActionResult> GetBookingsForProvider(
+            [FromQuery] DateOnly? from,
+            [FromQuery] DateOnly? to,
+            [FromQuery] string? status
+        )
         {
             var providerIdStr = User.FindFirst("providerId")?.Value;
 
             if (string.IsNullOrWhiteSpace(providerIdStr) || !long.TryParse(providerIdStr, out var providerId))
                 return Unauthorized(new { success = false, message = "Missing providerId in token." });
 
-            var data = await _service.GetBookingListByProviderAsync(providerId);
+            var data = await _service.GetBookingListByProviderAsync(providerId, from, to, status);
 
             return Ok(new { success = true, data, message = "Fetched successfully" });
         }

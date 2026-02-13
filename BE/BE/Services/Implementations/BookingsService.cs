@@ -83,36 +83,76 @@ namespace BE.Services.Implementations
             return list;
         }
 
-        public async Task<List<ProviderBookingListDto>> GetBookingListByProviderAsync(long providerId)
+        public async Task<List<ProviderBookingListDto>> GetBookingListByProviderAsync(
+    long providerId,
+    DateOnly? from,
+    DateOnly? to,
+    string? status
+)
         {
             var list = new List<ProviderBookingListDto>();
+
             await using var conn = new NpgsqlConnection(_connectionString);
-            await using var cmd = new NpgsqlCommand(@"
-                SELECT
-                    b.id,
-                    u.full_name,
-                    b.created_at,
-                    b.status,
-                    COALESCE(pay.status, 'UNPAID'),
-                    COUNT(bi.id),
-                    COALESCE(SUM(bi.price), 0),
-                    COALESCE(SUM(bi.commission_amount), 0)
-                FROM bookings b
-                JOIN users u ON u.id = b.customer_id
-                JOIN booking_items bi ON bi.booking_id = b.id
-                LEFT JOIN (
-                    SELECT DISTINCT ON (booking_id) booking_id, status
-                    FROM payments
-                    ORDER BY booking_id, paid_at DESC NULLS LAST, id DESC
-                ) pay ON pay.booking_id = b.id
-                WHERE bi.provider_id = @providerId
-                GROUP BY b.id, u.full_name, b.created_at, b.status, pay.status
-                ORDER BY b.created_at DESC
-            ", conn);
+
+            var sql = @"
+        SELECT
+            b.id,
+            u.full_name,
+            b.created_at,
+            b.status,
+            COALESCE(pay.status, 'UNPAID') AS payment_status,
+            COUNT(bi.id) AS total_items,
+            COALESCE(SUM(bi.price), 0) AS provider_revenue,
+            COALESCE(SUM(bi.commission_amount), 0) AS provider_commission
+        FROM bookings b
+        JOIN users u ON u.id = b.customer_id
+        JOIN booking_items bi ON bi.booking_id = b.id
+        LEFT JOIN (
+            SELECT DISTINCT ON (booking_id) booking_id, status
+            FROM payments
+            ORDER BY booking_id, paid_at DESC NULLS LAST, id DESC
+        ) pay ON pay.booking_id = b.id
+        WHERE bi.provider_id = @providerId
+    ";
+
+            // thêm filter động
+            if (from.HasValue)
+                sql += "\n AND b.created_at >= @fromDate";
+
+            if (to.HasValue)
+                sql += "\n AND b.created_at < @toDate"; // < ngày kế tiếp để bao trọn "đến ngày"
+
+            if (!string.IsNullOrWhiteSpace(status))
+                sql += "\n AND UPPER(b.status) = UPPER(@status)";
+
+            sql += @"
+        GROUP BY b.id, u.full_name, b.created_at, b.status, pay.status
+        ORDER BY b.created_at DESC
+    ";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
 
             cmd.Parameters.AddWithValue("@providerId", providerId);
+
+            if (from.HasValue)
+            {
+                var fromDt = from.Value.ToDateTime(TimeOnly.MinValue);
+                cmd.Parameters.AddWithValue("@fromDate", fromDt);
+            }
+
+            if (to.HasValue)
+            {
+                // tới ngày kế tiếp 00:00:00 (để inclusive theo ngày)
+                var toExclusive = to.Value.AddDays(1).ToDateTime(TimeOnly.MinValue);
+                cmd.Parameters.AddWithValue("@toDate", toExclusive);
+            }
+
+            if (!string.IsNullOrWhiteSpace(status))
+                cmd.Parameters.AddWithValue("@status", status.Trim());
+
             await conn.OpenAsync();
             await using var rd = await cmd.ExecuteReaderAsync();
+
             while (await rd.ReadAsync())
             {
                 list.Add(new ProviderBookingListDto
@@ -127,9 +167,9 @@ namespace BE.Services.Implementations
                     ProviderCommission = rd.GetDecimal(7)
                 });
             }
+
             return list;
         }
-
         // --- CẬP NHẬT: LOGIC MAPPING CHÍNH XÁC THEO DTO BẠN GỬI ---
         public async Task<BookingDetailDto?> GetBookingDetailAsync(long id)
         {

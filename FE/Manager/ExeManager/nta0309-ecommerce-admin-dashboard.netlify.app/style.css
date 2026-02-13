@@ -9731,9 +9731,460 @@ blockquote {
 		max-width: 100%;
 	}
 }
+/* Fix logo sidebar (provider) - chống quá to */
+.logo.sherah-sidebar-padding a{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90px;            /* chiều cao vùng logo (tùy bạn chỉnh 70-100) */
+  padding: 12px 10px;
+}
+
+.logo.sherah-sidebar-padding .sherah-logo__main{
+  max-width: 500px;        /* chỉnh độ rộng tối đa */
+  max-height: 150px;        /* chỉnh chiều cao tối đa */
+  width: auto;
+  height: auto;
+  object-fit: contain;     /* giữ tỉ lệ, không méo */
+  display: block;
+}
+/* =========================
+   DARK MODE - FULL LAYOUT
+   (append at the END of style.css)
+========================= */
+
+/* nền tổng */
+body.dark,
+body.dark .sherah-body-area,
+body.dark .sherah-adashboard {
+  background: #0b1220 !important;
+  color: #e5e7eb !important;
+}
+
+/* HEADER */
+body.dark .sherah-header,
+body.dark .sherah-header__inner,
+body.dark .sherah-header__middle,
+body.dark .sherah-header__right,
+body.dark .sherah-header__group,
+body.dark .sherah-header__group-two {
+  background: #0b1220 !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: #e5e7eb !important;
+}
+
+/* chữ/link trên header */
+body.dark .sherah-header a,
+body.dark .sherah-header h1,
+body.dark .sherah-header h2,
+body.dark .sherah-header h3,
+body.dark .sherah-header h4,
+body.dark .sherah-header span,
+body.dark .sherah-header p {
+  color: #e5e7eb !important;
+}
+
+/* SVG icon trên header (quan trọng) */
+body.dark .sherah-header svg,
+body.dark .sherah-header svg path,
+body.dark .sherah-header svg circle {
+  fill: #e5e7eb !important;
+  stroke: #e5e7eb !important;
+}
+
+/* DROPDOWN trên header */
+body.dark .sherah-dropdown-card,
+body.dark .sherah-dropdown-card__profile,
+body.dark .sherah-dropdown-card__alarm {
+  background: #0f172a !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: #e5e7eb !important;
+}
+body.dark .sherah-dropdown-card a,
+body.dark .sherah-dropdown-card h3,
+body.dark .sherah-dropdown-card h4,
+body.dark .sherah-dropdown-card p,
+body.dark .sherah-dropdown-card span {
+  color: #e5e7eb !important;
+}
+
+/* SIDEBAR (dashboard menu) */
+body.dark .sherah-smenu,
+body.dark .sherah-smenu__inner,
+body.dark .sherah-smenu__content,
+body.dark .sherah-smenu__logo {
+  background: #0b1220 !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: #e5e7eb !important;
+}
+
+body.dark .sherah-smenu a,
+body.dark .sherah-smenu span,
+body.dark .sherah-smenu p,
+body.dark .sherah-smenu li,
+body.dark .sherah-smenu h1,
+body.dark .sherah-smenu h2,
+body.dark .sherah-smenu h3,
+body.dark .sherah-smenu h4 {
+  color: #e5e7eb !important;
+}
+
+/* icon sidebar (svg) */
+body.dark .sherah-smenu svg,
+body.dark .sherah-smenu svg path,
+body.dark .sherah-smenu svg circle {
+  fill: #e5e7eb !important;
+  stroke: #e5e7eb !important;
+}
+
+/* các khối nội dung dạng card */
+body.dark .sherah-page-inner,
+body.dark .sherah-border,
+body.dark .sherah-default-bg,
+body.dark .sherah-table,
+body.dark .sherah-body,
+body.dark .sherah-dsinner {
+  background: #0f172a !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: #e5e7eb !important;
+}
+
+/* input/select trong dark */
+body.dark input,
+body.dark select,
+body.dark textarea,
+body.dark .form-control {
+  background: #0b1220 !important;
+  color: #e5e7eb !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: rgba(229,231,235,0.6) !important;
+}
+
+/* datatable header/body */
+body.dark table,
+body.dark thead,
+body.dark tbody,
+body.dark th,
+body.dark td {
+  background: transparent !important;
+  color: #e5e7eb !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+/* ==== FORCE DARK SIDEBAR (Sherah) ==== */
+body.dark .admin-menu,
+body.dark .admin-menu__one,
+body.dark .logo,
+body.dark .menu-bar,
+body.dark .menu-bar__one,
+body.dark .menu-bar__one-dropdown,
+body.dark .sherah-dashboard-menu,
+body.dark .sherah__dropdown,
+body.dark .sherah-smenu .collapse {
+  background: #0b1220 !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* chữ menu */
+body.dark .menu-bar__name,
+body.dark .menu-bar__text,
+body.dark .sherah-dashboard-menu a,
+body.dark .sherah-dashboard-menu li,
+body.dark .menu-bar__one-dropdown a {
+  color: #e5e7eb !important;
+}
+
+/* icon svg trong sidebar */
+body.dark .sherah-dashboard-menu svg,
+body.dark .sherah-dashboard-menu svg path,
+body.dark .sherah-dashboard-menu svg circle {
+  fill: #e5e7eb !important;
+  stroke: #e5e7eb !important;
+}
+
+/* hover/active (nếu bị trắng chói) */
+body.dark .sherah-dashboard-menu li a:hover,
+body.dark .sherah-dashboard-menu li.active > a {
+  background: rgba(255,255,255,0.06) !important;
+}
+/* =========================
+   DARK MODE - SIDEBAR MENU READABILITY
+========================= */
+
+/* chữ menu mặc định (đậm hơn cho dễ đọc) */
+body.dark .sherah-dashboard-menu .menu-bar__name,
+body.dark .sherah-dashboard-menu .menu-bar__text {
+  color: rgba(229,231,235,0.92) !important;
+}
+
+/* link/menu item */
+body.dark .sherah-dashboard-menu li > a{
+  color: rgba(229,231,235,0.92) !important;
+  background: transparent !important;
+  border-radius: 12px;
+}
+
+/* hover */
+body.dark .sherah-dashboard-menu li > a:hover{
+  background: rgba(255,255,255,0.08) !important;
+}
+
+/* ACTIVE: template thường dùng .active hoặc .current */
+body.dark .sherah-dashboard-menu li.active > a,
+body.dark .sherah-dashboard-menu li.current > a,
+body.dark .sherah-dashboard-menu li > a[aria-expanded="true"]{
+  background: rgba(59,130,246,0.18) !important; /* xanh nhẹ */
+  color: #e5e7eb !important;
+}
+
+/* active chữ */
+body.dark .sherah-dashboard-menu li.active .menu-bar__name,
+body.dark .sherah-dashboard-menu li.current .menu-bar__name,
+body.dark .sherah-dashboard-menu li > a[aria-expanded="true"] .menu-bar__name{
+  color: #e5e7eb !important;
+}
+
+/* icon trong item (normal/active) */
+body.dark .sherah-dashboard-menu li > a svg,
+body.dark .sherah-dashboard-menu li > a svg path{
+  fill: rgba(229,231,235,0.9) !important;
+  stroke: rgba(229,231,235,0.9) !important;
+}
+body.dark .sherah-dashboard-menu li.active > a svg,
+body.dark .sherah-dashboard-menu li.active > a svg path,
+body.dark .sherah-dashboard-menu li.current > a svg,
+body.dark .sherah-dashboard-menu li.current > a svg path{
+  fill: #e5e7eb !important;
+  stroke: #e5e7eb !important;
+}
+
+/* nếu template còn đang set nền sáng cho span/text bên trong */
+body.dark .sherah-dashboard-menu li > a .menu-bar__text{
+  background: transparent !important;
+}
+/* =========================
+   DARK MODE - PRODUCTS PAGE TEXT FIX
+========================= */
+
+/* chữ chung trong vùng content */
+body.dark .sherah-body,
+body.dark .sherah-dsinner,
+body.dark .sherah-breadcrumb,
+body.dark .sherah-breadcrumb__title,
+body.dark .sherah-breadcrumb__list,
+body.dark .sherah-breadcrumb__list a,
+body.dark #resultCount{
+  color: #e5e7eb !important;
+}
+
+/* sidebar category + price */
+body.dark .sherah-product-sidebar,
+body.dark .sherah-product-sidebar__title,
+body.dark .sherah-product-sidebar__list,
+body.dark .sherah-product-sidebar__list a,
+body.dark .sherah-product-sidebar__list span,
+body.dark .price-filter,
+body.dark .price-filter *{
+  color: #e5e7eb !important;
+}
+
+/* form add category (bạn đang style inline border #ddd) */
+body.dark #addCatForm input,
+body.dark #addCatForm textarea,
+body.dark #addCatForm #catNameInput,
+body.dark #addCatForm #catDescInput{
+  background: #0b1220 !important;
+  color: #e5e7eb !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+body.dark #addCatForm input::placeholder,
+body.dark #addCatForm textarea::placeholder{
+  color: rgba(229,231,235,0.6) !important;
+}
+
+/* search box */
+body.dark .sherah-header__form--product input,
+body.dark #searchInput{
+  background: #0b1220 !important;
+  color: #e5e7eb !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+/* product card text */
+body.dark .sherah-product-card__content,
+body.dark .sherah-product-card__title,
+body.dark .sherah-product-card__title a,
+body.dark .sherah-product-card__price,
+body.dark .sherah-product-card__meta,
+body.dark .sherah-product-card__meta span,
+body.dark .sherah-product-card__meta b{
+  color: #e5e7eb !important;
+}
+
+/* icon chevron trong category list (fontawesome) */
+body.dark .sherah-product-sidebar__list i{
+  color: rgba(229,231,235,0.9) !important;
+}
+
+/* pagination */
+body.dark .sherah-pagination,
+body.dark .sherah-pagination a{
+  color: #e5e7eb !important;
+}
+body.dark .sherah-pagination li.active a{
+  color: #e5e7eb !important;
+}
+/* =========================
+   DARK MODE - PROFILE / SETTINGS PAGE FIX
+========================= */
+
+/* sidebar tab list (list-group) */
+body.dark .sherah-psidebar,
+body.dark .sherah-psidebar__list {
+  background: #0f172a !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+body.dark .sherah-psidebar__list .list-group-item {
+  background: transparent !important;
+  color: #e5e7eb !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+body.dark .sherah-psidebar__list .list-group-item .sherah-psidebar__title,
+body.dark .sherah-psidebar__list .list-group-item span {
+  color: #e5e7eb !important;
+}
+
+/* active tab */
+body.dark .sherah-psidebar__list .list-group-item.active {
+  background: rgba(255,255,255,0.08) !important;
+  color: #fff !important;
+}
+
+/* icon svg trong list-group */
+body.dark .sherah-psidebar__icon svg,
+body.dark .sherah-psidebar__icon svg path,
+body.dark .sherah-psidebar__icon svg circle {
+  fill: #e5e7eb !important;
+  stroke: #e5e7eb !important;
+}
+
+/* khối nội dung profile */
+body.dark .sherah-ptabs,
+body.dark .sherah-ptabs__inner,
+body.dark .sherah-ptabs__form-main,
+body.dark .sherah__item-group,
+body.dark .sherah-profile-info__v2,
+body.dark .sherah-paymentm {
+  background: #0f172a !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: #e5e7eb !important;
+}
+
+/* cover/header trong profile */
+body.dark .sherah-profile-cover,
+body.dark .sherah-offset-bg {
+  background: #0b1220 !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+body.dark .sherah-profile-cover__title,
+body.dark .sherah-profile-cover__text,
+body.dark .sherah-profile-info__heading,
+body.dark .sherah-profile-info__title,
+body.dark .sherah-profile-info__text {
+  color: #e5e7eb !important;
+}
+
+/* form provider-field (label + input/select/textarea) */
+body.dark .provider-field label {
+  color: #e5e7eb !important;
+}
+body.dark .provider-field input,
+body.dark .provider-field select,
+body.dark .provider-field textarea {
+  background: #0b1220 !important;
+  color: #e5e7eb !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+body.dark .provider-field input::placeholder,
+body.dark .provider-field textarea::placeholder {
+  color: rgba(229,231,235,0.6) !important;
+}
+
+/* change password form (sherah-wc__) */
+body.dark .sherah-wc__form-label {
+  color: #e5e7eb !important;
+}
+body.dark .sherah-wc__form-input {
+  background: #0b1220 !important;
+  color: #e5e7eb !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+body.dark .sherah-wc__form-input::placeholder {
+  color: rgba(229,231,235,0.6) !important;
+}
+
+/* ảnh minh hoạ bên phải: giữ nguyên, nhưng nếu nền bị “lệch” */
+body.dark .sherah-password__img {
+  background: transparent !important;
+}
+/* =========================
+   DARK MODE - ORDER DETAILS FIX
+========================= */
+
+/* phần header trong card (Items from Order...) */
 
 
+/* khối "sherah-table-order" + bảng order v1 */
+body.dark .sherah-table-order,
+body.dark .sherah-table__main--orderv1,
+body.dark #sherah-table__orderv1 {
+  background: transparent !important;
+  color: #e5e7eb !important;
+}
 
+body.dark #sherah-table__orderv1 thead th,
+body.dark #sherah-table__orderv1 tbody td {
+  color: #e5e7eb !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* text trong cells (tên sp, mô tả, v.v.) */
+body.dark .sherah-table__product-name--title,
+body.dark .sherah-table__product-name--text,
+body.dark .sherah-table__product-desc,
+body.dark .sherah-table__product-content p {
+  color: #e5e7eb !important;
+}
+
+/* totals phía dưới */
+body.dark .order-totals,
+body.dark .order-totals__list,
+body.dark .order-totals__list li,
+body.dark .order-totals__amount {
+  background: transparent !important;
+  color: #e5e7eb !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* cột "Thông tin khách" (bạn dùng h5 + p + b + span) */
+body.dark .sherah-default-bg h5,
+body.dark .sherah-default-bg p,
+body.dark .sherah-default-bg b,
+body.dark .sherah-default-bg span {
+  color: #e5e7eb !important;
+}
+
+/* alert error box cho hợp dark */
+body.dark .alert-danger {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  color: #fecaca !important;
+}
 /*======================================
 	End Utilities CSS
 ========================================*/

@@ -15,11 +15,17 @@ namespace BE.Services.Interfaces
 
         // --- CÁC HÀM CŨ CỦA BẠN ---
         Task<List<BookingListDto>> GetBookingListAsync();
-        Task<List<ProviderBookingListDto>> GetBookingListByProviderAsync(long providerId);
+        
 
         // --- CÁC HÀM CẦN THÊM MỚI ---
         Task<BookingDetailDto?> GetBookingDetailAsync(long id);
         Task<bool> UpdateStatusAsync(long id, string status);
         Task<BookingDetailDto?> GetBookingDetailForProviderAsync(long bookingId, long providerId);
+        Task<List<ProviderBookingListDto>> GetBookingListByProviderAsync(
+    long providerId,
+    DateOnly? from,
+    DateOnly? to,
+    string? status
+);
     }
 }
