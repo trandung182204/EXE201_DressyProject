@@ -357,7 +357,56 @@ namespace BE.Services.Implementations
             // Trả về detail mới nhất
             return await GetProductDetailByProviderAsync(providerId, productId);
         }
+        public async Task<IEnumerable<HomeFavoriteProductDto>> GetLatestFavoritesAsync(int limit)
+        {
+            if (limit <= 0) limit = 5;
+            if (limit > 50) limit = 50;
 
+            // 1) Lấy top N product mới nhất (AVAILABLE)
+            var latest = await _context.Products
+                .Where(p => p.Status == "AVAILABLE")
+                .OrderByDescending(p => p.CreatedAt)  // CreatedAt null -> xuống cuối
+                .ThenByDescending(p => p.Id)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.CreatedAt,
+
+                    // lấy 1 ảnh đầu tiên
+                    ImageFileId = p.ProductImages
+                        .OrderBy(i => i.Id)
+                        .Select(i => i.ImageFileId)
+                        .FirstOrDefault(),
+
+                    // lấy min price theo variant active
+                    MinPricePerDay = p.ProductVariants
+                        .Where(v => v.Status == true)
+                        .Select(v => (decimal?)v.PricePerDay)
+                        .Min(),
+                    DepositAmount = p.ProductVariants
+  .Where(v => v.Status == true)
+  .Select(v => (decimal?)v.DepositAmount)
+  .Min(),
+                })
+                .Take(limit)
+                .ToListAsync();
+
+            // 2) Build URL ảnh runtime (đúng kiểu bạn đang làm)
+            var result = latest.Select(x => new HomeFavoriteProductDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                CreatedAt = x.CreatedAt,
+                MinPricePerDay = x.MinPricePerDay ?? 0,
+                DepositAmount = x.DepositAmount ?? 0,
+
+                ImageFileId = x.ImageFileId,
+                ImageUrl = x.ImageFileId != null ? ("/api/media-files/" + x.ImageFileId) : null
+            });
+
+            return result;
+        }
 
     }
 }

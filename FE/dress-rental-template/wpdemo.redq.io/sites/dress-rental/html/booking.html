@@ -7,7 +7,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title> Dress rental </title>
+	<title> Xúng Xính </title>
 	<link
 		href="https://fonts.googleapis.com/css?family=Abril+Fatface|Forum|Open+Sans:400,600|Roboto:100,300,400,500,700"
 		rel="stylesheet">
@@ -70,51 +70,27 @@
 		<ol class="breadcrumb underline">
 			<li><a href="index.html">Trang chủ</a></li>
 			<li><a href="listing-page.html">Váy</a></li>
-			<li>Váy Dạ Hội Diva</li>
+			<li id="bc-product-name">...</li>
 		</ol><!-- /.breadcrumb -->
 	</div><!-- /.container -->
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	<div class="product-details base-padd">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-5 rq-custom-5">
 					<div class="flexslider product_details_slider">
-						<ul class="slides">
-							<li data-thumb="../assets/dist/img/product-details/1_1.jpg">
-								<img src="../assets/dist/img/product-details/1.jpg" class="img-responsive" alt="1" />
-							</li>
-							<li data-thumb="../assets/dist/img/product-details/1_2.jpg">
-								<img src="../assets/dist/img/product-details/1.jpg" alt="1" />
-							</li>
-							<li data-thumb="../assets/dist/img/product-details/1_3.jpg">
-								<img src="../assets/dist/img/product-details/1.jpg" alt="1" />
-							</li>
+						<ul class="slides" id="pd-slides">
+							<!-- JS sẽ render li ở đây -->
 						</ul>
-						<div class="customer-photo ">
-							<p>Ảnh từ khách hàng</p>
-							<a href="#"><img src="../assets/dist/img/product-details/1_1.jpg" alt="1"></a>
-							<a href="#"><img src="../assets/dist/img/product-details/1_2.jpg" alt="1"></a>
-							<a href="#"><img src="../assets/dist/img/product-details/1_3.jpg" alt="1"></a>
-						</div>
 					</div>
 				</div>
 				<div class="col-sm-7">
 					<div class="rq-inner">
-						<a href="#" class="font-30-for-reg-0">Váy Dạ Hội Diva Dáng Dài</a>
-						<h3 class="font-18-for-reg-0">Thương hiệu : <span>Blue Flamingo</span></h3>
+						<a href="#" id="pd-name" class="font-30-for-reg-0">...</a>
+						<h3 class="font-18-for-reg-0">
+							Thương hiệu : <span id="pd-brand">...</span>
+						</h3>
+
 						<a href="#" class="rating">
 							<i class="fa fa-star" aria-hidden="true"></i>
 							<i class="fa fa-star" aria-hidden="true"></i>
@@ -123,6 +99,10 @@
 							<i class="fa fa-star-o ash" aria-hidden="true"></i>
 							<span class="ash">(29 đánh giá)</span>
 						</a>
+						<div style="margin:12px 0;">
+							<div class="font-25-for-reg-0" id="pd-rent-price">Giá thuê: --</div>
+							<div class="font-16-for-reg-0" id="pd-deposit">Giá cọc: --</div>
+						</div>
 						<div class="select-box">
 							<div style="display: inline-block; width: 48%; vertical-align: top;">
 								<select class="rq-rental-select2" id="colorSelect">
@@ -158,14 +138,7 @@
 								<a href="cart.html" class="reserve">Đặt thuê ngay</a>
 								<button class="wishlist">Yêu thích</button>
 							</div>
-							<div class="col-sm-6">
-								<div class="social-icon">
-									<a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-									<a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-									<a href="#"><i class="fa fa-dribbble" aria-hidden="true"></i></a>
-									<a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-								</div>
-							</div>
+							
 						</div>
 						<div class="panel-group rq-accordion" id="accordion" role="tablist" aria-multiselectable="true">
 							<div class="panel panel-default">
@@ -173,9 +146,10 @@
 									<h4 class="panel-title">
 										<a role="button" data-toggle="collapse" data-parent="#accordion"
 											href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-											Kích thước và Kiểu dáng
+											Mô tả sản phẩm
 											<i class="fa fa-angle-up pull-right" aria-hidden="true"></i>
 										</a>
+										<p id="pd-desc" class="font-16-for-reg-0" style="margin-top:8px;"></p>
 
 									</h4>
 								</div>

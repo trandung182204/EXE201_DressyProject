@@ -596,3 +596,55 @@
   font-family: 'Open Sans', sans-serif;
   text-transform: uppercase;
 }
+/* ==== FIX khoảng cách ảnh – chi tiết ==== */
+
+.owl-favorites .item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Figure bỏ margin thừa */
+.owl-favorites .item figure {
+  margin-bottom: -20px;   /* chỉnh khoảng cách ảnh ↔ tên */
+}
+
+/* Ảnh gọn lại, không kéo cao */
+.owl-favorites .item figure img {
+  width: 100%;
+  max-width: 220px;     /* chỉnh size ảnh nếu muốn */
+  height: auto;
+  display: block;
+}
+
+/* Tên sản phẩm sát ảnh hơn */
+.owl-favorites .item h3 {
+  margin: 6px 0 4px;
+}
+
+/* Dòng "Sản phẩm mới" */
+.owl-favorites .item p {
+  margin-bottom: 8px;
+}
+
+/* Block giá */
+.owl-favorites .elements {
+  margin-top: 0;
+}
+
+/* Giá thuê */
+.owl-favorites .font-25-for-reg-0 {
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Giá cọc */
+.owl-favorites .font-16-for-reg-0 {
+  margin-bottom: 6px;
+}
+
+/* Icon dưới cùng */
+.owl-favorites .elements .tool-tip {
+  margin-right: 8px;
+}

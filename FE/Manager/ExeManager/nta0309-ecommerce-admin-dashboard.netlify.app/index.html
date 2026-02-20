@@ -81,8 +81,7 @@
 											<div class="sherah-progress-card__content">
 												<div class="sherah-progress-card__heading">
 													<span class="sherah-pcolor">Tổng doanh thu</span>
-													<h4 class="sherah-progress-card__title"><b
-															class="count-animate">$654.66k</b></h4>
+													<h4 class="sherah-progress-card__title"><b id="kpi-total-revenue" class="count-animate">0</b></h4>
 												</div>
 												<div class="sherah-progress-card__button">
 													<p class="sherah-progress-card__text sherah-color3">
@@ -124,8 +123,7 @@
 											<div class="sherah-progress-card__content">
 												<div class="sherah-progress-card__heading">
 													<span class="sherah-pcolor">Tổng đơn hàng</span>
-													<h4 class="sherah-progress-card__title"><b
-															class="count-animate">$854.66k</b></h4>
+													<h4 class="sherah-progress-card__title"><b id="kpi-total-orders" class="count-animate">0</b></h4>
 												</div>
 												<div class="sherah-progress-card__button">
 													<p class="sherah-progress-card__text sherah-color2">
@@ -174,8 +172,7 @@
 											<div class="sherah-progress-card__content">
 												<div class="sherah-progress-card__heading">
 													<span class="sherah-pcolor">Tổng số đơn/ ngày</span>
-													<h4 class="sherah-progress-card__title"><b
-															class="count-animate">$987.21M</b></h4>
+													<h4 class="sherah-progress-card__title"><b id="kpi-orders-today" class="count-animate">0</b></h4>
 												</div>
 												<div class="sherah-progress-card__button">
 													<p class="sherah-progress-card__text sherah-color1">
@@ -224,8 +221,7 @@
 											<div class="sherah-progress-card__content">
 												<div class="sherah-progress-card__heading">
 													<span class="sherah-pcolor">Doanh thu/ ngày</span>
-													<h4 class="sherah-progress-card__title"><b
-															class="count-animate">$987.21M</b></h4>
+													<h4 class="sherah-progress-card__title"><b id="kpi-revenue-today" class="count-animate">0</b></h4>
 												</div>
 												<div class="sherah-progress-card__button">
 													<p class="sherah-progress-card__text sherah-color4">
@@ -390,6 +386,7 @@
 	<script src="js/main.js"></script>
 	<script src="js/auth-header.js"></script>
 	<script src="js/provider-notifications.js"></script>
+	<script src="js/provider-dashboard.js"></script>
 
 	<script>
 		$(document).ready(function () {
@@ -900,6 +897,9 @@
     <script>
   document.addEventListener("DOMContentLoaded", () => {
     loadLayout();
+	if (window.initProviderDashboard) {
+      window.initProviderDashboard({ totalSales: myChart_Total_Sales_Home });
+    }
   });
 </script>
 

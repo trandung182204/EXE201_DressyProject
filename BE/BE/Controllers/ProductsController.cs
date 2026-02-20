@@ -63,5 +63,11 @@ namespace BE.Controllers
 
             return Ok(new { success = true, message = "Status updated" });
         }
+        [HttpGet("latest-favorites")]
+        public async Task<IActionResult> GetLatestFavorites([FromQuery] int limit = 5)
+        {
+            var data = await _service.GetLatestFavoritesAsync(limit);
+            return Ok(new { success = true, data, message = "Fetched latest favorites successfully" });
+        }
     }
 }

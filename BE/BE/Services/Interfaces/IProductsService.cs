@@ -18,7 +18,7 @@ namespace BE.Services.Interfaces
         Task<ProductDetailDto?> GetProductDetailByProviderAsync(long providerId, long productId);
         Task<bool> DeleteByProviderAsync(long providerId, long productId);
         Task<ProductDetailDto?> UpdateForProviderAsync(long providerId, long productId, UpdateProviderProductDto dto);
-
+        Task<IEnumerable<HomeFavoriteProductDto>> GetLatestFavoritesAsync(int limit);
 
     }
 }
