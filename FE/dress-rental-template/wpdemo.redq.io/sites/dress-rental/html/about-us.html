@@ -19,6 +19,28 @@
 	<link rel="stylesheet" href="../assets/dist/style/style.css">
 	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
 	<link rel="stylesheet" href="../assets/dist/style/responsive.css">
+
+	<style>
+	/* Team image normalization & alignment */
+	/* Make grid items equal-height and top-aligned so rows line up */
+	.team .row { display: flex; flex-wrap: wrap; align-items: stretch; }
+	.team .col-sm-4 { display: flex; }
+	.team .col-sm-4 > .element { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; flex: 1 1 0; }
+	.team .element { text-align: center; padding: 18px 12px; }
+	.team .element figure { width: 165px; height: 200px; margin: 6px auto 14px; overflow: hidden; border-radius: 12px; border: 6px solid #fff; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+	.team .element figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+	.team .element h5 { margin: 12px 0 4px; font-weight: 800; font-size: 2.6rem; }
+	.team .element h6 { margin: 0 0 10px; color: #554c4c; font-weight: 700; font-size: 2.1rem; }
+	.team .element p { color: #5b4f4f; line-height: 1.6; font-size: 1.2rem; max-width: 560px; margin: 0 auto; }
+
+	/* Responsive tweaks */
+	@media (max-width: 768px) {
+		.team .element figure { width: 120px; height: 150px; }
+		.team .element h5 { font-size: 1.8rem; }
+		.team .element h6 { font-size: 1.6rem; }
+		.team .element p { font-size: 1.02rem; max-width: 320px; }
+	}
+	</style>
 </head>
 
 <body>
@@ -142,8 +164,8 @@
 
 	<div class="execution">
 		<div class="elements">
-			<h1>OUR AIM IS TO MAKE YOUR <br> DREAM ALIVE</h1>
-			<h4>WHO WE ARE</h4>
+			<h1>MỤC TIÊU CỦA CHÚNG TÔI LÀ <br> BIẾN GIẤC MƠ CỦA BẠN THÀNH HIỆN THỰC</h1>
+			<h4>CHÚNG TA LÀ AI</h4>
 			<a class="slow-down" href="#our_mission"><img src="../assets/dist/img/down.png" alt=""></a>
 		</div><!-- /.elements -->
 	</div><!-- /.execution -->
@@ -152,24 +174,19 @@
 
 
 	<div class="mission base-padd" id="our_mission">
-		<h2>OUR MISSION</h2>
+		<h2>NHIỆM VỤ CỦA CHÚNG TÔI</h2>
 		<div class="container">
 			<div class="inner-element">
-				<p class="font-20-for-reg-0">Lorem Ipsum is simply dummy text of the printing and typesetting industry
-					when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-					survived not only five centuries, but also the leap into electronic typesetting,
-					remaining essentially unchanged. <a href="#">It was popularised in the 1960s with the release of
-						Letraset sheets containing </a> Lorem Ipsum passages, and more recently with desktop publishing
-					software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of
-					the printing and typesetting industry.</p>
-				<h6>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-					industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
-					and scrambled it to make a type specimen book.</h6>
-				<p class="font-20-for-reg-0">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-					Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-					printer took a galley of type and scrambled it to make a type specimen book. It has survived not
-					only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-				</p>
+				<p class="font-20-for-reg-0">
+					Chúng tôi xây dựng Xúng Xính — nền tảng kết nối cho thuê trang phục — với mục tiêu giúp người dùng
+					tiết kiệm thời gian khi tìm kiếm và thuê trang phục cho mọi sự kiện. Xúng Xính kết nối chủ đồ và
+					khách hàng, cung cấp danh mục sản phẩm được kiểm soát chất lượng, thanh toán an toàn và quy trình
+					đặt/nhận trả tiện lợi.
+			<h6>Tiết kiệm thời gian, tăng giá trị</h6>
+			<p class="font-20-for-reg-0">Nền tảng của chúng tôi giúp rút ngắn thời gian tìm kiếm trang phục, giảm chi phí mua sắm, và
+				khuyến khích sử dụng trang phục bền vững. Người dùng có thể đặt trước, chọn kích cỡ, xem đánh
+				giá, và nhận hàng tại địa điểm thuận tiện. Chủ đồ/nhà cung cấp có thể quản lý danh mục, đặt giá,
+				và theo dõi lịch thuê trên cùng một giao diện.</p>
 			</div><!-- /.inner-element -->
 		</div><!-- /.container -->
 	</div><!-- /.mission -->
@@ -178,8 +195,8 @@
 
 	<div class="execution executiontwo">
 		<div class="elements">
-			<h1>WE HAVE THE BEST<br> QUALITY TEAM</h1>
-			<h4>OUR TEAM</h4>
+			<h1>ĐỘI NGŨ XÚNG XÍNH<br> TẬN TÂM VÀ CHUYÊN NGHIỆP</h1>
+			<h4>ĐỘI NGŨ CỐ VẤN</h4>
 			<a class="slow-down" href="#our_mission2"><img src="../assets/dist/img/down.png" alt="down"></a>
 		</div><!-- /.elements -->
 	</div><!-- /.execution -->
@@ -191,7 +208,7 @@
 
 
 	<div class="team base-padd" id="our_mission2">
-		<h2>OUR TEAM</h2>
+		<h2>ĐỘI NGŨ CỦA CHÚNG TÔI</h2>
 		<div class="container">
 			<div class="row">
 
@@ -200,12 +217,12 @@
 					<div class="element">
 
 						<figure>
-							<img src=../assets/dist/img/team/1.png alt="">
+							<img src="../assets/dist/img/haminhtan.png" alt="Hà Minh Tân">
 						</figure>
-						<h5>Lara</h5>
-						<h6>Co-founder/CEO</h6>
-						<p>Lorem ipsum dolor sit amet, consectetur adipis elit, sed do eiusmod tempor incididunt ut
-							labore et dolore magna aliqua.</p>
+						<h5>Hà Minh Tân</h5>
+						<h6>Giám đốc Điều hành (CEO)</h6>
+						<p>Người dẫn dắt chiến lược phát triển Xúng Xính, tập trung vào mở rộng mạng lưới nhà cung cấp và
+							nâng cao trải nghiệm thuê trang phục cho khách hàng.</p>
 
 					</div><!-- /.element -->
 				</div><!-- /.col-sm-4 -->
@@ -214,12 +231,12 @@
 					<div class="element">
 
 						<figure>
-							<img src=../assets/dist/img/team/2.png alt="">
+							<img src="../assets/dist/img/tranyenthanh.png" alt="Trần Yến Thanh">
 						</figure>
-						<h5>Dean</h5>
-						<h6>Co-founder/COO</h6>
-						<p>Lorem ipsum dolor sit amet, consectetur adipis elit, sed do eiusmod tempor incididunt ut
-							labore et dolore magna aliqua.</p>
+						<h5>Trần Yến Thanh</h5>
+						<h6>Giám đốc Marketing</h6>
+						<p>Chịu trách nhiệm xây dựng thương hiệu và chiến dịch tiếp thị đa kênh nhằm thu hút cả khách
+							hàng lẫn đối tác cung cấp trang phục.</p>
 
 					</div><!-- /.element -->
 				</div><!-- /.col-sm-4 -->
@@ -228,12 +245,12 @@
 					<div class="element">
 
 						<figure>
-							<img src=../assets/dist/img/team/3.png alt="">
+							<img src="../assets/dist/img/trananhdung.png" alt="Trần Anh Dũng">
 						</figure>
-						<h5>Brunte</h5>
-						<h6>Customer Happiness</h6>
-						<p>Lorem ipsum dolor sit amet, consectetur adipis elit, sed do eiusmod tempor incididunt ut
-							labore et dolore magna aliqua.</p>
+						<h5>Trần Anh Dũng</h5>
+						<h6>Giám đốc Công nghệ (CIO)</h6>
+						<p>Quản lý nền tảng kỹ thuật, đảm bảo hệ thống vận hành ổn định, bảo mật và tích hợp các phương
+							thức thanh toán an toàn.</p>
 
 					</div><!-- /.element -->
 				</div><!-- /.col-sm-4 -->
@@ -242,12 +259,12 @@
 					<div class="element">
 
 						<figure>
-							<img src=../assets/dist/img/team/4.png alt="">
+							<img src="../assets/dist/img/huyhoang.png" alt="Nguyễn Đắc Huy Hoàng">
 						</figure>
-						<h5>Joshep</h5>
-						<h6>Head of Engineering</h6>
-						<p>Lorem ipsum dolor sit amet, consectetur adipis elit, sed do eiusmod tempor incididunt ut
-							labore et dolore magna aliqua.</p>
+						<h5>Nguyễn Đắc Huy Hoàng</h5>
+						<h6>Giám đốc Sản phẩm (CPO)</h6>
+						<p>Chịu trách nhiệm quản lý danh mục sản phẩm, tối ưu trải nghiệm tìm kiếm và trình bày sản phẩm
+							phù hợp với nhu cầu thuê.</p>
 
 					</div><!-- /.element -->
 				</div><!-- /.col-sm-4 -->
@@ -256,12 +273,12 @@
 					<div class="element">
 
 						<figure>
-							<img src=../assets/dist/img/team/3.png alt="">
+							<img src="../assets/dist/img/hang.png" alt="Lại Việt Hằng">
 						</figure>
-						<h5>Brunte</h5>
-						<h6>Customer Happiness</h6>
-						<p>Lorem ipsum dolor sit amet, consectetur adipis elit, sed do eiusmod tempor incididunt ut
-							labore et dolore magna aliqua.</p>
+						<h5>Lại Việt Hằng</h5>
+						<h6>Giám đốc Tài chính (CFO)</h6>
+						<p>Quản lý tài chính và chính sách giá cho thuê, đảm bảo mô hình bền vững giúp đối tác và
+							nền tảng cùng phát triển.</p>
 
 					</div><!-- /.element -->
 				</div><!-- /.col-sm-4 -->
@@ -270,12 +287,12 @@
 					<div class="element">
 
 						<figure>
-							<img src=../assets/dist/img/team/4.png alt="">
+							<img src="../assets/dist/img/ly.png" alt="Phùng Hương Ly">
 						</figure>
-						<h5>Joshep</h5>
-						<h6>Head of Engineering</h6>
-						<p>Lorem ipsum dolor sit amet, consectetur adipis elit, sed do eiusmod tempor incididunt ut
-							labore et dolore magna aliqua.</p>
+						<h5>Phùng Hương Ly</h5>
+						<h6>Giám đốc Dịch vụ Khách hàng</h6>
+						<p>Chịu trách nhiệm chăm sóc khách hàng, giải đáp thắc mắc và đảm bảo quy trình nhận/trả đồ
+							diễn ra suôn sẻ.</p>
 
 					</div><!-- /.element -->
 				</div><!-- /.col-sm-4 -->
