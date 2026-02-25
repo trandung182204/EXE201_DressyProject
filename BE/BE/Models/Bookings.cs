@@ -15,6 +15,13 @@ public partial class Bookings
 
     public DateTime? CreatedAt { get; set; }
 
+    // Delivery info from checkout form
+    public string? RecipientName { get; set; }
+
+    public string? RecipientPhone { get; set; }
+
+    public string? RecipientAddress { get; set; }
+
     public virtual ICollection<BookingItems> BookingItems { get; set; } = new List<BookingItems>();
 
     public virtual Users? Customer { get; set; }

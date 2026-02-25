@@ -321,9 +321,9 @@ th {
 
 @font-face {
   font-family: "Ionicons";
-  src: 
-       url("../../style/fonts/ionicons.woff") format("woff"),
-       url("../../style/fonts/ionicons.ttf") format("truetype");
+  src:
+    url("../../style/fonts/ionicons.woff") format("woff"),
+    url("../../style/fonts/ionicons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -8306,9 +8306,9 @@ button.close {
  */
 @font-face {
   font-family: "Ionicons";
-  src: 
-       url("../../style/fonts/ionicons.woff") format("woff"),
-       url("../../style/fonts/ionicons.ttf") format("truetype");
+  src:
+    url("../../style/fonts/ionicons.woff") format("woff"),
+    url("../../style/fonts/ionicons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -11360,9 +11360,9 @@ button.close {
 */
 @font-face {
   font-family: "Ionicons";
-  src: 
-       url("../../style/fonts/ionicons.woff") format("woff"),
-       url("../../style/fonts/ionicons.ttf") format("truetype");
+  src:
+    url("../../style/fonts/ionicons.woff") format("woff"),
+    url("../../style/fonts/ionicons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -16152,9 +16152,9 @@ body.lb-disable-scrolling {
 
 @font-face {
   font-family: "Ionicons";
-  src: 
-       url("../../style/fonts/ionicons.woff") format("woff"),
-       url("../../style/fonts/ionicons.ttf") format("truetype");
+  src:
+    url("../../style/fonts/ionicons.woff") format("woff"),
+    url("../../style/fonts/ionicons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -16524,9 +16524,9 @@ i[class*=" rq-"] {
 
 @font-face {
   font-family: "Ionicons";
-  src: 
-       url("../../style/fonts/ionicons.woff") format("woff"),
-       url("../../style/fonts/ionicons.ttf") format("truetype");
+  src:
+    url("../../style/fonts/ionicons.woff") format("woff"),
+    url("../../style/fonts/ionicons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -21004,4 +21004,55 @@ div.DateInput {
   .transition-container--horizontal {
     width: 320px !important;
   }
+}
+
+/* ======================================== */
+/* Be Vietnam Pro – Global Font Override    */
+/* ======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+li,
+td,
+th,
+label,
+input,
+textarea,
+select,
+button,
+.btn,
+.form-control {
+  font-family: 'Be Vietnam Pro', sans-serif !important;
+}
+
+/* Preserve icon fonts */
+.fa,
+.fa::before {
+  font-family: 'FontAwesome' !important;
+}
+
+.ion,
+.ion::before,
+.ionicons,
+.ionicons::before,
+[class^="ion-"],
+[class^="ion-"]::before,
+[class*=" ion-"],
+[class*=" ion-"]::before {
+  font-family: 'Ionicons' !important;
+}
+
+.glyphicon,
+.glyphicon::before {
+  font-family: 'Glyphicons Halflings' !important;
 }

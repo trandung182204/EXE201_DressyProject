@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đặt hàng thành công - Xúng Xính</title>
+    <link
+        href="https://fonts.googleapis.com/css?family=Abril+Fatface|Forum|Open+Sans:400,600|Roboto:100,300,400,500,700"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/dist/style/elements.css">
+    <link rel="stylesheet" href="../assets/dist/style/header.css">
+    <link rel="stylesheet" href="../assets/dist/style/footer.css">
+    <link rel="stylesheet" href="../assets/dist/style/blog.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+</head>
+
+<body>
+
+    <!-- LOADER -->
+    <div id="gl-circle-loader-wrapper">
+        <div id="gl-circle-loader-center">
+            <div class="gl-circle-load">
+                <img src="../assets/dist/img/ploading.gif" alt="Page Loader">
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+                if (typeof renderAuthHeader === "function") renderAuthHeader();
+            })
+            .catch(error => console.error('Lỗi khi tải header:', error));
+    </script>
+
+    <!-- BREADCRUMB -->
+    <div class="container">
+        <ol class="breadcrumb underline">
+            <li><a href="index.html">Trang chủ</a></li>
+            <li>Đặt hàng thành công</li>
+        </ol>
+    </div>
+
+    <!-- SUCCESS CONTENT -->
+    <div class="shopping-details base-padd">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <div class="shopping-bag" style="text-align: center;">
+
+                        <!-- Success Icon -->
+                        <div style="margin: 40px 0 30px;">
+                            <i class="fa fa-check-circle" style="font-size: 80px; color: #4CAF50;"></i>
+                        </div>
+
+                        <!-- Success Message -->
+                        <h4 class="one" style="padding-left: 0; text-align: center;">
+                            Đặt hàng thành công!
+                        </h4>
+
+                        <div class="diva" style="margin-top: 20px;">
+                            <p style="font-size: 18px; color: #979797; margin-bottom: 15px;">
+                                Cảm ơn bạn đã đặt hàng tại <strong style="color: #392606;">Xúng Xính</strong>!
+                            </p>
+                            <p style="font-size: 16px; color: #979797; margin-bottom: 10px;">
+                                Đơn hàng của bạn đã được ghi nhận và đang chờ xử lý.
+                            </p>
+                            <p style="font-size: 16px; color: #979797; margin-bottom: 10px;">
+                                Chúng tôi sẽ liên hệ với bạn sớm nhất để xác nhận đơn hàng.
+                            </p>
+
+                            <!-- Order ID (if passed via URL) -->
+                            <div id="order-info"
+                                style="display: none; margin: 25px auto; padding: 15px; background: #f9f9f9; border-radius: 4px; max-width: 400px;">
+                                <p style="font-size: 16px; color: #392606; margin: 0;">
+                                    Mã đơn hàng: <strong id="order-id-display" style="color: #F45858;"></strong>
+                                </p>
+                            </div>
+
+                            <p style="font-size: 14px; color: #979797; margin-top: 20px;">
+                                <i class="fa fa-phone" style="margin-right: 5px;"></i>
+                                Nếu cần hỗ trợ, vui lòng liên hệ hotline: <strong style="color: #392606;">0123 456
+                                    789</strong>
+                            </p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <a href="listing-page.html" class="btn continue" style="margin-top: 30px;">
+                            <i class="fa fa-shopping-bag"></i> Tiếp tục mua sắm
+                        </a>
+                        <a href="index.html" class="btn update" style="margin-top: 30px;">
+                            <i class="fa fa-home"></i> Về trang chủ
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Show order ID if passed in URL -->
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const orderId = params.get('id');
+        if (orderId) {
+            document.getElementById('order-info').style.display = 'block';
+            document.getElementById('order-id-display').textContent = '#' + orderId;
+        }
+    </script>
+
+    <!-- FOOTER -->
+    <div id="footer-placeholder"></div>
+    <script>
+        fetch('footer.html')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('footer-placeholder').innerHTML = data;
+            })
+            .catch(error => console.error('Lỗi khi tải footer:', error));
+    </script>
+
+    <!-- VENDOR SCRIPTS -->
+    <script src="../assets/dist/js/vendor/jquery-3.2.0.min.js"></script>
+    <script src="../assets/dist/js/vendor/bootstrap.min.js"></script>
+    <script src="../assets/dist/js/vendor/countUp.js"></script>
+    <script src="../assets/dist/js/vendor/owl.carousel.min.js"></script>
+    <script src="../assets/dist/js/vendor/ion.rangeSlider.min.js"></script>
+    <script src="../assets/dist/js/vendor/dateRangePicker.js"></script>
+    <script src="../assets/dist/js/vendor/jquery.flexslider-min.js"></script>
+    <script src="../assets/dist/js/vendor/jquery.nicescroll.min.js"></script>
+    <script src="../assets/dist/js/vendor/select2.min.js"></script>
+    <script src="../assets/dist/js/vendor/lightbox.min.js"></script>
+    <script src="../assets/dist/js/vendor/jquery.smooth-scroll.js"></script>
+    <script src="../assets/dist/js/custom.js"></script>
+    <script src="../assets/dist/js/auth-header.js"></script>
+    
+</body>
+
+</html>

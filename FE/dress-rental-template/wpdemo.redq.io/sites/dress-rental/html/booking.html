@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <!-- Mirrored from wpdemo.redq.io/sites/dress-rental/html/booking.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 22 Jan 2026 15:16:36 GMT -->
@@ -102,7 +102,21 @@
 						<div style="margin:12px 0;">
 							<div class="font-25-for-reg-0" id="pd-rent-price">Giá thuê: --</div>
 							<div class="font-16-for-reg-0" id="pd-deposit">Giá cọc: --</div>
+						<div class="font-16-for-reg-0" id="pd-quantity" style="margin-top:6px;">Số lượng: <span style="color:#999;">Chọn màu & size</span></div>
+					</div>
+
+					<!-- Quantity Input -->
+					<div style="margin-bottom:15px;">
+						<label style="font-weight:600;margin-bottom:5px;display:block;">Số lượng thuê:</label>
+						<div style="display:flex;align-items:center;gap:8px;">
+							<button type="button" onclick="changeQty(-1)" style="width:32px;height:32px;border:1px solid #ddd;background:#f5f5f5;cursor:pointer;font-size:16px;border-radius:4px;">&#8722;</button>
+							<input type="number" id="quantityInput" value="1" min="1" style="width:60px;text-align:center;height:32px;border:1px solid #ddd;border-radius:4px;" onchange="validateQty()">
+							<button type="button" onclick="changeQty(1)" style="width:32px;height:32px;border:1px solid #ddd;background:#f5f5f5;cursor:pointer;font-size:16px;border-radius:4px;">+</button>
 						</div>
+						<div id="quantityError" class="rq-inline-error"
+							style="display:none; margin-top: 5px; font-size: 13px; color: #842029; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 5px; border-radius: 4px;">
+						</div>
+					</div>
 						<div class="select-box">
 							<div style="display: inline-block; width: 48%; vertical-align: top;">
 								<select class="rq-rental-select2" id="colorSelect">
@@ -134,9 +148,9 @@
 						</div>
 
 						<div class="row rq-margin">
-							<div class="col-sm-6">
-								<a href="cart.html" class="reserve">Đặt thuê ngay</a>
-								<button class="wishlist">Yêu thích</button>
+							<div class="col-sm-8" style="display:flex;gap:12px;align-items:center;">
+								<a href="cart.html" class="reserve" style="white-space:nowrap;">Đặt thuê ngay</a>
+								<button class="wishlist" id="addToCartBtn" style="white-space:nowrap;"><i class="fa fa-cart-plus"></i> Thêm vào giỏ</button>
 							</div>
 							
 						</div>

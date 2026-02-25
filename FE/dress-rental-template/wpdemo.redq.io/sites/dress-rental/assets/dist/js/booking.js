@@ -67,6 +67,138 @@ function showError(message) {
 }
 
 /**
+ * Render image gallery with thumbnails
+ */
+function renderImageGallery(product) {
+    const slidesContainer = document.getElementById("pd-slides");
+    if (!slidesContainer) return;
+
+    const images = product.imageUrls && product.imageUrls.length > 0
+        ? product.imageUrls
+        : (product.thumbnailUrl ? [product.thumbnailUrl] : []);
+
+    if (images.length === 0) {
+        slidesContainer.innerHTML = `<li><img src="../assets/dist/img/product-details/1.jpg" alt="No image"></li>`;
+        return;
+    }
+
+    // Build gallery HTML
+    const galleryHTML = `
+        <div id="main-image-wrapper" style="position:relative; text-align:center; background:#f9f9f9; min-height:350px; display:flex; align-items:center; justify-content:center;">
+            <img id="main-product-img" src="${safeImg(images[0])}" alt="${product.name || ''}" style="max-width:100%; max-height:450px; object-fit:contain;">
+            ${images.length > 1 ? `
+                <button onclick="galleryPrev()" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);color:#fff;border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button onclick="galleryNext()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);color:#fff;border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            ` : ''}
+        </div>
+        ${images.length > 1 ? `
+            <div id="thumb-container" style="display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding:5px 0;">
+                ${images.map((img, i) => `
+                    <img src="${safeImg(img)}" alt="thumb-${i}"
+                         onclick="setMainImage(${i})"
+                         class="gallery-thumb ${i === 0 ? 'active-thumb' : ''}"
+                         style="width:70px;height:70px;object-fit:cover;border:2px solid ${i === 0 ? '#d0021b' : '#ddd'};border-radius:4px;cursor:pointer;flex-shrink:0;">
+                `).join('')}
+            </div>
+        ` : ''}
+    `;
+
+    slidesContainer.innerHTML = galleryHTML;
+    window._galleryImages = images;
+    window._galleryIndex = 0;
+}
+
+function setMainImage(index) {
+    const images = window._galleryImages || [];
+    if (index < 0 || index >= images.length) return;
+    window._galleryIndex = index;
+    const mainImg = document.getElementById('main-product-img');
+    if (mainImg) mainImg.src = safeImg(images[index]);
+    // Update thumb borders
+    document.querySelectorAll('.gallery-thumb').forEach((t, i) => {
+        t.style.border = i === index ? '2px solid #d0021b' : '2px solid #ddd';
+    });
+}
+
+function galleryPrev() {
+    const images = window._galleryImages || [];
+    if (images.length <= 1) return;
+    let idx = (window._galleryIndex - 1 + images.length) % images.length;
+    setMainImage(idx);
+}
+
+function galleryNext() {
+    const images = window._galleryImages || [];
+    if (images.length <= 1) return;
+    let idx = (window._galleryIndex + 1) % images.length;
+    setMainImage(idx);
+}
+
+/**
+ * Find matching variant by color + size
+ */
+function findVariant(color, size) {
+    if (!currentProduct || !currentProduct.variants) return null;
+    return currentProduct.variants.find(v =>
+        (v.colorName === color || !color || color === 'N/A') &&
+        (v.sizeLabel === size || !size || size === 'N/A')
+    );
+}
+
+/**
+ * Update price, deposit, and stock based on selected variant
+ */
+function updateVariantInfo() {
+    const variant = findVariant(selectedColor, selectedSize);
+    const rentEl = document.getElementById('pd-rent-price');
+    const depositEl = document.getElementById('pd-deposit');
+    const qtyEl = document.getElementById('pd-quantity');
+    const reserveBtn = document.querySelector('.reserve');
+
+    if (variant) {
+        const price = variant.pricePerDay || currentProduct.minPricePerDay || 0;
+        const deposit = variant.depositAmount || 0;
+        const qty = variant.quantity || 0;
+
+        if (rentEl) rentEl.innerHTML = `Giá thuê: <span style="color:#d0021b;font-weight:bold;">${money(price)}</span> /ngày`;
+        if (depositEl) depositEl.innerHTML = `Giá cọc: <span style="color:#333;font-weight:bold;">${money(deposit)}</span>`;
+        if (qtyEl) {
+            if (qty > 0) {
+                qtyEl.innerHTML = `Còn lại: <span style="color:#4CAF50;font-weight:bold;">${qty} sản phẩm</span>`;
+                qtyEl.style.color = '';
+            } else {
+                qtyEl.innerHTML = `<span style="color:#f44336;font-weight:bold;"><i class="fa fa-ban"></i> Hết hàng</span>`;
+            }
+        }
+
+        // Disable reserve button if out of stock
+        if (reserveBtn) {
+            if (qty <= 0) {
+                reserveBtn.style.opacity = '0.5';
+                reserveBtn.style.pointerEvents = 'none';
+                reserveBtn.textContent = 'Hết hàng';
+            } else {
+                reserveBtn.style.opacity = '1';
+                reserveBtn.style.pointerEvents = 'auto';
+                reserveBtn.textContent = 'Đặt thuê ngay';
+            }
+        }
+
+        // Store selected variant info
+        currentProduct._selectedVariant = variant;
+    } else {
+        const price = currentProduct.minPricePerDay || currentProduct.pricePerDay || 0;
+        if (rentEl) rentEl.innerHTML = `Giá thuê: <span style="color:#d0021b;font-weight:bold;">${money(price)}</span> /ngày`;
+        if (depositEl) depositEl.innerHTML = `Giá cọc: --`;
+        if (qtyEl) qtyEl.innerHTML = `Số lượng: <span style="color:#999;">Chọn màu & size</span>`;
+    }
+}
+
+/**
  * Render product details to the page
  */
 function renderProduct(product) {
@@ -91,25 +223,32 @@ function renderProduct(product) {
         brandEl.innerHTML = `Danh mục: <span id="productCategory">${product.categoryName || ""}</span>`;
     }
 
-    // Update price
-    const priceEl = document.querySelector(".rq-inner > h4");
-    if (priceEl) {
-        const price = product.minPricePerDay || product.pricePerDay || 0;
-        priceEl.innerHTML = `<span id="productPrice">${money(price)}</span> /ngày`;
+    // Update price & deposit
+    const price = product.minPricePerDay || product.pricePerDay || 0;
+    const rentEl = document.getElementById('pd-rent-price');
+    if (rentEl) rentEl.innerHTML = `Giá thuê: <span style="color:#d0021b;font-weight:bold;">${money(price)}</span> /ngày`;
+
+    // Deposit - show from first variant if available
+    const depositEl = document.getElementById('pd-deposit');
+    if (depositEl && product.variants && product.variants.length > 0) {
+        const dep = product.variants[0].depositAmount || 0;
+        depositEl.innerHTML = `Giá cọc: <span style="color:#333;font-weight:bold;">${money(dep)}</span>`;
     }
 
-    // Update main image
-    const mainImg = document.querySelector(".flexslider .slides li:first-child img");
-    if (mainImg && product.thumbnailUrl) {
-        mainImg.src = safeImg(product.thumbnailUrl);
-        mainImg.alt = product.name || "";
-    }
+    // Render image gallery
+    renderImageGallery(product);
 
     // Render colors dropdown
     renderColors(product.colors || []);
 
     // Render sizes dropdown
     renderSizes(product.sizes || []);
+
+    // Description
+    const descEl = document.getElementById('pd-desc');
+    if (descEl && product.description) {
+        descEl.textContent = product.description;
+    }
 }
 
 /**
@@ -154,6 +293,7 @@ function renderColors(colors) {
             if (selectedColor) {
                 if (colorError) colorError.style.display = "none";
                 updateColorUI(selectedColor);
+                updateVariantInfo();
             }
         });
 
@@ -210,6 +350,7 @@ function renderSizes(sizes) {
             if (selectedSize) {
                 if (sizeError) sizeError.style.display = "none";
                 updateSizeUI(selectedSize);
+                updateVariantInfo();
             }
         });
 
@@ -364,7 +505,7 @@ function validateRentalDays(start, end) {
     endDate = end;
 
     const diffTime = Math.abs(end.getTime() - start.getTime());
-    rentalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    rentalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
     console.log(`Rental days: ${rentalDays}`);
 
@@ -462,6 +603,23 @@ function setupReserveButton() {
         const isValid = validateAllFieldsOnSubmit();
 
         if (isValid) {
+            // Get variant info
+            const variant = findVariant(selectedColor, selectedSize);
+            const pricePerDay = variant?.pricePerDay || currentProduct.minPricePerDay || currentProduct.pricePerDay || 0;
+            const depositAmount = variant?.depositAmount || 0;
+            const qtyInput = document.getElementById('quantityInput');
+            const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+
+            // Check stock
+            if (variant && (variant.quantity || 0) < quantity) {
+                const errDiv = document.getElementById('quantityError');
+                if (errDiv) {
+                    errDiv.innerHTML = `<i class="fa fa-exclamation-circle"></i> Chỉ còn ${variant.quantity || 0} sản phẩm`;
+                    errDiv.style.display = 'block';
+                }
+                return;
+            }
+
             const bookingInfo = {
                 productId: currentProduct.id,
                 productName: currentProduct.name,
@@ -470,13 +628,145 @@ function setupReserveButton() {
                 startDate: startDate.toISOString(),
                 endDate: endDate.toISOString(),
                 days: rentalDays,
-                pricePerDay: currentProduct.minPricePerDay || currentProduct.pricePerDay || 0,
-                totalPrice: (currentProduct.minPricePerDay || currentProduct.pricePerDay || 0) * rentalDays,
-                thumbnailUrl: currentProduct.thumbnailUrl
+                quantity: quantity,
+                pricePerDay: pricePerDay,
+                depositAmount: depositAmount,
+                totalPrice: pricePerDay * rentalDays * quantity,
+                thumbnailUrl: currentProduct.thumbnailUrl || (currentProduct.imageUrls && currentProduct.imageUrls[0]) || '',
+                // Include arrays for cart edit modal dropdown options
+                colors: currentProduct.colors || [],
+                sizes: currentProduct.sizes || [],
             };
 
+            // Check stock including what's already in cart
+            const existingCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+            const existingItem = existingCart.find(ci =>
+                ci.productId === bookingInfo.productId &&
+                ci.color === bookingInfo.color &&
+                ci.size === bookingInfo.size
+            );
+            const alreadyInCart = existingItem ? (existingItem.quantity || 1) : 0;
+            const maxStock = variant ? (variant.quantity || 0) : 999;
+            const totalQty = alreadyInCart + quantity;
+
+            if (totalQty > maxStock) {
+                const errDiv = document.getElementById('quantityError');
+                if (errDiv) {
+                    errDiv.innerHTML = `<i class="fa fa-exclamation-circle"></i> Vượt quá số lượng tồn kho! Kho còn ${maxStock}, trong giỏ đã có ${alreadyInCart}.`;
+                    errDiv.style.display = 'block';
+                }
+                return;
+            }
+
             localStorage.setItem("currentBooking", JSON.stringify(bookingInfo));
+
+            // Merge into cartItems: if same product+color+size exists, add quantity
+            if (existingItem) {
+                existingItem.quantity = (existingItem.quantity || 1) + quantity;
+                existingItem.totalPrice = existingItem.pricePerDay * existingItem.days * existingItem.quantity;
+            } else {
+                existingCart.push(bookingInfo);
+            }
+            localStorage.setItem("cartItems", JSON.stringify(existingCart));
+
             window.location.href = `cart.html`;
+        }
+    });
+}
+
+/**
+ * Show a toast notification on the booking page
+ */
+function showBookingToast(msg, type, ms) {
+    let toast = document.getElementById('booking-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'booking-toast';
+        toast.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;padding:14px 24px;border-radius:8px;font-size:14px;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:opacity 0.3s;';
+        document.body.appendChild(toast);
+    }
+    toast.style.background = type === 'success' ? '#4CAF50' : '#f44336';
+    toast.textContent = msg;
+    toast.style.opacity = '1';
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => { toast.style.display = 'none'; }, 300); }, ms || 3000);
+}
+
+/**
+ * Setup "Thêm vào giỏ" button — adds to cart WITHOUT redirect
+ */
+function setupAddToCartButton() {
+    const btn = document.getElementById('addToCartBtn');
+    if (!btn) return;
+
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const isValid = validateAllFieldsOnSubmit();
+        if (!isValid) return;
+
+        const variant = findVariant(selectedColor, selectedSize);
+        const pricePerDay = variant?.pricePerDay || currentProduct.minPricePerDay || currentProduct.pricePerDay || 0;
+        const depositAmount = variant?.depositAmount || 0;
+        const qtyInput = document.getElementById('quantityInput');
+        const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+
+        // Check stock
+        if (variant && (variant.quantity || 0) < quantity) {
+            const errDiv = document.getElementById('quantityError');
+            if (errDiv) {
+                errDiv.innerHTML = `<i class="fa fa-exclamation-circle"></i> Chỉ còn ${variant.quantity || 0} sản phẩm`;
+                errDiv.style.display = 'block';
+            }
+            return;
+        }
+
+        const bookingInfo = {
+            productId: currentProduct.id,
+            productName: currentProduct.name,
+            color: selectedColor,
+            size: selectedSize,
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString(),
+            days: rentalDays,
+            quantity: quantity,
+            pricePerDay: pricePerDay,
+            depositAmount: depositAmount,
+            totalPrice: pricePerDay * rentalDays * quantity,
+            thumbnailUrl: currentProduct.thumbnailUrl || (currentProduct.imageUrls && currentProduct.imageUrls[0]) || '',
+            colors: currentProduct.colors || [],
+            sizes: currentProduct.sizes || [],
+        };
+
+        // Check stock including cart
+        const existingCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+        const existingItem = existingCart.find(ci =>
+            ci.productId === bookingInfo.productId &&
+            ci.color === bookingInfo.color &&
+            ci.size === bookingInfo.size
+        );
+        const alreadyInCart = existingItem ? (existingItem.quantity || 1) : 0;
+        const maxStock = variant ? (variant.quantity || 0) : 999;
+
+        if (alreadyInCart + quantity > maxStock) {
+            showBookingToast(`Vượt quá tồn kho! Kho còn ${maxStock}, trong giỏ đã có ${alreadyInCart}.`, 'error', 4000);
+            return;
+        }
+
+        // Merge or push
+        if (existingItem) {
+            existingItem.quantity = (existingItem.quantity || 1) + quantity;
+            existingItem.totalPrice = existingItem.pricePerDay * existingItem.days * existingItem.quantity;
+        } else {
+            existingCart.push(bookingInfo);
+        }
+        localStorage.setItem("cartItems", JSON.stringify(existingCart));
+
+        showBookingToast(`✓ Đã thêm "${currentProduct.name}" vào giỏ hàng!`, 'success', 3000);
+
+        // Refresh header cart dropdown in real-time
+        if (typeof window.renderHeaderCart === 'function') {
+            window.renderHeaderCart();
         }
     });
 }
@@ -543,6 +833,8 @@ function init() {
         return;
     }
     setupDateValidation();
+    setupReserveButton();
+    setupAddToCartButton();
     loadProduct(productId);
 }
 
@@ -576,6 +868,36 @@ function updateSizeUI(text) {
             "opacity": "1"
         });
         rendered.removeClass("select2-selection__placeholder");
+    }
+}
+
+/**
+ * Quantity input helpers
+ */
+function changeQty(delta) {
+    const input = document.getElementById('quantityInput');
+    if (!input) return;
+    let val = parseInt(input.value) || 1;
+    val = Math.max(1, val + delta);
+    input.value = val;
+    validateQty();
+}
+
+function validateQty() {
+    const input = document.getElementById('quantityInput');
+    const errDiv = document.getElementById('quantityError');
+    if (!input) return;
+    let val = parseInt(input.value) || 1;
+    if (val < 1) { val = 1; input.value = 1; }
+
+    const variant = findVariant(selectedColor, selectedSize);
+    if (variant && variant.quantity != null && val > variant.quantity) {
+        if (errDiv) {
+            errDiv.innerHTML = `<i class="fa fa-exclamation-circle"></i> Chỉ còn ${variant.quantity} sản phẩm`;
+            errDiv.style.display = 'block';
+        }
+    } else {
+        if (errDiv) errDiv.style.display = 'none';
     }
 }
 

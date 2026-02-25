@@ -1,4 +1,4 @@
-<header class="main-nav" id="stickynav">
+﻿<header class="main-nav" id="stickynav">
 
 
   <nav class="navbar navbar-default">
@@ -26,14 +26,6 @@
           </ul>
         </li>
 
-        <!-- <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-            aria-expanded="false">Tin tức</a>
-          <ul class="dropdown-menu number2">
-            <li><a href="blog-listing.html">Danh sách bài viết</a></li>
-            <li><a href="post-single.html">Chi tiết bài viết</a></li>
-          </ul>
-        </li> -->
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
             aria-expanded="false">Trang khác</a>
@@ -74,49 +66,29 @@
         <ul>
           <li>
             <div class="wrapper">
-              <a href="#" class="wrapper-img"> <img src="../assets/dist/img/content/1.jpg" alt="1" /> </a>
-              <a href="#" class="product-title">Áo thun White Beard</a>
-              <p>1 x <small> $49.00</small></p>
-              <a href="#" class="subtraction"><i class="ion-ios-close-empty"></i></a>
-            </div>
-          </li>
-          <li class="last">
-            <div class="wrapper">
-              <a href="#" class="wrapper-img"> <img src="../assets/dist/img/content/7.jpg" alt="1" /> </a>
-              <a href="#" class="product-title">Mercedes Ben C-Class</a>
-              <p>1 x <small> $65.00</small></p>
-              <a href="#" class="subtraction"><i class="ion-ios-close-empty"></i></a>
+              <p style="text-align:center;color:#999;">Chưa có sản phẩm yêu thích</p>
             </div>
           </li>
         </ul>
       </div>
     </li>
     <li>
-      <a href="#" class="rq-shopping-cart-items-list">Giỏ hàng <i class="fa fa-shopping-cart"
-          aria-hidden="true"></i></a>
-      <div class="rq-shopping-cart-inner-div">
-        <h4>Sản phẩm vừa thêm</h4>
-        <ul>
+      <a href="#" class="rq-shopping-cart-items-list">Giỏ hàng <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        <span id="header-cart-count"
+          style="background:#d0021b;color:#fff;border-radius:50%;padding:1px 6px;font-size:11px;margin-left:3px;display:none;">0</span></a>
+      <div class="rq-shopping-cart-inner-div" id="header-cart-dropdown">
+        <h4>Giỏ hàng của bạn</h4>
+        <ul id="header-cart-items">
           <li>
             <div class="wrapper">
-              <a href="#" class="wrapper-img"> <img src="../assets/dist/img/content/1.jpg" alt="1" /> </a>
-              <a href="#" class="product-title">Áo thun White Beard</a>
-              <p>1 x <small> $49.00</small></p>
-              <a href="#" class="subtraction"><i class="ion-ios-close-empty"></i></a>
-            </div>
-          </li>
-          <li>
-            <div class="wrapper">
-              <a href="#" class="wrapper-img"> <img src="../assets/dist/img/content/7.jpg" alt="1" /> </a>
-              <a href="#" class="product-title">Mercedes Ben C-Class</a>
-              <p>1 x <small> $65.00</small></p>
-              <a href="#" class="subtraction"><i class="ion-ios-close-empty"></i></a>
+              <p style="text-align:center;color:#999;">Giỏ hàng trống</p>
             </div>
           </li>
         </ul>
-        <div class="subtotal">
+        <div id="header-cart-subtotal"
+          style="display:none; justify-content:space-between; margin-top:15px; margin-bottom:15px; padding-top:15px; border-top:1px solid #ddd; font-size:15px;">
           <strong>Tạm tính:</strong>
-          <strong>$114.00</strong>
+          <strong id="header-subtotal-val" style="color:#d0021b;">0 ₫</strong>
         </div>
         <div class="view-cart">
           <a href="cart.html">Xem giỏ hàng</a>

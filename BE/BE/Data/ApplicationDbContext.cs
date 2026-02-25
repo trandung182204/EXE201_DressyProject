@@ -120,6 +120,17 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("total_price");
 
+            // Delivery info columns (added via ALTER TABLE)
+            entity.Property(e => e.RecipientName)
+                .HasMaxLength(255)
+                .HasColumnName("RecipientName");
+            entity.Property(e => e.RecipientPhone)
+                .HasMaxLength(20)
+                .HasColumnName("RecipientPhone");
+            entity.Property(e => e.RecipientAddress)
+                .HasMaxLength(500)
+                .HasColumnName("RecipientAddress");
+
             entity.HasOne(d => d.Customer).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.CustomerId)
                 .HasConstraintName("FK__bookings__custom__04E4BC85");
