@@ -59,6 +59,7 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<Users> Users { get; set; }
 
     public DbSet<MediaFiles> MediaFiles { get; set; }
+    
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

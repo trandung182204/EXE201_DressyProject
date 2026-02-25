@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace BE.Controllers;
 
@@ -15,7 +16,6 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _auth;
     private readonly ApplicationDbContext _db;
-
     public AuthController(IAuthService auth, ApplicationDbContext db)
     {
         _auth = auth;
@@ -120,5 +120,7 @@ public class AuthController : ControllerBase
             return BadRequest(new { success = false, message = ex.Message });
         }
     }
+
+    // forgot-password and reset-password endpoints removed
 }
 

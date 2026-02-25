@@ -5,6 +5,9 @@ using BE.Data;
 using BE.DTOs;
 using BE.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -293,5 +296,6 @@ public class AuthService : IAuthService
 
         await _db.SaveChangesAsync();
     }
+    // password-reset methods removed
 
 }

@@ -109,7 +109,12 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = redirectUrl;
       } catch (err) {
         console.error("Login error:", err);
-        setMsg("loginMsg", err?.message || "Đăng nhập thất bại");
+        const text = err?.message || "Đăng nhập thất bại";
+        if (window && typeof window.showToast === 'function') {
+          window.showToast(text, 'error');
+        } else {
+          setMsg("loginMsg", text);
+        }
       }
     });
   }
@@ -146,8 +151,13 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Redirecting to:", redirectUrl);
         window.location.href = redirectUrl;
       } catch (err) {
-        console.error("Register error:", err);
-        setMsg("registerMsg", err?.message || "Đăng ký thất bại");
+          console.error("Register error:", err);
+          const text = err?.message || "Đăng ký thất bại";
+          if (window && typeof window.showToast === 'function') {
+            window.showToast(text, 'error');
+          } else {
+            setMsg("registerMsg", text);
+          }
       }
     });
   }
