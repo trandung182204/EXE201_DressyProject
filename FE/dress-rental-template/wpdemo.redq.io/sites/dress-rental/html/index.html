@@ -20,6 +20,187 @@
 	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
 	<link rel="stylesheet" href="../assets/dist/style/responsive.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+	<style>
+		/* ===============================
+   BANNER
+================================ */
+		.banner .item img {
+			height: 500px;
+			object-fit: cover;
+		}
+
+		.banner {
+			height: 500px;
+			overflow: hidden;
+		}
+
+		.banner .owl-carousel,
+		.banner .owl-stage-outer,
+		.banner .owl-stage,
+		.banner .item {
+			height: 500px !important;
+		}
+
+		/* ===============================
+   CONTENT: FULL WIDTH + GRID
+================================ */
+		.content.base-padd,
+		.content .container-fulid {
+			width: 100% !important;
+			max-width: 100% !important;
+			margin: 0 !important;
+			padding-left: 40px;
+			padding-right: 40px;
+		}
+
+		.content .content-wrapper {
+			width: 100% !important;
+			max-width: 100% !important;
+			margin: 0 !important;
+
+			display: grid !important;
+			grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+			gap: 25px;
+			align-items: stretch;
+		}
+
+		.content .rq-rental-item-column {
+			display: grid !important;
+			gap: 25px;
+			min-height: 850px;
+		}
+
+		/* cột 1: 7/3, cột 2: 4/2/4, cột 3: 4/6 */
+		.content .content-wrapper>.rq-rental-item-column:nth-child(1) {
+			grid-template-rows: 7fr 3fr;
+		}
+
+		.content .content-wrapper>.rq-rental-item-column:nth-child(2) {
+			grid-template-rows: 4fr 2fr 4fr;
+		}
+
+		.content .content-wrapper>.rq-rental-item-column:nth-child(3) {
+			grid-template-rows: 4fr 6fr;
+		}
+
+		/* gỡ mọi giới hạn width/max-width của theme */
+		.content .rq-rental-item-column,
+		.content .rq-rental-item-column .rq-rental-item,
+		.content .rq-rental-item-column .img-wrapper {
+			width: 100% !important;
+			max-width: none !important;
+			min-width: 0 !important;
+		}
+
+		.content .rq-rental-item-column .rq-rental-item {
+			height: 100% !important;
+		}
+
+		.content .rq-rental-item-column .img-wrapper {
+			height: 100% !important;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.content .rq-rental-item-column .img-wrapper img {
+			width: 100% !important;
+			max-width: none !important;
+			height: 100% !important;
+			display: block !important;
+			object-fit: cover !important;
+			object-position: center !important;
+		}
+
+		/* ===============================
+   HOVER: 1 HÌNH CHỮ NHẬT Ở GIỮA ẢNH
+================================ */
+		.content .img-wrapper .hover {
+			position: absolute !important;
+			left: 50% !important;
+			top: 50% !important;
+			transform: translate(-50%, -50%) !important;
+
+			width: min(78%, 420px) !important;
+			/* chiều ngang khung chữ */
+			height: auto !important;
+			/* tự co theo nội dung */
+			padding: 18px 16px !important;
+			box-sizing: border-box;
+
+			background: rgba(255, 255, 255, 0.78) !important;
+			border: 2px solid rgba(50, 40, 10, 0.8) !important;
+			/* viền giống mẫu */
+			border-radius: 0 !important;
+			/* hình chữ nhật */
+			text-align: center;
+
+			display: flex !important;
+			flex-direction: column !important;
+			align-items: center !important;
+			justify-content: center !important;
+			gap: 8px !important;
+
+			z-index: 2 !important;
+		}
+
+		/* bỏ margin mặc định để khung không bị cao */
+		.content .img-wrapper .hover h3,
+		.content .img-wrapper .hover p {
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+
+		/* chữ gọn lại */
+		.content .img-wrapper .hover h3 {
+			line-height: 1.15 !important;
+		}
+
+		/* nút "Xem ngay" gọn */
+		.content .img-wrapper .hover a.font-22-for-reg-2 {
+			margin-top: 6px !important;
+			padding: 6px 12px !important;
+			display: inline-block !important;
+		}
+
+		/* ===============================
+   RESPONSIVE
+================================ */
+		@media (max-width: 991px) {
+			.content .content-wrapper {
+				grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+			}
+		}
+
+		@media (max-width: 575px) {
+			.content .content-wrapper {
+				grid-template-columns: 1fr !important;
+			}
+
+			.content .img-wrapper .hover {
+				width: min(90%, 360px) !important;
+				padding: 14px 12px !important;
+			}
+		}
+
+		/* 1) Mặc định ẨN khung chữ */
+		.content .img-wrapper .hover {
+			opacity: 0 !important;
+			visibility: hidden !important;
+			pointer-events: none !important;
+			transition: opacity .25s ease, transform .25s ease !important;
+
+			/* giữ nguyên vị trí giữa ảnh */
+			transform: translate(-50%, -50%) scale(0.98) !important;
+		}
+
+		/* 2) Khi đưa chuột vào ảnh -> HIỆN */
+		.content .img-wrapper:hover .hover {
+			opacity: 1 !important;
+			visibility: visible !important;
+			pointer-events: auto !important;
+			transform: translate(-50%, -50%) scale(1) !important;
+		}
+	</style>
 </head>
 
 <body>
@@ -61,18 +242,18 @@
 	<div class="banner">
 		<div class="owl-carousel owl-theme dr-main-slider">
 			<div class="item">
-				<img src="../assets/dist/img/banner/2.jpg" alt="" class="img-responsive">
+				<img src="../assets/dist/img/banner/slider_1.jpg" alt="" class="img-responsive">
 				<div class="text">
-					<h4>MỚI <span>50%<br /> <small>GIẢM GIÁ</small></span></h4>
-					<h2>Mùa Xuân</h2>
-					<h3>~ BIẾN TỦ ĐỒ CỦA BẠN TRỞ NÊN ĐỘC NHẤT ~</h3>
+
 					<a href="listing-page.html">KHÁM PHÁ NGAY</a>
+					<h4>MẪU </h4>
+					<h2>Mới</h2>
 				</div>
 			</div>
 			<div class="item">
 				<img src="../assets/dist/img/banner/3.jpg" alt="" class="img-responsive">
 				<div class="text2">
-					<h2>Siêu Giảm Giá!</h2>
+					<h2>Giá siêu hời!</h2>
 					<p>Bộ sưu tập Xuân & Đông</p>
 					<a href="listing-page.html">KHÁM PHÁ NGAY</a>
 				</div>
@@ -105,7 +286,7 @@
 			</form>
 		</div>
 	</div> -->
-	<div class="work-procedure base-padd">
+	<!-- <div class="work-procedure base-padd">
 		<div class="container">
 			<h2>Cách thức hoạt động</h2>
 			<div class="row">
@@ -138,7 +319,22 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
+
+	<div class="favorites base-padd">
+		<h2>SẢN PHẨM ĐƯỢC YÊU THÍCH</h2>
+		<div class="container">
+			<div class="owl-favorites owl-carousel owl-theme"></div>
+		</div>
+	</div>``
+
+
+
+
+
+
+
+
 	<div class="content base-padd">
 		<div class="container-fulid">
 			<div class="content-wrapper">
@@ -146,7 +342,7 @@
 				<div class="rq-rental-item-column width-32per">
 					<div class="rq-rental-item width-32per">
 						<div class="img-wrapper">
-							<img src="../assets/dist/img/content/1.jpg" alt="" />
+							<img src="../assets/dist/img/content/anh1.jpg" alt="" />
 							<div class="hover">
 								<h3 class="font-40-pla-reg-2"><a href="#">Phong cách cổ điển</a></h3>
 								<p class="font-14-for-reg-2">Màu đen là xu hướng mới</p>
@@ -223,12 +419,7 @@
 	</div>```
 
 
-	<div class="favorites base-padd">
-		<h2>SẢN PHẨM ĐƯỢC YÊU THÍCH</h2>
-		<div class="container">
-			<div class="owl-favorites owl-carousel owl-theme"></div>
-		</div>
-	</div>```
+	`
 
 
 
@@ -293,7 +484,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="sponsors base-padd">
+	<!-- <div class="sponsors base-padd">
 		<div class="container-fluid wrapper">
 			<div class="sponsors-carousel owl-theme owl-carousel">
 				<div class="item"><a href="#"><img src="../assets/dist/img/sponsors/1.png" alt=""></a></div>
@@ -311,7 +502,7 @@
 				<div class="item"><a href="#"><img src="../assets/dist/img/sponsors/1.png" alt=""></a></div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<div class="community base-padd">
 		<h2>Cộng Đồng Của Chúng Tôi</h2>
 		<div class="container-fluid wrapper">
@@ -545,13 +736,6 @@
                 <span class="tooltiptext">THÊM VÀO GIỎ HÀNG</span>
                 <a href="#" onclick="event.preventDefault();">
                   <img src="../assets/dist/img/favorites/wish.png" alt="">
-                </a>
-              </div>
-
-              <div class="tool-tip">
-                <span class="tooltiptext">YÊU THÍCH</span>
-                <a href="#" onclick="event.preventDefault();">
-                  <i class="fa fa-heart-o" aria-hidden="true"></i>
                 </a>
               </div>
             </div>
