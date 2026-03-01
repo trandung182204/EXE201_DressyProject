@@ -67,7 +67,7 @@
 		.content .rq-rental-item-column {
 			display: grid !important;
 			gap: 25px;
-			min-height: 850px;
+			min-height: 850px; /* chiều cao cố định cho cột, để hover hình chữ nhật ở giữa đẹp hơn */
 		}
 
 		/* cột 1: 7/3, cột 2: 4/2/4, cột 3: 4/6 */
@@ -110,6 +110,7 @@
 			object-fit: cover !important;
 			object-position: center !important;
 		}
+		
 
 		/* ===============================
    HOVER: 1 HÌNH CHỮ NHẬT Ở GIỮA ẢNH
@@ -336,13 +337,13 @@
 
 
 	<div class="content base-padd">
-		<div class="container-fulid">
+		<div class="container">
 			<div class="content-wrapper">
 
-				<div class="rq-rental-item-column width-32per">
-					<div class="rq-rental-item width-32per">
+				<div class="rq-rental-item-column ">
+					<div class="rq-rental-item ">
 						<div class="img-wrapper">
-							<img src="../assets/dist/img/content/anh1.jpg" alt="" />
+							<img src="../assets/dist/img/content/anh12.jpg" alt="" />
 							<div class="hover">
 								<h3 class="font-40-pla-reg-2"><a href="#">Phong cách cổ điển</a></h3>
 								<p class="font-14-for-reg-2">Màu đen là xu hướng mới</p>
@@ -350,9 +351,9 @@
 							</div>
 						</div>
 					</div>
-					<div class="rq-rental-item width-32per">
+					<div class="rq-rental-item ">
 						<div class="img-wrapper">
-							<img src="../assets/dist/img/content/2.jpg" alt="" />
+							<img src="../assets/dist/img/content/viet-phuc-6130178_1280.jpg" alt="" />
 							<div class="hover">
 								<h3 class="font-40-pla-reg-2"><a href="#">Phong cách hiện đại</a></h3>
 								<p class="font-14-for-reg-2">Màu đen là xu hướng mới</p>
@@ -362,10 +363,10 @@
 					</div>
 				</div>
 
-				<div class="rq-rental-item-column width-36per">
-					<div class="rq-rental-item width-36per">
+				<div class="rq-rental-item-column ">
+					<div class="rq-rental-item ">
 						<div class="img-wrapper">
-							<img src="../assets/dist/img/content/3.jpg" alt="" />
+							<img src="../assets/dist/img/content/20240927_gD4pf3oTNIi.jpeg" alt="" />
 							<div class="hover">
 								<h3 class="font-40-pla-reg-2"><a href="#">Phong cách quý cô</a></h3>
 								<p class="font-14-for-reg-2">Màu đen là xu hướng mới</p>
@@ -373,14 +374,14 @@
 							</div>
 						</div>
 					</div>
-					<div class="rq-rental-item width-36per">
+					<div class="rq-rental-item ">
 						<div class="img-wrapper">
 							<img src="../assets/dist/img/content/4s.jpg" alt="" />
 						</div>
 					</div>
-					<div class="rq-rental-item width-36per">
+					<div class="rq-rental-item ">
 						<div class="img-wrapper fix-height">
-							<img src="../assets/dist/img/content/5.jpg" alt="" />
+							<img src="../assets/dist/img/content/chân-váy-ren-cùng-áo-vest-sang-trọng-_-cleanipedia.jpg" alt="" />
 							<div class="hover">
 								<h3 class="font-40-pla-reg-2"><a href="#">Phong cách điệu đà</a></h3>
 								<p class="font-14-for-reg-2">Màu đen là xu hướng mới</p>
@@ -390,11 +391,11 @@
 					</div>
 				</div>
 
-				<div class="rq-rental-item-column width-32per">
-					<div class="rq-rental-item width-32per">
+				<div class="rq-rental-item-column ">
+					<div class="rq-rental-item ">
 						<div class="img-wrapper">
 
-							<img src="../assets/dist/img/content/6.jpg" alt="" />
+							<img src="../assets/dist/img/content/dam-lua-do-du-tiec-vat-dap-cheo-kk165-20.jpg" alt="" />
 							<div class="hover">
 								<h3 class="font-40-pla-reg-2"><a href="#">Phong cách trẻ trung</a></h3>
 								<p class="font-14-for-reg-2">Màu đen là xu hướng mới</p>
@@ -402,9 +403,9 @@
 							</div>
 						</div>
 					</div>
-					<div class="rq-rental-item width-32per">
+					<div class="rq-rental-item ">
 						<div class="img-wrapper">
-							<img src="../assets/dist/img/content/7.jpg" alt="" />
+							<img src="../assets/dist/img/content/94d371481e954d8baf4fe93bbdb91217.jpg" alt="" />
 							<div class="hover">
 								<h3 class="font-40-pla-reg-2"><a href="#">Phong cách dễ thương</a></h3>
 								<p class="font-14-for-reg-2">Màu đen là xu hướng mới</p>
@@ -720,9 +721,10 @@
           <figure>
             <img src="${img}" alt="${name}">
             <a href="${detailUrl}">Xem ngay</a>
+			
           </figure>
 
-          <h3 class="font-20-for-reg-0">${nameText}</h3>
+          <h3 class="font-20-for-reg-0"><a href="${detailUrl}">${nameText}</a></h3>
           <div class="elements" style="display:block;">
             <!-- Dòng giá -->
             <div style="display:flex; flex-direction:column; gap:6px;">
@@ -755,7 +757,7 @@
 					responsive: {
 						0: { items: 1 },
 						768: { items: 2 },
-						992: { items: 4 }
+						992: { items: 5 }
 					}
 				});
 			}
