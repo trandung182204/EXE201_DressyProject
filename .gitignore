@@ -22,7 +22,6 @@ uploads/
 wwwroot/uploads/
 
 # Optional: ignore all uploaded images
-*.jpg
 *.jpeg
 *.png
 *.webp
