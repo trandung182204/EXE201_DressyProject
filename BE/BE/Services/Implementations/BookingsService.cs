@@ -179,21 +179,58 @@ namespace BE.Services.Implementations
             await conn.OpenAsync();
 
             // 1. Lấy thông tin Header (Booking Info)
-            // Chỉ lấy các trường có trong BookingDetailDto của bạn
-            await using (var cmd = new NpgsqlCommand(@"
-                SELECT 
-                    b.id, 
-                    u.full_name, 
-                    b.created_at, 
-                    b.status, 
+            // Detect actual column names for recipient fields to avoid referencing non-existing columns
+            string phoneColExpr = "''";
+            string addrColExpr = "''";
+            string nameColExpr = "''";
+
+            await using (var colCmd = new NpgsqlCommand(@"
+                SELECT column_name FROM information_schema.columns
+                WHERE table_name = 'bookings'
+                AND column_name IN ('recipient_phone','RecipientPhone','recipient_address','RecipientAddress')
+            ", conn))
+            {
+                await using var rdCols = await colCmd.ExecuteReaderAsync();
+                var found = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
+                while (await rdCols.ReadAsync())
+                {
+                    found.Add(rdCols.GetString(0));
+                }
+
+                if (found.Contains("recipient_phone")) phoneColExpr = "b.recipient_phone";
+                else if (found.Contains("RecipientPhone")) phoneColExpr = "b.\"RecipientPhone\"";
+
+                if (found.Contains("recipient_address")) addrColExpr = "b.recipient_address";
+                else if (found.Contains("RecipientAddress")) addrColExpr = "b.\"RecipientAddress\"";
+
+                if (found.Contains("recipientname")) nameColExpr = "b.recipientname";
+                else if (found.Contains("RecipientName")) nameColExpr = "b.\"RecipientName\"";
+            }
+
+            var sql = $@"
+                SELECT
+                    b.id,
+                    u.full_name,
+                    b.created_at,
+                    b.status,
                     COALESCE(p.status, 'UNPAID') as payment_status,
-                    b.total_price
+                    b.total_price,
+                    COALESCE({phoneColExpr}, '') as recipient_phone,
+                    COALESCE({addrColExpr}, '') as recipient_address,
+                    COALESCE({nameColExpr}, '') as recipient_name,
+                    p.id as payment_id
                 FROM bookings b
                 LEFT JOIN users u ON b.customer_id = u.id
-                LEFT JOIN payments p ON p.booking_id = b.id
+                LEFT JOIN (
+                    SELECT DISTINCT ON (booking_id) *
+                    FROM payments
+                    ORDER BY booking_id, paid_at DESC NULLS LAST, id DESC
+                ) p ON p.booking_id = b.id
                 WHERE b.id = @id
                 LIMIT 1
-            ", conn))
+            ";
+
+            await using (var cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@id", id);
                 await using var rd = await cmd.ExecuteReaderAsync();
@@ -207,7 +244,11 @@ namespace BE.Services.Implementations
                         BookingStatus = rd.GetString(3),
                         PaymentStatus = rd.GetString(4),
                         TotalPrice = rd.GetDecimal(5),
-                        Items = new List<BookingItemDto>() // Khởi tạo list rỗng
+                        RecipientPhone = rd.IsDBNull(6) ? null : rd.GetString(6),
+                        RecipientAddress = rd.IsDBNull(7) ? null : rd.GetString(7),
+                        RecipientName = rd.IsDBNull(8) ? null : rd.GetString(8),
+                        PaymentId = rd.IsDBNull(9) ? (long?)null : rd.GetInt64(9),
+                        Items = new List<BookingItemDto>()
                     };
                 }
             }
@@ -280,6 +321,32 @@ namespace BE.Services.Implementations
             }
 
             return detail;
+        }
+
+        public async Task<bool> UpdatePaymentStatusAsync(long bookingId, string status)
+        {
+            if (string.IsNullOrWhiteSpace(status)) return false;
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            // Tìm payment mới nhất cho booking (theo paid_at DESC, id DESC)
+            await using var cmdFind = new NpgsqlCommand(@"
+                SELECT id FROM payments WHERE booking_id = @bookingId
+                ORDER BY paid_at DESC NULLS LAST, id DESC LIMIT 1
+            ", conn);
+            cmdFind.Parameters.AddWithValue("@bookingId", bookingId);
+            var obj = await cmdFind.ExecuteScalarAsync();
+            if (obj == null) return false;
+
+            long pid;
+            try { pid = Convert.ToInt64(obj); } catch { return false; }
+
+            await using var cmd = new NpgsqlCommand("UPDATE payments SET status = @status WHERE id = @id", conn);
+            cmd.Parameters.Add("@status", NpgsqlTypes.NpgsqlDbType.Varchar).Value = status;
+            cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Bigint).Value = pid;
+            var affected = await cmd.ExecuteNonQueryAsync();
+            return affected > 0;
         }
         public async Task<BookingDetailDto?> GetBookingDetailForProviderAsync(long bookingId, long providerId)
         {

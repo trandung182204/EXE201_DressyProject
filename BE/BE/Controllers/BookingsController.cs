@@ -106,6 +106,19 @@ namespace BE.Controllers
 
             return Ok(new { success = true, message = "Status updated successfully" });
         }
+
+        [HttpPut("{id}/payment-status")]
+        public async Task<IActionResult> UpdatePaymentStatus(long id, [FromBody] UpdateBookingStatusDto dto)
+        {
+            if (dto == null || string.IsNullOrWhiteSpace(dto.Status))
+                return BadRequest(new { success = false, message = "Status is required" });
+
+            var ok = await _service.UpdatePaymentStatusAsync(id, dto.Status);
+            if (!ok)
+                return NotFound(new { success = false, message = "Payment or booking not found" });
+
+            return Ok(new { success = true, message = "Payment status updated successfully" });
+        }
         [Authorize(Roles = "provider")]
         [HttpGet("provider/{id}/detail")]
         public async Task<IActionResult> GetDetailForProvider(long id)

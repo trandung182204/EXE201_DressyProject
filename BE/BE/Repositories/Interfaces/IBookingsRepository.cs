@@ -10,6 +10,6 @@ namespace BE.Repositories.Interfaces
         Task<Bookings?> GetByIdAsync(int id);
         Task<Bookings> AddAsync(Bookings model);
         Task<Bookings?> UpdateAsync(int id, Bookings model);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(long id);
     }
 }
