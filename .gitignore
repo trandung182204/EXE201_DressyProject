@@ -21,7 +21,3 @@ Thumbs.db
 uploads/
 wwwroot/uploads/
 
-# Optional: ignore all uploaded images
-*.jpeg
-*.png
-*.webp

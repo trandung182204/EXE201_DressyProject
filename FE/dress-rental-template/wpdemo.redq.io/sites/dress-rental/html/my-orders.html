@@ -442,7 +442,7 @@
 
       if (!res.ok) {
         const text = await res.text();
-        wrap.innerHTML = `<div class="empty-box">Không tải được đơn hàng (HTTP ${res.status}).<br>${text}</div>`;
+        wrap.innerHTML = `<div class="empty-box">Không tải được đơn hàng. <br>${text}</div>`;
         countChip.style.display = "none";
         return;
       }
