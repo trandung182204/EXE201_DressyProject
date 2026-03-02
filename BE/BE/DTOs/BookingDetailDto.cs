@@ -12,6 +12,15 @@ namespace BE.DTOs
         public string PaymentStatus { get; set; } = "";
         public decimal TotalPrice { get; set; }
 
+        // Recipient / delivery info
+        public string? RecipientPhone { get; set; }
+        public string? RecipientAddress { get; set; }
+
+        public string? RecipientName { get; set; }
+
+        // Latest payment record id for updating payment status from UI (nullable)
+        public long? PaymentId { get; set; }
+
         public List<BookingItemDto> Items { get; set; } = new();
     }
 

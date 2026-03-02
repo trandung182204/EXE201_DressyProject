@@ -164,6 +164,20 @@
             border: 1px solid #bfdbfe !important;
         }
 
+        /* Màu riêng cho trạng thái đang giao (shipped) */
+        .badge-shipped {
+            background: #eef2ff !important;
+            color: #1e40af !important;
+            border: 1px solid #c7d2fe !important;
+        }
+
+        /* Màu riêng cho trạng thái đã giao (delivered) */
+        .badge-delivered {
+            background: #f5f3ff !important;
+            color: #6b21a8 !important;
+            border: 1px solid #ddd6fe !important;
+        }
+
         .pagination-btn {
             border: 1px solid #e5e7eb;
             background: #ffffff;
@@ -264,9 +278,11 @@
                                                 <label class="filter-label">Trạng thái đơn</label>
                                                 <select id="status-filter" class="filter-input">
                                                     <option value="">Tất cả</option>
-                                                    <option value="pending">Chờ xử lý</option>
-                                                    <option value="completed">Hoàn thành</option>
+                                                    <option value="pending">Chờ xử lý </option>
+                                                    <option value="completed">Hoàn thành </option>
                                                     <option value="cancelled">Đã hủy</option>
+                                                    <option value="delivered">Đã giao hàng</option>
+                                                    <option value="shipped">Đang giao hàng</option>
                                                 </select>
                                             </div>
 
@@ -275,7 +291,7 @@
                                                 <select id="payment-filter" class="filter-input">
                                                     <option value="">Tất cả</option>
                                                     <option value="success">Đã thanh toán</option>
-                                                    <option value="pending">Chưa thanh toán</option>
+                                                    <option value="pending">Chờ thanh toán</option>
                                                     <option value="failed">Thanh toán thất bại</option>
                                                 </select>
                                             </div>
@@ -357,6 +373,8 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <p><strong>Khách hàng:</strong> <span id="modal-customer"></span></p>
+                            <p><strong>SDT:</strong> <span id="modal-phone"></span></p>
+                            <p><strong>Địa chỉ:</strong> <span id="modal-address"></span></p>
                             <p><strong>Ngày đặt:</strong> <span id="modal-date"></span></p>
                         </div>
                         <div class="col-md-6">
@@ -375,9 +393,19 @@
                                 <option value="pending">Chờ xử lý </option>
                                 <option value="completed">Hoàn thành </option>
                                 <option value="cancelled">Đã hủy</option>
+                                <option value="delivered">Đã giao hàng</option>
+                                <option value="shipping">Đang giao hàng</option>
                             </select>
                             <button id="btn-save-status" class="btn btn-primary text-nowrap">
                                 <i class="fa fa-save"></i> Lưu
+                            </button>
+                            <select id="modal-payment-select" class="form-select" style="max-width:200px;">
+                                <option value="success">Thanh toán thành công</option>
+                                <option value="failed">Thanh toán thất bại</option>
+                                <option value="pending">Chờ thanh toán</option>
+                            </select>
+                            <button id="btn-save-payment" class="btn btn-outline-primary text-nowrap">
+                                <i class="fa fa-save"></i> Lưu thanh toán
                             </button>
                         </div>
                     </div>
@@ -419,6 +447,7 @@
             bookings: `${API_BASE}/bookings/list`,
             detail: (id) => `${API_BASE}/bookings/${id}/detail`,
             updateStatus: (id) => `${API_BASE}/bookings/${id}/status`,
+            updatePayment: (id) => `${API_BASE}/bookings/${id}/payment-status`,
             delete: (id) => `${API_BASE}/bookings/${id}`
         };
 
@@ -435,11 +464,11 @@
             return API_HOST + '/' + url;
         }
 
-                // Build media URL from a file id (like manager page does)
-                function buildMediaUrl(fileId) {
-                    if (!fileId) return null;
-                    return API_HOST.replace(/\/$/, '') + '/api/media-files/' + String(fileId);
-                }
+        // Build media URL from a file id (like manager page does)
+        function buildMediaUrl(fileId) {
+            if (!fileId) return null;
+            return API_HOST.replace(/\/$/, '') + '/api/media-files/' + String(fileId);
+        }
 
         let state = {
             data: [],
@@ -569,7 +598,10 @@
 
             pageData.forEach(item => {
                 let statusClass = 'badge-warning';
-                if (['completed', 'shipped', 'success'].includes(item.statusRaw)) statusClass = 'badge-success';
+                // Custom color for shipped vs delivered
+                if (item.statusRaw === 'delivered') statusClass = 'badge-delivered';
+                else if (item.statusRaw === 'shipping') statusClass = 'badge-shipped';
+                else if (['completed', 'success'].includes(item.statusRaw)) statusClass = 'badge-success';
                 else if (['cancelled', 'failed'].includes(item.statusRaw)) statusClass = 'badge-danger';
                 else if (['processing', 'confirmed'].includes(item.statusRaw)) statusClass = 'badge-info';
 
@@ -587,7 +619,8 @@
                 <td class="text-end fw-bold">${formatMoney(item.totalPrice)}</td>
                 <td class="text-center"><span class="badge ${statusClass}">${item.bookingStatus}</span></td>
                 <td class="text-end">
-                    <button class="btn btn-sm btn-light border" onclick="openDetailModal(${item.bookingId})"><i class="fa fa-eye text-primary"></i></button>
+                    <button class="btn btn-sm btn-light border me-2" onclick="openDetailModal(${item.bookingId})"><i class="fa fa-eye text-primary"></i></button>
+                    <button class="btn btn-sm btn-light border text-danger" onclick="deleteBooking(${item.bookingId})" title="Xóa đơn"><i class="fa fa-trash"></i></button>
                 </td>
             `;
                 els.tableBody.appendChild(tr);
@@ -633,12 +666,16 @@
                     if (res.success && res.data) {
                         const d = res.data;
                         document.getElementById('modal-customer').innerText = d.customerName || 'N/A';
+                        document.getElementById('modal-phone').innerText = d.recipientPhone || 'N/A';
+                        document.getElementById('modal-address').innerText = d.recipientAddress || 'N/A';
                         document.getElementById('modal-date').innerText = new Date(d.createdAt).toLocaleString('vi-VN');
                         document.getElementById('modal-price').innerText = d.totalPrice.toLocaleString('vi-VN') + ' đ';
                         document.getElementById('modal-payment-status').innerText = d.paymentStatus || 'Unknown';
 
                         const statusSelect = document.getElementById('modal-status-select');
                         if (statusSelect) statusSelect.value = (d.bookingStatus || 'pending').toLowerCase();
+                        const paySelect = document.getElementById('modal-payment-select');
+                        if (paySelect) paySelect.value = (d.paymentStatus || 'unpaid').toLowerCase();
 
                         // Render Items
                         let htmlItems = '<div class="d-flex flex-column gap-3">';
@@ -728,6 +765,44 @@
                     .finally(() => {
                         btnSave.disabled = false;
                         btnSave.innerHTML = 'Lưu thay đổi';
+                    });
+            });
+        }
+
+        // Nút Lưu trạng thái thanh toán
+        const btnSavePayment = document.getElementById('btn-save-payment');
+        if (btnSavePayment) {
+            btnSavePayment.addEventListener('click', () => {
+                if (!currentBookingId) return;
+                const newStatus = document.getElementById('modal-payment-select').value.toUpperCase();
+
+                btnSavePayment.disabled = true;
+                btnSavePayment.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+
+                fetch(endpoints.updatePayment(currentBookingId), {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            alert('Cập nhật trạng thái thanh toán thành công!');
+                            const itemIndex = state.data.findIndex(x => x.bookingId == currentBookingId);
+                            if (itemIndex > -1) {
+                                state.data[itemIndex].paymentStatus = newStatus;
+                                state.data[itemIndex].paymentRaw = newStatus.toLowerCase();
+                                applyFilters();
+                            }
+                            bootstrap.Modal.getInstance(document.getElementById('orderDetailModal')).hide();
+                        } else {
+                            alert('Lỗi: ' + res.message);
+                        }
+                    })
+                    .catch(err => alert('Lỗi kết nối!'))
+                    .finally(() => {
+                        btnSavePayment.disabled = false;
+                        btnSavePayment.innerHTML = 'Lưu thanh toán';
                     });
             });
         }

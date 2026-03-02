@@ -30,7 +30,7 @@ namespace BE.Repositories.Implementations
             await _context.SaveChangesAsync();
             return item;
         }
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(long id)
         {
             var item = await _context.Bookings.FindAsync(id);
             if (item == null) return false;

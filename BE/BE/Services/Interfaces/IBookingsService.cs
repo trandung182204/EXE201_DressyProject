@@ -20,6 +20,7 @@ namespace BE.Services.Interfaces
         // --- CÁC HÀM CẦN THÊM MỚI ---
         Task<BookingDetailDto?> GetBookingDetailAsync(long id);
         Task<bool> UpdateStatusAsync(long id, string status);
+        Task<bool> UpdatePaymentStatusAsync(long bookingId, string status);
         Task<BookingDetailDto?> GetBookingDetailForProviderAsync(long bookingId, long providerId);
         Task<List<ProviderBookingListDto>> GetBookingListByProviderAsync(
     long providerId,
