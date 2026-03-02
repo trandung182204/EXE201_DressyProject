@@ -24,5 +24,9 @@ namespace BE.DTOs
         public DateOnly? StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
         public string ImageUrl { get; set; } = "";
+
+        public string? SizeLabel { get; set; }
+        public string? ColorName { get; set; }
+        public decimal DepositAmount { get; set; }
     }
 }

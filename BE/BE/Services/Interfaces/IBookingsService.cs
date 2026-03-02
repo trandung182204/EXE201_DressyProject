@@ -27,5 +27,8 @@ namespace BE.Services.Interfaces
     DateOnly? to,
     string? status
 );
+
+Task<List<CustomerBookingListDto>> GetMyBookingsAsync(long customerId, string? status);
+Task<BookingDetailDto?> GetMyBookingDetailAsync(long bookingId, long customerId);
     }
 }
