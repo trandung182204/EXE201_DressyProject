@@ -801,6 +801,16 @@ function setupAddToCartButton() {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
 
+        // CHECK LOGIN FIRST
+        const token = localStorage.getItem("token");
+        if (!token) {
+            showBookingToast("Vui lòng đăng nhập hoặc đăng ký để thêm sản phẩm vào giỏ hàng.", "error", 3000);
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+            return;
+        }
+
         const isValid = validateAllFieldsOnSubmit();
         if (!isValid) return;
 
@@ -864,6 +874,30 @@ function setupAddToCartButton() {
         localStorage.setItem("cartItems", JSON.stringify(existingCart));
 
         showBookingToast(`✓ Đã thêm "${currentProduct.name}" vào giỏ hàng!`, 'success', 3000);
+
+        // Sync to server if logged in
+        if (token && bookingInfo.variantId) {
+            var startDateOnly = bookingInfo.startDate ? bookingInfo.startDate.split('T')[0] : null;
+            var endDateOnly = bookingInfo.endDate ? bookingInfo.endDate.split('T')[0] : null;
+            fetch(API_BASE + '/api/Carts/me/items', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
+                    productVariantId: bookingInfo.variantId,
+                    quantity: quantity,
+                    startDate: startDateOnly,
+                    endDate: endDateOnly
+                })
+            }).then(function (res) {
+                if (res.ok) console.log('[CART] Synced to server');
+                else console.warn('[CART] Server sync failed:', res.status);
+            }).catch(function (err) {
+                console.warn('[CART] Server sync error:', err);
+            });
+        }
 
         // Refresh header cart dropdown in real-time
         if (typeof window.renderHeaderCart === 'function') {

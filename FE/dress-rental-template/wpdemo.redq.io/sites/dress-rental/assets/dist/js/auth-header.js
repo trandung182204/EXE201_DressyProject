@@ -42,6 +42,8 @@ function renderAuthHeader() {
     localStorage.removeItem("fullName");
     localStorage.removeItem("userId");
     localStorage.removeItem("providerId");
+    localStorage.removeItem("cartItems"); // Clear cart on logout
+    localStorage.removeItem("currentBooking"); // Clear cart on logout
     window.location.href = getLogoutRedirect();
   });
 

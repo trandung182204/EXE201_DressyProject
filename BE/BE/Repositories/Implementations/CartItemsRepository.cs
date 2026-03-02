@@ -38,5 +38,18 @@ namespace BE.Repositories.Implementations
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<List<CartItems>> GetByCartIdAsync(long cartId)
+        {
+            return await _context.CartItems
+                .Include(ci => ci.ProductVariant)
+                .Where(ci => ci.CartId == cartId)
+                .ToListAsync();
+        }
+        public async Task DeleteByCartIdAsync(long cartId)
+        {
+            var items = await _context.CartItems.Where(ci => ci.CartId == cartId).ToListAsync();
+            _context.CartItems.RemoveRange(items);
+            await _context.SaveChangesAsync();
+        }
     }
 }
