@@ -474,7 +474,7 @@
 
       if (!res.ok) {
         root.className = "card";
-        root.innerHTML = `Không tải được chi tiết (HTTP ${res.status})<br>${await res.text()}`;
+        root.innerHTML = `Không tải được chi tiết <br>${await res.text()}`;
         return;
       }
 

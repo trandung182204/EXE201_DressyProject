@@ -528,10 +528,17 @@ function toInputDate(dateStr) {
 }
 
 function saveCartToStorage() {
+    const uid = localStorage.getItem('userId');
     if (cartState.items.length > 0) {
-        localStorage.setItem("cartItems", JSON.stringify(cartState.items));
+        const key = uid ? `cartItems:user:${uid}` : 'cartItems:anon';
+        localStorage.setItem(key, JSON.stringify(cartState.items));
+        // keep legacy generic key for backward compat only if anon
+        if (!uid) localStorage.setItem('cartItems', JSON.stringify(cartState.items));
     } else {
-        localStorage.removeItem("cartItems");
-        localStorage.removeItem("currentBooking");
+        // remove all known cart keys
+        localStorage.removeItem('cartItems');
+        localStorage.removeItem('cartItems:anon');
+        if (uid) localStorage.removeItem(`cartItems:user:${uid}`);
+        localStorage.removeItem('currentBooking');
     }
 }
