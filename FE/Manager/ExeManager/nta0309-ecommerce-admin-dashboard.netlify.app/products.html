@@ -75,7 +75,8 @@
                                     <!-- LEFT SIDEBAR (giữ nguyên template) -->
                                     <div class="col-xxl-3 col-lg-4 col-12">
                                         <div class="sherah-product-sidebar sherah-default-bg mg-top-30">
-                                            <h4 class="sherah-product-sidebar__title sherah-border-btm">Danh mục sản phẩm</h4>
+                                            <h4 class="sherah-product-sidebar__title sherah-border-btm">Danh mục sản
+                                                phẩm</h4>
                                             <ul class="sherah-product-sidebar__list" id="categoryList">
                                                 <!-- JS sẽ render -->
                                             </ul>
@@ -285,7 +286,7 @@
 
         let filters = {
             q: "",
-            categoryId: null,
+            categoryIds: null,
             minPrice: 0,
             maxPrice: Number.MAX_SAFE_INTEGER
         };
@@ -613,36 +614,50 @@
             const ul = document.getElementById("categoryList");
             if (!ul) return;
 
-            const cats = (categories || [])
-                .filter(c => c && c.id != null)
-                .map(c => ({ id: Number(c.id), name: c.name || "Unknown" }))
-                .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+            // Group categories by name
+            const nameMap = new Map();
+            (categories || []).forEach(c => {
+                if (!c || c.id == null) return;
+                const name = (c.name || "Unknown").trim();
+                if (!nameMap.has(name)) {
+                    nameMap.set(name, []);
+                }
+                nameMap.get(name).push(Number(c.id));
+            });
+
+            // Get sorted unique names
+            const sortedNames = Array.from(nameMap.keys()).sort((a, b) => a.localeCompare(b));
 
             let html = `
-            <li>
-                <a href="#" data-cid="">
-                    <span><i class="fa-solid fa-chevron-right"></i>All</span>
-                </a>
-            </li>
-        `;
-
-            cats.forEach(c => {
-                html += `
                 <li>
-                    <a href="#" data-cid="${c.id}">
-                        <span><i class="fa-solid fa-chevron-right"></i>${c.name}</span>
+                    <a href="#" class="filter-link" data-cids="">
+                        <span><i class="fa-solid fa-chevron-right"></i>All</span>
                     </a>
                 </li>
             `;
+
+            sortedNames.forEach(name => {
+                const ids = nameMap.get(name);
+                html += `
+                    <li>
+                        <a href="#" class="filter-link" data-cids="${ids.join(",")}">
+                            <span><i class="fa-solid fa-chevron-right"></i>${name}</span>
+                        </a>
+                    </li>
+                `;
             });
 
             ul.innerHTML = html;
 
-            ul.querySelectorAll("a[data-cid]").forEach(a => {
+            ul.querySelectorAll("a[data-cids]").forEach(a => {
                 a.addEventListener("click", (e) => {
                     e.preventDefault();
-                    const cidRaw = a.getAttribute("data-cid");
-                    filters.categoryId = cidRaw ? Number(cidRaw) : null;
+                    const cidsRaw = a.getAttribute("data-cids");
+                    filters.categoryIds = cidsRaw ? cidsRaw.split(",").map(Number) : null;
+
+                    ul.querySelectorAll("a").forEach(el => el.classList.remove("active"));
+                    a.classList.add("active");
+
                     applyFilters();
                 });
             });
@@ -721,8 +736,8 @@
                     if (!ok) return false;
                 }
 
-                if (filters.categoryId != null) {
-                    if (Number(p.categoryId) !== Number(filters.categoryId)) return false;
+                if (filters.categoryIds != null && filters.categoryIds.length > 0) {
+                    if (!filters.categoryIds.includes(Number(p.categoryId))) return false;
                 }
 
                 const price = Number(p.minPricePerDay ?? p.pricePerDay ?? 0);

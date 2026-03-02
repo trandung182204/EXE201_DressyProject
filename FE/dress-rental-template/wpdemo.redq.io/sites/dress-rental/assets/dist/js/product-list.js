@@ -356,34 +356,55 @@ async function loadCategories() {
 
     const response = await res.json();
     // API returns { success, data, message }
-    const categories = response.data || response || [];
+    let rawCategories = response.data || response || [];
+    if (!Array.isArray(rawCategories)) rawCategories = [];
 
-    if (!categories.length) {
+    if (!rawCategories.length) {
       container.innerHTML = `<p style="padding: 10px; color: #999;">Không có danh mục</p>`;
       return;
     }
 
-    // Render category checkboxes
-    container.innerHTML = categories.map(cat => `
+    // Group categories by name to show only unique items in the list
+    const grouped = [];
+    const nameMap = new Map();
+
+    rawCategories.forEach(cat => {
+      // Use name or categoryName, trim and default if both missing
+      const name = (cat.name || cat.categoryName || "Danh mục " + cat.id).trim();
+      if (!nameMap.has(name)) {
+        const group = { name: name, ids: [cat.id] };
+        nameMap.set(name, group);
+        grouped.push(group);
+      } else {
+        nameMap.get(name).ids.push(cat.id);
+      }
+    });
+
+    // Render grouped category checkboxes
+    container.innerHTML = grouped.map((group, idx) => `
       <div>
         <span class="rq-checkbox">
-          <input type="checkbox" id="cat-${cat.id}" data-cat-id="${cat.id}">
-          <label for="cat-${cat.id}">${cat.name || cat.categoryName || 'Danh mục ' + cat.id}</label>
+          <input type="checkbox" id="cat-group-${idx}">
+          <label for="cat-group-${idx}">${group.name}</label>
         </span>
       </div>
     `).join("");
 
-    // Attach event listeners to new checkboxes
-    categories.forEach(cat => {
-      const cb = document.getElementById(`cat-${cat.id}`);
+    // Attach event listeners to the new unique checkboxes
+    grouped.forEach((group, idx) => {
+      const cb = document.getElementById(`cat-group-${idx}`);
       if (!cb) return;
 
       cb.addEventListener("change", () => {
-        const catId = String(cat.id);
+        const stringIds = group.ids.map(id => String(id));
         if (cb.checked) {
-          if (!state.categoryIds.includes(catId)) state.categoryIds.push(catId);
+          // Check: avoid duplicates in state
+          stringIds.forEach(id => {
+            if (!state.categoryIds.includes(id)) state.categoryIds.push(id);
+          });
         } else {
-          state.categoryIds = state.categoryIds.filter(id => id !== catId);
+          // Remove all IDs belonging to this name
+          state.categoryIds = state.categoryIds.filter(id => !stringIds.includes(id));
         }
         state.page = 1;
         load();
@@ -397,24 +418,45 @@ async function loadCategories() {
 }
 
 /**
- * Initialize price range filter
+ * Initialize price range filter (VND, dynamic max from API)
  */
-function initPriceFilter() {
+async function initPriceFilter() {
   const rangeInput = document.getElementById("range_id");
   if (!rangeInput) return;
 
-  // Try to hook into ionRangeSlider if available
+  // Fetch max price_per_day from products
+  let maxPriceValue = 10000000; // fallback 10M VND
+  try {
+    const res = await fetch(`${ENDPOINT}?status=AVAILABLE&page=1&pageSize=1&sortBy=price&sortDir=desc`);
+    if (res.ok) {
+      const data = await res.json();
+      const items = data.items || [];
+      if (items.length > 0 && items[0].minPricePerDay) {
+        maxPriceValue = Math.ceil(items[0].minPricePerDay / 10000) * 10000; // round up to nearest 10k
+      }
+    }
+  } catch (err) {
+    console.warn("[PRICE-FILTER] Could not fetch max price, using default:", err);
+  }
+
+  // Wait for jQuery and slider to be ready
   const checkSlider = setInterval(() => {
     if (typeof $ !== "undefined") {
       const sliderData = $(rangeInput).data("ionRangeSlider");
       if (sliderData) {
         clearInterval(checkSlider);
 
-        // Override the onFinish callback
-        const originalOnFinish = sliderData.options.onFinish || (() => { });
+        // Re-initialize slider with VND settings and dynamic max
         sliderData.update({
+          min: 0,
+          max: maxPriceValue,
+          from: 0,
+          to: maxPriceValue,
+          step: 10000,
+          postfix: " ₫",
+          prefix: "",
+          prettify_separator: ".",
           onFinish: (data) => {
-            originalOnFinish(data);
             state.minPrice = data.from;
             state.maxPrice = data.to;
             state.page = 1;
@@ -500,7 +542,7 @@ async function init() {
   initSort();
   initSizeFilter();
   initColorFilter();
-  initPriceFilter();
+  await initPriceFilter();
   initClearAll();
 
   // Load products

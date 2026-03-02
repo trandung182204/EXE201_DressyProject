@@ -92,7 +92,7 @@ function renderBasic(product) {
       const $slider = jQuery(".product_details_slider");
 
       // nếu đã init rồi thì destroy (tùy phiên bản)
-      try { $slider.flexslider(0); } catch {}
+      try { $slider.flexslider(0); } catch { }
 
       // init lại
       $slider.flexslider({
@@ -107,14 +107,63 @@ function renderBasic(product) {
   const colorSelect = document.getElementById("colorSelect");
   const sizeSelect = document.getElementById("sizeSelect");
 
-  if (colorSelect) {
-    const colors = uniq(variants.map(v => v.colorName ?? v.ColorName));
+  const allColors = uniq(variants.map(v => v.colorName ?? v.ColorName));
+  const allSizes = uniq(variants.map(v => v.sizeLabel ?? v.SizeLabel));
+
+  function fillColorOptions(colors) {
+    if (!colorSelect) return;
     colorSelect.innerHTML = `<option value="">Chọn màu sắc</option>` + colors.map(c => `<option value="${c}">${c}</option>`).join("");
   }
-  if (sizeSelect) {
-    const sizes = uniq(variants.map(v => v.sizeLabel ?? v.SizeLabel));
+
+  function fillSizeOptions(sizes) {
+    if (!sizeSelect) return;
     sizeSelect.innerHTML = `<option value="">Chọn kích thước</option>` + sizes.map(s => `<option value="${s}">${s}</option>`).join("");
   }
+
+  // Always render ALL options
+  fillColorOptions(allColors);
+  fillSizeOptions(allSizes);
+
+  // Start size dropdown as disabled — user must pick color first
+  if (sizeSelect && allColors.length > 0) {
+    sizeSelect.disabled = true;
+    // Update placeholder text
+    sizeSelect.options[0].textContent = "Vui lòng chọn màu trước";
+  }
+
+  // Cross-filtering: color → enable size + disable invalid sizes
+  if (colorSelect) {
+    colorSelect.addEventListener("change", () => {
+      const selColor = colorSelect.value;
+      if (selColor) {
+        const validSizes = uniq(variants.filter(v => (v.colorName ?? v.ColorName) === selColor).map(v => v.sizeLabel ?? v.SizeLabel));
+        if (sizeSelect) {
+          // Enable size dropdown
+          sizeSelect.disabled = false;
+          sizeSelect.options[0].textContent = "Chọn kích thước";
+          // Disable invalid size options
+          Array.from(sizeSelect.options).forEach(opt => {
+            if (opt.value === "") return;
+            opt.disabled = !validSizes.includes(opt.value);
+          });
+          // Reset size if currently selected size is now invalid
+          if (sizeSelect.value && !validSizes.includes(sizeSelect.value)) {
+            sizeSelect.value = "";
+          }
+        }
+      } else {
+        // Color cleared → disable size and reset
+        if (sizeSelect) {
+          sizeSelect.value = "";
+          sizeSelect.disabled = true;
+          sizeSelect.options[0].textContent = "Vui lòng chọn màu trước";
+          Array.from(sizeSelect.options).forEach(opt => { opt.disabled = false; });
+        }
+      }
+    });
+  }
+
+  // No color disabling on size change — colors are always selectable to prevent deadlock
 }
 
 async function bootProductDetail() {

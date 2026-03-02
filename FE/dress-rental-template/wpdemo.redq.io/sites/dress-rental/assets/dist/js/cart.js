@@ -377,6 +377,8 @@ async function submitOrder() {
 
         return {
             productId: item.productId,
+            productVariantId: item.variantId || null,
+            providerId: item.providerId || null,
             startDate: startDateOnly,
             endDate: endDateOnly,
             price: calcItemTotal(item),

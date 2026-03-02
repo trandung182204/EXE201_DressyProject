@@ -34,9 +34,11 @@ builder.Services.AddScoped<BE.Repositories.Interfaces.IPaymentsRepository, BE.Re
 builder.Services.AddScoped<BE.Repositories.Interfaces.IProvidersRepository, BE.Repositories.Implementations.ProvidersRepository>();
 builder.Services.AddScoped<BE.Repositories.Interfaces.IProviderBranchesRepository, BE.Repositories.Implementations.ProviderBranchesRepository>();
 builder.Services.AddScoped<BE.Repositories.Interfaces.IProductsCustomerRepository, BE.Repositories.Implementations.ProductsCustomerRepository>();
+builder.Services.AddScoped<BE.Repositories.Interfaces.IProductReviewsRepository, BE.Repositories.Implementations.ProductReviewsRepository>();
 
 // Services
 builder.Services.AddScoped<BE.Services.Interfaces.IProductsService, BE.Services.Implementations.ProductsService>();
+builder.Services.AddScoped<BE.Services.Interfaces.IProductReviewsService, BE.Services.Implementations.ProductReviewsService>();
 builder.Services.AddScoped<BE.Services.Interfaces.ICategoriesService, BE.Services.Implementations.CategoriesService>();
 builder.Services.AddScoped<BE.Services.Interfaces.ICartsService, BE.Services.Implementations.CartsService>();
 builder.Services.AddScoped<BE.Services.Interfaces.ICartItemsService, BE.Services.Implementations.CartItemsService>();

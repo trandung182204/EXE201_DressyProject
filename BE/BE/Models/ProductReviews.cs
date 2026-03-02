@@ -20,6 +20,7 @@ public partial class ProductReviews
     public string? Status { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+    public string[]? ImageUrls { get; set; }
 
     public virtual BookingItems? BookingItem { get; set; }
 

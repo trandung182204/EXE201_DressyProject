@@ -337,6 +337,10 @@ public partial class ApplicationDbContext : DbContext
                 .UseCollation("Vietnamese_100_CI_AI")
                 .HasColumnName("status");
 
+            entity.Property(e => e.ImageUrls)
+                .HasColumnName("image_urls")
+                .HasColumnType("text[]");
+
             entity.HasOne(d => d.BookingItem).WithMany(p => p.ProductReviews)
                 .HasForeignKey(d => d.BookingItemId)
                 .HasConstraintName("FK_pr_booking_item");

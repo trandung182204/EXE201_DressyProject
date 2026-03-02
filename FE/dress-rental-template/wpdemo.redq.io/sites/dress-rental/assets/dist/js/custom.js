@@ -13,7 +13,7 @@ jQuery(function ($) {
   if ($(number_counter).length > 0) {
     $(number_counter).each(function () {
       var $this = $(this),
-          countTo = $this.attr('data-count');
+        countTo = $this.attr('data-count');
 
       $({ countNum: $this.text() }).animate({
         countNum: countTo
@@ -199,7 +199,7 @@ jQuery(function ($) {
   var sticky = $("#stickynav").offset().top;
   window_select.on('scroll', function () {
     if (window_select.scrollTop() > sticky) {
-      $("#stickynav").addClass("navFixed");7;
+      $("#stickynav").addClass("navFixed"); 7;
     } else {
       $("#stickynav").removeClass("navFixed");
     }
@@ -213,10 +213,12 @@ jQuery(function ($) {
     type: "double",
     grid: true,
     min: 0,
-    max: 1000,
-    from: 200,
-    to: 800,
-    prefix: "$"
+    max: 10000000,
+    from: 0,
+    to: 10000000,
+    step: 10000,
+    postfix: " ₫",
+    prettify_separator: "."
   });
 
   ///////////////////////////// 
@@ -291,11 +293,11 @@ jQuery(function ($) {
       var container = $(".rq-shopping-cart-inner-div");
 
       if (!container.is(e.target) // if the target of the click isn't the container...
-      && container.has(e.target).length === 0) // ... nor a descendant of the container
-        {
-          container.removeClass("rq-visible");
-          cart_items.removeClass("active");
-        }
+        && container.has(e.target).length === 0) // ... nor a descendant of the container
+      {
+        container.removeClass("rq-visible");
+        cart_items.removeClass("active");
+      }
     });
   }
 

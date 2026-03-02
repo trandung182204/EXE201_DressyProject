@@ -241,8 +241,22 @@ function renderProduct(product) {
     // Render colors dropdown
     renderColors(product.colors || []);
 
-    // Render sizes dropdown
+    // Render sizes dropdown (initially disabled — user must pick color first)
     renderSizes(product.sizes || []);
+    const $sizeInit = $("#sizeSelect");
+    if ($sizeInit.length && product.colors && product.colors.length > 0) {
+        $sizeInit.prop("disabled", true);
+        // Re-init Select2 disabled state
+        if ($sizeInit.hasClass("select2-hidden-accessible")) {
+            try { $sizeInit.select2("destroy"); } catch (e) { }
+        }
+        $sizeInit.select2({
+            width: '100%',
+            minimumResultsForSearch: Infinity,
+            placeholder: "Vui lòng chọn màu trước",
+            allowClear: false
+        });
+    }
 
     // Description
     const descEl = document.getElementById('pd-desc');
@@ -293,8 +307,59 @@ function renderColors(colors) {
             if (selectedColor) {
                 if (colorError) colorError.style.display = "none";
                 updateColorUI(selectedColor);
-                updateVariantInfo();
             }
+
+            // Cross-filter: disable sizes that don't exist for this color
+            if (currentProduct && currentProduct.variants) {
+                if (selectedColor) {
+                    const validSizes = [...new Set(
+                        currentProduct.variants
+                            .filter(v => v.colorName === selectedColor)
+                            .map(v => v.sizeLabel)
+                            .filter(Boolean)
+                    )];
+                    // Enable size dropdown and set valid/invalid states
+                    $("#sizeSelect").prop("disabled", false);
+                    disableInvalidSizes(validSizes);
+                    // Re-init Select2 with enabled state
+                    const $ss = $("#sizeSelect");
+                    if ($ss.hasClass("select2-hidden-accessible")) {
+                        try { $ss.select2("destroy"); } catch (e) { }
+                    }
+                    $ss.select2({
+                        width: '100%',
+                        minimumResultsForSearch: Infinity,
+                        placeholder: "Chọn kích thước",
+                        allowClear: false
+                    });
+                    // Rebind size change (since Select2 was re-inited)
+                    $ss.off("change").on("change", sizeChangeHandler);
+                    // Reset size if currently selected size is now invalid
+                    if (selectedSize && !validSizes.includes(selectedSize)) {
+                        selectedSize = "";
+                        window._isFilteringSizes = true;
+                        $ss.val("").trigger("change.select2");
+                        window._isFilteringSizes = false;
+                    }
+                } else {
+                    // Color cleared → disable size dropdown and reset
+                    selectedSize = "";
+                    const $ss = $("#sizeSelect");
+                    $ss.val("");
+                    $ss.prop("disabled", true);
+                    enableAllSizes();
+                    if ($ss.hasClass("select2-hidden-accessible")) {
+                        try { $ss.select2("destroy"); } catch (e) { }
+                    }
+                    $ss.select2({
+                        width: '100%',
+                        minimumResultsForSearch: Infinity,
+                        placeholder: "Vui lòng chọn màu trước",
+                        allowClear: false
+                    });
+                }
+            }
+            updateVariantInfo();
         });
 
     } else {
@@ -344,15 +409,7 @@ function renderSizes(sizes) {
         });
 
         // Bind change event
-        sizeSelect.off("change").on("change", function () {
-            selectedSize = $(this).val();
-            console.log("Size selected:", selectedSize);
-            if (selectedSize) {
-                if (sizeError) sizeError.style.display = "none";
-                updateSizeUI(selectedSize);
-                updateVariantInfo();
-            }
-        });
+        sizeSelect.off("change").on("change", sizeChangeHandler);
 
     } else {
         sizeSelect.html(`<option value=""></option>`);
@@ -365,6 +422,46 @@ function renderSizes(sizes) {
         selectedSize = "N/A";
     }
 }
+
+/**
+ * Size change handler (extracted so it can be rebound after Select2 re-init)
+ */
+function sizeChangeHandler() {
+    if (window._isFilteringSizes) return;
+    selectedSize = $(this).val();
+    console.log("Size selected:", selectedSize);
+    const sizeError = document.getElementById("sizeError");
+    if (selectedSize) {
+        if (sizeError) sizeError.style.display = "none";
+        updateSizeUI(selectedSize);
+    }
+    // No color disabling — colors are always selectable to prevent deadlock
+    updateVariantInfo();
+}
+
+/**
+ * Disable size options that are not in the validSizes array
+ */
+function disableInvalidSizes(validSizes) {
+    const sizeSelect = document.getElementById("sizeSelect");
+    if (!sizeSelect) return;
+    Array.from(sizeSelect.options).forEach(opt => {
+        if (opt.value === "") return; // skip placeholder
+        opt.disabled = !validSizes.includes(opt.value);
+    });
+}
+
+/**
+ * Enable all size options
+ */
+function enableAllSizes() {
+    const sizeSelect = document.getElementById("sizeSelect");
+    if (!sizeSelect) return;
+    Array.from(sizeSelect.options).forEach(opt => {
+        opt.disabled = false;
+    });
+}
+
 
 /**
  * Setup date validation UI
@@ -622,6 +719,8 @@ function setupReserveButton() {
 
             const bookingInfo = {
                 productId: currentProduct.id,
+                variantId: variant?.id || null,
+                providerId: currentProduct.providerId || currentProduct.ProviderId || null,
                 productName: currentProduct.name,
                 color: selectedColor,
                 size: selectedSize,
@@ -723,6 +822,8 @@ function setupAddToCartButton() {
 
         const bookingInfo = {
             productId: currentProduct.id,
+            variantId: variant?.id || null,
+            providerId: currentProduct.providerId || currentProduct.ProviderId || null,
             productName: currentProduct.name,
             color: selectedColor,
             size: selectedSize,
@@ -902,3 +1003,412 @@ function validateQty() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+// ==========================================
+// PRODUCT REVIEWS LOGIC
+// ==========================================
+
+var currentReviewsPage = 1;
+var reviewsPageSize = 5;
+var eligibleBookingItemId = null; // Set by eligibility API
+
+/**
+ * Initialize Review System
+ */
+document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(initReviews, 300);
+});
+
+function initReviews() {
+    setupReviewStars();
+    setupImagePreview();
+    setupReviewFormSubmit();
+    loadReviews(1);
+    checkReviewEligibility();
+
+    var loadMoreBtn = document.getElementById('btn-load-more-reviews');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function () {
+            currentReviewsPage++;
+            loadReviews(currentReviewsPage, true);
+        });
+    }
+}
+
+/**
+ * Check if user is eligible to review this product
+ */
+function checkReviewEligibility() {
+    var token = localStorage.getItem('token');
+    var reviewBtn = document.getElementById('btn-open-review-modal');
+    if (!reviewBtn) return;
+
+    // If not logged in, hide write review button
+    if (!token) {
+        reviewBtn.style.display = 'none';
+        return;
+    }
+
+    var productId = getProductId();
+    if (!productId) return;
+
+    fetch(API_BASE + '/api/ProductReviews/eligibility?productId=' + productId, {
+        headers: { 'Authorization': 'Bearer ' + token }
+    })
+        .then(function (res) {
+            if (!res.ok) throw new Error("Eligibility check failed");
+            return res.json();
+        })
+        .then(function (data) {
+            if (data.canReview && data.bookingItemId) {
+                eligibleBookingItemId = data.bookingItemId;
+                reviewBtn.style.display = '';
+                reviewBtn.disabled = false;
+                console.log('[REVIEW] Eligible, bookingItemId:', eligibleBookingItemId);
+            } else {
+                eligibleBookingItemId = null;
+                reviewBtn.disabled = true;
+                reviewBtn.style.opacity = '0.5';
+                reviewBtn.style.cursor = 'not-allowed';
+                reviewBtn.title = data.message || 'Bạn chỉ có thể đánh giá sản phẩm sau khi đã mua.';
+                reviewBtn.removeAttribute('data-toggle');
+                reviewBtn.removeAttribute('data-target');
+                reviewBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    showBookingToast(data.message || 'Bạn chỉ có thể đánh giá sản phẩm sau khi đã mua.', 'error', 4000);
+                });
+                console.log('[REVIEW] Not eligible:', data.message);
+            }
+        })
+        .catch(function (err) {
+            console.error('[REVIEW] Eligibility check error:', err);
+            reviewBtn.style.display = 'none';
+        });
+}
+
+/**
+ * Setup interactive star rating (click + hover)
+ */
+function setupReviewStars() {
+    var container = document.getElementById('review-stars-input');
+    if (!container) return;
+
+    var ratingInput = document.getElementById('review-rating');
+    var errorMsg = document.getElementById('ratingError');
+
+    container.style.position = 'relative';
+    container.style.zIndex = '10';
+    container.style.cursor = 'pointer';
+
+    container.addEventListener('click', function (e) {
+        var star = e.target.closest('i[data-value]');
+        if (!star) return;
+        e.preventDefault();
+        e.stopPropagation();
+        var val = parseInt(star.getAttribute('data-value'));
+        if (ratingInput) ratingInput.value = val;
+        highlightStars(val);
+        if (errorMsg) errorMsg.style.display = 'none';
+    });
+
+    container.addEventListener('mouseover', function (e) {
+        var star = e.target.closest('i[data-value]');
+        if (!star) return;
+        highlightStars(parseInt(star.getAttribute('data-value')));
+    });
+
+    container.addEventListener('mouseleave', function () {
+        var currentVal = ratingInput ? parseInt(ratingInput.value) : 0;
+        highlightStars(currentVal);
+    });
+}
+
+function highlightStars(val) {
+    var stars = document.querySelectorAll('#review-stars-input i[data-value]');
+    stars.forEach(function (s) {
+        var starVal = parseInt(s.getAttribute('data-value'));
+        if (starVal <= val) {
+            s.className = 'fa fa-star';
+            s.style.color = '#f39c12';
+        } else {
+            s.className = 'fa fa-star-o';
+            s.style.color = '#f39c12';
+        }
+    });
+}
+
+/**
+ * Setup image file input preview with consistent sizing
+ */
+function setupImagePreview() {
+    var imageInput = document.getElementById('review-images');
+    var previewContainer = document.getElementById('review-image-preview');
+    if (!imageInput || !previewContainer) return;
+
+    imageInput.addEventListener('change', function () {
+        previewContainer.innerHTML = '';
+        if (!this.files || this.files.length === 0) return;
+        Array.from(this.files).forEach(function (file) {
+            if (!file.type.startsWith('image/')) return;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var wrapper = document.createElement('div');
+                wrapper.style.cssText = 'width:80px; height:80px; border-radius:6px; overflow:hidden; border:2px solid #ddd; flex-shrink:0;';
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.cssText = 'width:100%; height:100%; object-fit:cover; display:block;';
+                img.alt = 'Preview';
+                wrapper.appendChild(img);
+                previewContainer.appendChild(wrapper);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    if (typeof $ !== 'undefined') {
+        $('#rq_modal1').on('show.bs.modal', function (e) {
+            var token = localStorage.getItem('token');
+            if (!token) {
+                e.preventDefault();
+                showBookingToast("Vui lòng đăng nhập để viết đánh giá.", "error", 3000);
+                setTimeout(function () { window.location.href = "login.html"; }, 1500);
+                return;
+            }
+            if (!eligibleBookingItemId) {
+                e.preventDefault();
+                showBookingToast("Bạn chỉ có thể đánh giá sản phẩm sau khi đã mua.", "error", 4000);
+                return;
+            }
+        });
+
+        $('#rq_modal1').on('hidden.bs.modal', function () {
+            var form = document.getElementById('review-form');
+            if (form) form.reset();
+            var ratingInput = document.getElementById('review-rating');
+            if (ratingInput) ratingInput.value = '0';
+            highlightStars(0);
+            if (previewContainer) previewContainer.innerHTML = '';
+            var errorMsg = document.getElementById('ratingError');
+            if (errorMsg) errorMsg.style.display = 'none';
+        });
+    }
+}
+
+/**
+ * Handle Review Form Submission — BookingItemId is NOT sent, server resolves it
+ */
+function setupReviewFormSubmit() {
+    var form = document.getElementById('review-form');
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        var rating = parseInt(document.getElementById('review-rating').value);
+        if (!rating || rating === 0) {
+            document.getElementById('ratingError').style.display = 'block';
+            return;
+        }
+
+        if (!eligibleBookingItemId) {
+            showBookingToast('Bạn không đủ điều kiện đánh giá sản phẩm này.', 'error', 4000);
+            return;
+        }
+
+        var comment = document.getElementById('review-comment').value;
+        var imagesBox = document.getElementById('review-images');
+        var productId = getProductId();
+
+        var formData = new FormData();
+        formData.append('ProductId', productId);
+        formData.append('Rating', rating);
+        if (comment) formData.append('Comment', comment);
+
+        if (imagesBox && imagesBox.files && imagesBox.files.length > 0) {
+            Array.from(imagesBox.files).forEach(function (file) {
+                formData.append('Images', file);
+            });
+        }
+
+        var btn = document.getElementById('submit-review-btn');
+        var originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Đang gửi...';
+        btn.disabled = true;
+
+        var token = localStorage.getItem('token');
+
+        fetch(API_BASE + '/api/ProductReviews', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+            body: formData
+        })
+            .then(function (res) {
+                if (res.ok) {
+                    return res.json().then(function () {
+                        showBookingToast("Cảm ơn bạn đã đánh giá sản phẩm!", "success");
+                        if (typeof $ !== 'undefined') $('#rq_modal1').modal('hide');
+                        eligibleBookingItemId = null;
+                        var reviewBtn = document.getElementById('btn-open-review-modal');
+                        if (reviewBtn) {
+                            reviewBtn.disabled = true;
+                            reviewBtn.style.opacity = '0.5';
+                            reviewBtn.style.cursor = 'not-allowed';
+                            reviewBtn.removeAttribute('data-toggle');
+                            reviewBtn.removeAttribute('data-target');
+                            reviewBtn.title = 'Bạn đã đánh giá sản phẩm này rồi.';
+                        }
+                        currentReviewsPage = 1;
+                        loadReviews(1);
+                    });
+                } else {
+                    return res.json().then(function (err) {
+                        showBookingToast(err.message || "Lỗi khi gửi đánh giá.", "error", 4000);
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.error("Submit review error:", error);
+                showBookingToast("Không thể kết nối đến máy chủ.", "error", 4000);
+            })
+            .finally(function () {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+    });
+}
+
+/**
+ * Fetch and Render Reviews from API
+ */
+function loadReviews(page, append) {
+    page = page || 1;
+    append = append || false;
+
+    var productId = getProductId();
+    if (!productId) return;
+
+    var container = document.getElementById('reviews-list-container');
+    var loadMoreDiv = document.getElementById('reviews-pagination');
+
+    if (!append && container) {
+        container.innerHTML = '<div style="text-align:center; padding:40px; color:#666;"><i class="fa fa-spinner fa-spin fa-2x"></i><p style="margin-top:10px;">Đang tải đánh giá...</p></div>';
+    }
+
+    fetch(API_BASE + '/api/ProductReviews?productId=' + productId + '&page=' + page + '&pageSize=' + reviewsPageSize)
+        .then(function (res) {
+            if (!res.ok) throw new Error("Failed to fetch reviews");
+            return res.json();
+        })
+        .then(function (data) {
+            if (!append) {
+                updateReviewHeaderStats(data.totalItems, data.items);
+            }
+
+            if (!data.items || data.totalItems === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:30px; color:#888; border:1px dashed #ddd; border-radius:8px; margin-top:20px;">Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên đánh giá!</div>';
+                if (loadMoreDiv) loadMoreDiv.style.display = 'none';
+                return;
+            }
+
+            var html = '';
+            data.items.forEach(function (review) {
+                html += generateReviewHtml(review);
+            });
+
+            if (append) {
+                container.innerHTML += html;
+            } else {
+                container.innerHTML = html;
+            }
+
+            if (loadMoreDiv) {
+                if (data.page * data.pageSize < data.totalItems) {
+                    loadMoreDiv.style.display = 'block';
+                } else {
+                    loadMoreDiv.style.display = 'none';
+                }
+            }
+        })
+        .catch(function (error) {
+            console.error("Load reviews error:", error);
+            if (!append && container) {
+                container.innerHTML = '<div style="text-align:center; padding:20px; color:red;">Không thể tải đánh giá. Vui lòng tải lại trang.</div>';
+            }
+        });
+}
+
+function updateReviewHeaderStats(totalItems, items) {
+    var countEl = document.getElementById('total-reviews-count');
+    if (countEl) countEl.innerText = '(' + totalItems + ' đánh giá)';
+
+    var avg = 0;
+    if (items && items.length > 0) {
+        var sum = 0;
+        items.forEach(function (r) { sum += r.rating; });
+        avg = Math.round((sum / items.length) * 10) / 10;
+    }
+
+    var summaryCount = document.querySelector('.review-top span');
+    var summaryAvg = document.querySelector('.review-top p');
+    var summaryStars = document.querySelectorAll('.review-top > a > i');
+    var overallStars = document.querySelectorAll('#overall-star-rating > a > i');
+
+    if (summaryCount) summaryCount.innerText = totalItems;
+    if (summaryAvg) summaryAvg.innerText = avg + ' trên 5 sao';
+
+    var fullStarsCount = Math.floor(avg);
+    var hasHalfStar = (avg - fullStarsCount) >= 0.5;
+
+    [summaryStars, overallStars].forEach(function (starsNodeList) {
+        if (starsNodeList && starsNodeList.length === 5) {
+            starsNodeList.forEach(function (star, index) {
+                if (index < fullStarsCount) {
+                    star.className = 'fa fa-star';
+                } else if (index === fullStarsCount && hasHalfStar) {
+                    star.className = 'fa fa-star-half-o';
+                } else {
+                    star.className = 'fa fa-star-o';
+                }
+            });
+        }
+    });
+}
+
+function generateReviewHtml(review) {
+    var dateObj = new Date(review.createdAt);
+    var dateStr = dateObj.toLocaleDateString('vi-VN', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    var starsHtml = '';
+    for (var i = 1; i <= 5; i++) {
+        if (i <= review.rating) {
+            starsHtml += '<i class="fa fa-star" style="color:#f39c12; font-size:16px; margin-right:2px;"></i>';
+        } else {
+            starsHtml += '<i class="fa fa-star-o" style="color:#f39c12; font-size:16px; margin-right:2px;"></i>';
+        }
+    }
+
+    var imagesHtml = '';
+    if (review.imageUrls && review.imageUrls.length > 0) {
+        imagesHtml = '<div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">';
+        review.imageUrls.forEach(function (url) {
+            var fullUrl = url.startsWith('http') ? url : (API_BASE + url);
+            imagesHtml += '<div style="width:80px; height:80px; border-radius:6px; overflow:hidden; border:1px solid #eee; flex-shrink:0; cursor:pointer;" onclick="window.open(\'' + fullUrl + '\', \'_blank\')">'
+                + '<img src="' + fullUrl + '" alt="Review" style="width:100%; height:100%; object-fit:cover; display:block;">'
+                + '</div>';
+        });
+        imagesHtml += '</div>';
+    }
+
+    var firstLetter = review.customerName ? review.customerName.charAt(0).toUpperCase() : 'K';
+
+    return '<div style="background:#fff; padding:25px 30px; margin-bottom:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08);">'
+        + '  <div style="display:flex; align-items:center; margin-bottom:12px;">'
+        + '    <div style="width:42px; height:42px; border-radius:50%; background:#d0021b; color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; margin-right:12px; flex-shrink:0;">' + firstLetter + '</div>'
+        + '    <div>'
+        + '      <strong style="font-size:16px;">' + (review.customerName || 'Khách hàng') + '</strong>'
+        + '      <div style="margin-top:2px;">' + starsHtml + ' <span style="color:#999; font-size:13px; margin-left:10px;">' + dateStr + '</span></div>'
+        + '    </div>'
+        + '  </div>'
+        + '  <p style="color:#555; line-height:1.7; margin:0;">' + (review.comment || '<i style="color:#aaa;">(Không có nội dung đánh giá)</i>') + '</p>'
+        + imagesHtml
+        + '</div>';
+}

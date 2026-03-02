@@ -69,7 +69,7 @@
 	<div class="container">
 		<ol class="breadcrumb underline">
 			<li><a href="index.html">Trang chủ</a></li>
-			<li><a href="listing-page.html">Váy</a></li>
+			<li><a href="listing-page.html">Danh sách sản phẩm</a></li>
 			<li id="bc-product-name">...</li>
 		</ol><!-- /.breadcrumb -->
 	</div><!-- /.container -->
@@ -91,32 +91,29 @@
 							Thương hiệu : <span id="pd-brand">...</span>
 						</h3>
 
-						<a href="#" class="rating">
-							<i class="fa fa-star" aria-hidden="true"></i>
-							<i class="fa fa-star" aria-hidden="true"></i>
-							<i class="fa fa-star" aria-hidden="true"></i>
-							<i class="fa fa-star" aria-hidden="true"></i>
-							<i class="fa fa-star-o ash" aria-hidden="true"></i>
-							<span class="ash">(29 đánh giá)</span>
-						</a>
 						<div style="margin:12px 0;">
 							<div class="font-25-for-reg-0" id="pd-rent-price">Giá thuê: --</div>
 							<div class="font-16-for-reg-0" id="pd-deposit">Giá cọc: --</div>
-						<div class="font-16-for-reg-0" id="pd-quantity" style="margin-top:6px;">Số lượng: <span style="color:#999;">Chọn màu & size</span></div>
-					</div>
+							<div class="font-16-for-reg-0" id="pd-quantity" style="margin-top:6px;">Số lượng: <span
+									style="color:#999;">Chọn màu & size</span></div>
+						</div>
 
-					<!-- Quantity Input -->
-					<div style="margin-bottom:15px;">
-						<label style="font-weight:600;margin-bottom:5px;display:block;">Số lượng thuê:</label>
-						<div style="display:flex;align-items:center;gap:8px;">
-							<button type="button" onclick="changeQty(-1)" style="width:32px;height:32px;border:1px solid #ddd;background:#f5f5f5;cursor:pointer;font-size:16px;border-radius:4px;">&#8722;</button>
-							<input type="number" id="quantityInput" value="1" min="1" style="width:60px;text-align:center;height:32px;border:1px solid #ddd;border-radius:4px;" onchange="validateQty()">
-							<button type="button" onclick="changeQty(1)" style="width:32px;height:32px;border:1px solid #ddd;background:#f5f5f5;cursor:pointer;font-size:16px;border-radius:4px;">+</button>
+						<!-- Quantity Input -->
+						<div style="margin-bottom:15px;">
+							<label style="font-weight:600;margin-bottom:5px;display:block;">Số lượng thuê:</label>
+							<div style="display:flex;align-items:center;gap:8px;">
+								<button type="button" onclick="changeQty(-1)"
+									style="width:32px;height:32px;border:1px solid #ddd;background:#f5f5f5;cursor:pointer;font-size:16px;border-radius:4px;">&#8722;</button>
+								<input type="number" id="quantityInput" value="1" min="1"
+									style="width:60px;text-align:center;height:32px;border:1px solid #ddd;border-radius:4px;"
+									onchange="validateQty()">
+								<button type="button" onclick="changeQty(1)"
+									style="width:32px;height:32px;border:1px solid #ddd;background:#f5f5f5;cursor:pointer;font-size:16px;border-radius:4px;">+</button>
+							</div>
+							<div id="quantityError" class="rq-inline-error"
+								style="display:none; margin-top: 5px; font-size: 13px; color: #842029; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 5px; border-radius: 4px;">
+							</div>
 						</div>
-						<div id="quantityError" class="rq-inline-error"
-							style="display:none; margin-top: 5px; font-size: 13px; color: #842029; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 5px; border-radius: 4px;">
-						</div>
-					</div>
 						<div class="select-box">
 							<div style="display: inline-block; width: 48%; vertical-align: top;">
 								<select class="rq-rental-select2" id="colorSelect">
@@ -150,9 +147,10 @@
 						<div class="row rq-margin">
 							<div class="col-sm-8" style="display:flex;gap:12px;align-items:center;">
 								<a href="cart.html" class="reserve" style="white-space:nowrap;">Đặt thuê ngay</a>
-								<button class="wishlist" id="addToCartBtn" style="white-space:nowrap;"><i class="fa fa-cart-plus"></i> Thêm vào giỏ</button>
+								<button class="wishlist" id="addToCartBtn" style="white-space:nowrap;"><i
+										class="fa fa-cart-plus"></i> Thêm vào giỏ</button>
 							</div>
-							
+
 						</div>
 						<div class="panel-group rq-accordion" id="accordion" role="tablist" aria-multiselectable="true">
 							<div class="panel panel-default">
@@ -167,57 +165,9 @@
 
 									</h4>
 								</div>
-								<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
-									aria-labelledby="headingOne">
 
-									<div class="panel-body">
-										Sản phẩm được thiết kế chuẩn phom dáng quốc tế. Vui lòng tham khảo bảng quy đổi
-										kích thước của chúng tôi để chọn size phù hợp nhất. Chất liệu vải có độ co giãn
-										nhẹ giúp tôn lên đường cong cơ thể.
-									</div>
-								</div>
 							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading" role="tab" id="headingTwo">
-									<h4 class="panel-title">
-										<a class="collapsed" role="button" data-toggle="collapse"
-											data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
-											aria-controls="collapseTwo">
-											Lưu ý từ Nhà thiết kế
-											<i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
-										</a>
-									</h4>
-								</div>
-								<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel"
-									aria-labelledby="headingTwo">
-									<div class="panel-body">
-										Mẫu thiết kế này lấy cảm hứng từ sự sang trọng cổ điển kết hợp với nét hiện đại.
-										Điểm nhấn là phần chiết eo tinh tế và đường xẻ tà quyến rũ. Phù hợp nhất khi kết
-										hợp với giày cao gót mũi nhọn.
-									</div>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading" role="tab" id="headingThree">
-									<h4 class="panel-title">
-										<a class="collapsed" role="button" data-toggle="collapse"
-											data-parent="#accordion" href="#collapseThree" aria-expanded="false"
-											aria-controls="collapseThree">
-											Chi tiết sản phẩm
-											<i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
-										</a>
-									</h4>
-								</div>
-								<div id="collapseThree" class="panel-collapse collapse" role="tabpanel"
-									aria-labelledby="headingThree">
-									<div class="panel-body">
-										- Chất liệu: Lụa satin cao cấp.<br>
-										- Khóa kéo ẩn phía sau lưng.<br>
-										- Giặt khô là hơi.<br>
-										- Không sử dụng chất tẩy rửa mạnh.
-									</div>
-								</div>
-							</div>
+
 						</div>
 					</div>
 				</div>
@@ -433,40 +383,18 @@
 							<a href="#"><i class="fa fa-star ash" aria-hidden="true"></i></a>
 							<p>4 trên 5 sao</p>
 						</div>
-						<div class="bar1">
-							<span class="left">(129)</span>
-							<span class="right">5 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
-							<div class="complete" style="width: 85%;"></div>
-						</div>
-						<div class="bar1">
-							<span class="left">(70)</span>
-							<span class="right">4 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
-							<div class="complete" style="width: 70%;"></div>
-						</div>
-						<div class="bar1">
-							<span class="left">(25)</span>
-							<span class="right">3 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
-							<div class="complete" style="width: 35%;"></div>
-						</div>
-						<div class="bar1">
-							<span class="left">(0)</span>
-							<span class="right">2 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
-							<div class="complete" style="width: 1%;"></div>
-						</div>
-						<div class="bar1">
-							<span class="left">(1)</span>
-							<span class="right">1 <a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></span>
-							<div class="complete" style="width: 15%;"></div>
-						</div>
+
 						<div class="rate">
-							<p class="font-18-for-reg-1">Đánh giá</p>
-							<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-							<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-							<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-							<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-							<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+							<p class="font-18-for-reg-1">Đánh giá chung</p>
+							<div id="overall-star-rating" style="display:inline-block; margin-right: 10px;">
+								<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+								<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+								<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+								<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+								<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+							</div>
 							<button type="button" class="review-inner" data-toggle="modal" data-target="#rq_modal1"
-								data-whatever="@mdo">Viết đánh giá</button>
+								data-whatever="@mdo" id="btn-open-review-modal">Viết đánh giá</button>
 
 
 							<div class="modal fade rq-modal-2" id="rq_modal1" tabindex="-1" role="dialog"
@@ -480,49 +408,66 @@
 											<h4 class="modal-title" id="rq_modal">Viết đánh giá</h4>
 										</div>
 										<div class="modal-body">
-											<form>
-												<div class="inline">
-													<label class="control-label">Chấm điểm (trên 5):</label>
-													<div class="stars">
-														<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-														<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-														<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-														<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-														<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
+											<form id="review-form">
+												<div class="form-group" style="margin-bottom: 20px;">
+													<label class="control-label"
+														style="display: block; margin-bottom: 5px;">Chấm điểm (trên 5)
+														<span style="color: red;">*</span>:</label>
+													<div class="stars" id="review-stars-input"
+														style="font-size: 24px; cursor: pointer;">
+														<i class="fa fa-star-o" data-value="1"
+															style="color: #f39c12;"></i>
+														<i class="fa fa-star-o" data-value="2"
+															style="color: #f39c12;"></i>
+														<i class="fa fa-star-o" data-value="3"
+															style="color: #f39c12;"></i>
+														<i class="fa fa-star-o" data-value="4"
+															style="color: #f39c12;"></i>
+														<i class="fa fa-star-o" data-value="5"
+															style="color: #f39c12;"></i>
+													</div>
+													<input type="hidden" id="review-rating" name="Rating" value="0">
+													<div id="ratingError" class="rq-inline-error"
+														style="display:none; margin-top: 5px; font-size: 13px; color: #842029; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 5px; border-radius: 4px;">
+														<i class="fa fa-exclamation-triangle"></i> Vui lòng chọn số sao
+														đánh giá
 													</div>
 												</div>
-												<div class="inline">
-													<label class="control-label">Size đã mặc:</label>
-													<input type="text" class="form-control" />
+
+
+
+												<div class="form-group">
+													<label class="control-label">Nội dung đánh giá:</label>
+													<textarea id="review-comment" name="Comment" class="form-control"
+														rows="4"
+														placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."></textarea>
 												</div>
-												<div class="inline">
-													<label class="control-label">Tuổi:</label>
-													<input type="text" class="form-control" />
-												</div>
-												<div class="inline">
-													<label class="control-label">Thuê cho dịp:</label>
-													<input type="text" class="form-control" />
-												</div>
-												<div class="row">
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label class="control-label">Họ và tên</label>
-															<input type="text" class="form-control" />
+
+												<div class="form-group">
+													<label class="control-label">Hình ảnh đính kèm:</label>
+													<div
+														style="border: 1px dashed #ccc; padding: 15px; border-radius: 5px; text-align: center; background: #fafafa;">
+														<input type="file" id="review-images" name="Images" multiple
+															accept="image/*" class="form-control"
+															style="display: none;" />
+														<button type="button" class="btn btn-default"
+															onclick="document.getElementById('review-images').click();"
+															style="border: 1px solid #ddd; background: #fff;">
+															<i class="fa fa-camera" style="margin-right: 5px;"></i> Chọn
+															ảnh
+														</button>
+														<p style="margin-top: 10px; font-size: 13px; color: #888;">(Có
+															thể chọn nhiều ảnh)</p>
+														<div id="review-image-preview"
+															style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; justify-content: center;">
 														</div>
 													</div>
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label class="control-label">Địa chỉ Email</label>
-															<input type="text" class="form-control" />
-														</div>
-													</div>
 												</div>
-												<div class="form-group">
-													<label class="control-label">Nội dung:</label>
-													<textarea class="form-control"></textarea>
-												</div>
-												<div class="form-group">
-													<button type="button" class="btn">Gửi đánh giá</button>
+
+												<div class="form-group" style="margin-top: 20px;">
+													<button type="submit" id="submit-review-btn" class="btn reserve"
+														style="width: 100%; border-radius: 4px; padding: 12px; font-size: 16px; border: none;">Gửi
+														đánh giá</button>
 												</div>
 											</form>
 										</div>
@@ -563,75 +508,25 @@
 	</div>
 	<div class="top-review">
 		<div class="container">
-			<h4 class="font-30-pla-reg-2">ĐÁNH GIÁ NỔI BẬT</h4>
+			<h4 class="font-30-pla-reg-2" style="display: flex; align-items: center; justify-content: space-between;">
+				ĐÁNH GIÁ TỪ KHÁCH HÀNG
+				<span id="total-reviews-count" style="font-size: 18px; color: #666; font-weight: normal;"></span>
+			</h4>
 
-			<div class="wrapper">
-				<div class="reviews">
-					<div class="customer-details">
-						<h4 class="font-22-for-reg-2">SARA JONES</h4>
-						<p class="font-14-for-reg-2">Size đã mặc : <span>XL</span></p>
-						<p class="font-14-for-reg-2">Thuê cho dịp : <span>Tiệc cưới</span></p>
-						<p class="font-14-for-reg-2">Tuổi : <span>25</span></p>
-					</div>
-					<div class="contents">
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star ash" aria-hidden="true"></i></a>
-						<span class="font-14-for-reg-2">30 Tháng 11, 2016</span>
-						<h3 class="font-25-for-reg-0">Được khen ngợi suốt buổi tiệc!</h3>
-						<p class="font-16-for-reg-0">Chiếc váy này không dành cho những người nhút nhát - nó sẽ khoe
-							đường cong gợi cảm. Tôi đã phải dùng băng dính thời trang (tôi biết trước là sẽ cần). Tôi
-							được khen về màu sắc và kiểu dáng chiếc váy rất nhiều lần trong buổi tiệc cưới. Tôi cảm thấy
-							thật xinh đẹp khi mặc nó!</p>
-					</div>
-					<div class="photo"><img src="../assets/dist/img/top-reviews/1.jpg" alt=""></div>
+			<div id="reviews-list-container">
+				<!-- JS sẽ render đánh giá vào đây -->
+				<div style="text-align: center; padding: 40px; color: #666;">
+					<i class="fa fa-spinner fa-spin fa-2x"></i>
+					<p style="margin-top: 10px;">Đang tải đánh giá...</p>
 				</div>
 			</div>
-			<div class="wrapper">
-				<div class="reviews">
-					<div class="customer-details">
-						<h4 class="font-22-for-reg-2">SARA JONES</h4>
-						<p class="font-14-for-reg-2">Size đã mặc : <span>XL</span></p>
-						<p class="font-14-for-reg-2">Thuê cho dịp : <span>Tiệc cưới</span></p>
-						<p class="font-14-for-reg-2">Tuổi : <span>25</span></p>
-					</div>
-					<div class="contents">
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-						<a href="#"><i class="fa fa-star ash" aria-hidden="true"></i></a>
-						<span class="font-14-for-reg-2">30 Tháng 11, 2016</span>
-						<h3 class="font-25-for-reg-0">Được khen ngợi suốt buổi tiệc!</h3>
-						<p class="font-16-for-reg-0">Chiếc váy này không dành cho những người nhút nhát - nó sẽ khoe
-							đường cong gợi cảm. Tôi đã phải dùng băng dính thời trang (tôi biết trước là sẽ cần). Tôi
-							được khen về màu sắc và kiểu dáng chiếc váy rất nhiều lần trong buổi tiệc cưới. Tôi cảm thấy
-							thật xinh đẹp khi mặc nó!</p>
-					</div>
-					<div class="photo"><img src="../assets/dist/img/top-reviews/2.jpg" alt=""></div>
-				</div>
+
+			<div id="reviews-pagination" style="text-align: center; margin-top: 30px; display: none;">
+				<button id="btn-load-more-reviews" class="btn btn-default"
+					style="border: 1px solid #ddd; padding: 10px 25px; border-radius: 4px; background: transparent;">
+					Tải thêm đánh giá <i class="fa fa-angle-down" style="margin-left: 5px;"></i>
+				</button>
 			</div>
-			<nav aria-label="Page navigation">
-				<ul class="pagination">
-					<li>
-						<a href="#" aria-label="Trang trước">
-							<i class="fa fa-angle-left" aria-hidden="true"></i>
-						</a>
-					</li>
-					<li><a class="active" href="#">1</a></li>
-					<li><a href="#">2</a></li>
-					<li><a href="#">3</a></li>
-					<li><a href="#">...</a></li>
-					<li><a href="#">9</a></li>
-					<li>
-						<a href="#" class="active" aria-label="Trang sau">
-							<i class="fa fa-angle-right" aria-hidden="true"></i>
-						</a>
-					</li>
-				</ul>
-			</nav>
 		</div>
 	</div>```
 
