@@ -32,19 +32,26 @@ document.addEventListener("DOMContentLoaded", () => {
  * Load cart items from localStorage
  */
 function loadCartFromStorage() {
-    // Try cartItems array first (multi-product cart)
-    const rawItems = localStorage.getItem("cartItems");
-    if (rawItems) {
-        try {
-            const items = JSON.parse(rawItems);
-            if (Array.isArray(items) && items.length > 0) {
-                cartState.items = items;
-                console.log("[CART] Loaded", items.length, "items from cartItems");
-                return;
-            }
-        } catch (e) {
-            console.error("[CART] Failed to parse cartItems:", e);
+    // Read cart using user-specific key if available, otherwise fallback to anon/generic keys
+    function readCart() {
+        const uid = localStorage.getItem('userId');
+        const keys = uid ? [`cartItems:user:${uid}`, 'cartItems:anon', 'cartItems'] : ['cartItems:anon', 'cartItems'];
+        for (const k of keys) {
+            const raw = localStorage.getItem(k);
+            if (!raw) continue;
+            try {
+                const items = JSON.parse(raw);
+                if (Array.isArray(items)) return items;
+            } catch (e) { console.warn('[CART] Failed to parse', k, e); }
         }
+        return null;
+    }
+
+    const items = readCart();
+    if (items && items.length > 0) {
+        cartState.items = items;
+        console.log('[CART] Loaded', items.length, 'items from storage');
+        return;
     }
 
     // Fallback: single currentBooking (backward compat)
@@ -53,8 +60,8 @@ function loadCartFromStorage() {
         try {
             const booking = JSON.parse(raw);
             cartState.items = [booking];
-            // Migrate to cartItems format
-            localStorage.setItem("cartItems", JSON.stringify([booking]));
+            // Migrate to user-specific / anon key
+            saveCartToStorage();
             console.log("[CART] Migrated single booking to cartItems");
             return;
         } catch (e) {
@@ -406,8 +413,12 @@ async function submitOrder() {
         // Get booking ID from response
         const bookingId = data?.data?.id || data?.id || "";
 
-        localStorage.removeItem("cartItems");
-        localStorage.removeItem("currentBooking");
+        // remove all known cart keys (user-scoped and legacy)
+        const uidToClear = localStorage.getItem('userId');
+        localStorage.removeItem('cartItems');
+        localStorage.removeItem('cartItems:anon');
+        if (uidToClear) localStorage.removeItem(`cartItems:user:${uidToClear}`);
+        localStorage.removeItem('currentBooking');
         cartState.items = [];
         cartState.discount = 0;
         cartState.voucherCode = "";
@@ -498,10 +509,17 @@ function toInputDate(dateStr) {
 }
 
 function saveCartToStorage() {
+    const uid = localStorage.getItem('userId');
     if (cartState.items.length > 0) {
-        localStorage.setItem("cartItems", JSON.stringify(cartState.items));
+        const key = uid ? `cartItems:user:${uid}` : 'cartItems:anon';
+        localStorage.setItem(key, JSON.stringify(cartState.items));
+        // keep legacy generic key for backward compat only if anon
+        if (!uid) localStorage.setItem('cartItems', JSON.stringify(cartState.items));
     } else {
-        localStorage.removeItem("cartItems");
-        localStorage.removeItem("currentBooking");
+        // remove all known cart keys
+        localStorage.removeItem('cartItems');
+        localStorage.removeItem('cartItems:anon');
+        if (uid) localStorage.removeItem(`cartItems:user:${uid}`);
+        localStorage.removeItem('currentBooking');
     }
 }

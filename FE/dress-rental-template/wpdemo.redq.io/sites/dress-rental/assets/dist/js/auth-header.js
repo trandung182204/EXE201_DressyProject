@@ -37,11 +37,26 @@ function renderAuthHeader() {
   list.innerHTML = `<li><a href="javascript:void(0)" id="btn-logout">Đăng xuất</a></li>`;
 
   document.getElementById("btn-logout")?.addEventListener("click", () => {
+    try {
+      // clear cart keys associated with this user to avoid leaking cart between users
+      const uid = localStorage.getItem('userId');
+      if (uid) {
+        localStorage.removeItem(`cartItems:user:${uid}`);
+      }
+      // clear anon/legacy carts as well to ensure a clean state after logout
+      localStorage.removeItem('cartItems:anon');
+      localStorage.removeItem('cartItems');
+    } catch (e) { console.warn('[AUTH-HEADER] clearing cart on logout failed', e); }
+
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("fullName");
     localStorage.removeItem("userId");
     localStorage.removeItem("providerId");
+
+    // ensure header cart UI updates immediately if page doesn't reload
+    try { if (typeof window.renderHeaderCart === 'function') window.renderHeaderCart(); } catch (e) {}
+
     window.location.href = getLogoutRedirect();
   });
 
@@ -59,9 +74,18 @@ window.renderHeaderCart = function () {
 
   if (!listEl) return false;
 
-  var raw = localStorage.getItem('cartItems');
-  var items = [];
-  try { items = JSON.parse(raw) || []; } catch (e) { }
+  // Read cart considering user-specific storage to avoid mixing carts between users
+  function readHeaderCart() {
+    const uid = localStorage.getItem('userId');
+    const keys = uid ? [`cartItems:user:${uid}`, 'cartItems:anon', 'cartItems'] : ['cartItems:anon', 'cartItems'];
+    for (const k of keys) {
+      const r = localStorage.getItem(k);
+      if (!r) continue;
+      try { const parsed = JSON.parse(r); if (Array.isArray(parsed)) return parsed; } catch (e) { /* ignore */ }
+    }
+    return [];
+  }
+  var items = readHeaderCart();
 
   if (items.length === 0) {
     var single = localStorage.getItem('currentBooking');

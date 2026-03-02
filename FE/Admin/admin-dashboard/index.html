@@ -517,12 +517,19 @@
 				e.preventDefault();
 
 				// clear auth
-				localStorage.removeItem("accessToken");
-				localStorage.removeItem("token");
-				localStorage.removeItem("user");
-				localStorage.removeItem("currentUser");
-				localStorage.removeItem("username");
-				localStorage.removeItem("role");
+					localStorage.removeItem("accessToken");
+					localStorage.removeItem("token");
+					localStorage.removeItem("user");
+					localStorage.removeItem("currentUser");
+					localStorage.removeItem("username");
+					localStorage.removeItem("role");
+					// also clear any cart keys to avoid leaking cart between users
+					try {
+						const uid = localStorage.getItem('userId');
+						if (uid) localStorage.removeItem(`cartItems:user:${uid}`);
+						localStorage.removeItem('cartItems:anon');
+						localStorage.removeItem('cartItems');
+					} catch (e) { console.warn('Failed clearing cart on logout', e); }
 
 				sessionStorage.removeItem("accessToken");
 				sessionStorage.removeItem("token");
