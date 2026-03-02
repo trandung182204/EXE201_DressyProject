@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chi tiết đơn - Xúng Xính</title>
+
+  <link
+    href="https://fonts.googleapis.com/css?family=Abril+Fatface|Forum|Open+Sans:400,600|Roboto:100,300,400,500,700"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../assets/dist/style/elements.css">
+  <link rel="stylesheet" href="../assets/dist/style/header.css">
+  <link rel="stylesheet" href="../assets/dist/style/footer.css">
+  <link rel="stylesheet" href="../assets/dist/style/style.css">
+  <link rel="stylesheet" href="../assets/dist/style/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    :root {
+      --brand: #d0021b;
+      --text: #1f1f1f;
+      --muted: #777;
+      --line: #eee;
+      --bg: #faf7f4;
+      --card: #fff;
+      --shadow: 0 10px 25px rgba(0, 0, 0, .06);
+      --radius: 14px;
+    }
+
+    body {
+      background: var(--bg);
+    }
+
+    .wrap {
+      padding: 28px 0 40px;
+    }
+
+    .page-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 6px 0 14px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: "Open Sans", sans-serif;
+    }
+
+    .back-link:hover {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .page-title {
+      margin: 0;
+      font-family: "Abril Fatface", serif;
+      letter-spacing: .2px;
+      color: var(--text);
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .card.loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      line-height: 1;
+      font-family: "Open Sans", sans-serif;
+      background: #fff;
+      color: #333;
+      margin-right: 6px;
+      margin-top: 6px;
+      white-space: nowrap;
+    }
+
+    .pill.red {
+      border-color: rgba(208, 2, 27, .35);
+      color: var(--brand);
+      background: rgba(208, 2, 27, .06);
+    }
+
+    .pill.green {
+      border-color: rgba(21, 128, 61, .28);
+      color: #15803d;
+      background: rgba(21, 128, 61, .06);
+    }
+
+    .pill.gray {
+      border-color: rgba(120, 120, 120, .25);
+      color: #555;
+      background: rgba(120, 120, 120, .06);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: 1.4fr .6fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .info-block h3 {
+      margin: 0 0 6px 0;
+      font-size: 18px;
+      color: var(--text);
+      font-family: "Open Sans", sans-serif;
+      font-weight: 700;
+    }
+
+    .info-line {
+      font-family: "Open Sans", sans-serif;
+      font-size: 14px;
+      margin: 4px 0;
+      color: #333;
+    }
+
+    .info-line strong {
+      font-weight: 700;
+    }
+
+    .price-box {
+      border-left: 1px dashed var(--line);
+      padding-left: 14px;
+      text-align: right;
+    }
+
+    .price-label {
+      font-family: "Open Sans", sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .price-value {
+      font-size: 22px;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 800;
+      color: var(--text);
+      margin-top: 2px;
+    }
+
+    .price-sub {
+      margin-top: 8px;
+      font-family: "Open Sans", sans-serif;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 14px 0;
+    }
+
+    .section-title {
+      margin: 0 0 12px 0;
+      font-family: "Open Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .items {
+      display: grid;
+      gap: 12px;
+    }
+
+    .item-card {
+      display: grid;
+      grid-template-columns: 92px 1fr 160px;
+      gap: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .thumb {
+      width: 92px;
+      height: 92px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #f3f3f3;
+    }
+
+    .item-name {
+      font-family: "Open Sans", sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      color: var(--text);
+    }
+
+    .item-meta {
+      font-family: "Open Sans", sans-serif;
+      font-size: 13px;
+      color: #333;
+      margin: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .meta-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      background: #fff;
+      color: #333;
+      font-family: "Open Sans", sans-serif;
+    }
+
+    .meta-tag b {
+      font-weight: 800;
+    }
+
+    .right-col {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+      border-left: 1px dashed var(--line);
+      padding-left: 12px;
+    }
+
+    .right-label {
+      font-family: "Open Sans", sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .right-price {
+      font-family: "Open Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .hint {
+      font-family: "Open Sans", sans-serif;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    /* responsive */
+    @media (max-width: 991px) {
+      .top-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .price-box {
+        border-left: 0;
+        padding-left: 0;
+        border-top: 1px dashed var(--line);
+        padding-top: 12px;
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .item-card {
+        grid-template-columns: 92px 1fr;
+      }
+
+      .right-col {
+        grid-column: 1 / -1;
+        border-left: 0;
+        padding-left: 0;
+        border-top: 1px dashed var(--line);
+        padding-top: 10px;
+        text-align: left;
+      }
+
+      .page-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header-placeholder"></div>
+  <script>
+    fetch('header.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('header-placeholder').innerHTML = html;
+        if (typeof renderAuthHeader === "function") renderAuthHeader();
+      })
+      .catch(console.error);
+  </script>
+
+  <div class="container wrap">
+    <div class="page-head">
+      <a href="my-orders.html" class="back-link">
+        <i class="fa fa-arrow-left"></i> Quay lại
+      </a>
+      <h1 class="page-title">Chi tiết đơn hàng</h1>
+      <div style="width:24px;"></div>
+    </div>
+
+    <div id="detail-root" class="card loading">
+      <i class="fa fa-circle-o-notch fa-spin"></i>
+      <span>Đang tải...</span>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+  <script>
+    fetch('footer.html')
+      .then(r => r.text())
+      .then(html => document.getElementById('footer-placeholder').innerHTML = html)
+      .catch(console.error);
+  </script>
+
+  <script src="../assets/dist/js/vendor/jquery-3.2.0.min.js"></script>
+  <script src="../assets/dist/js/vendor/bootstrap.min.js"></script>
+  <script src="../assets/dist/js/auth-header.js"></script>
+
+  <script>
+    const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    const API_BASE = isLocal ? "http://localhost:5135" : "";
+
+    function getToken() {
+      return localStorage.getItem("accessToken")
+        || localStorage.getItem("token")
+        || localStorage.getItem("jwt")
+        || "";
+    }
+
+    function qs(name) {
+      const u = new URL(location.href);
+      return u.searchParams.get(name);
+    }
+
+    function formatVND(n) {
+      try { return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(n ?? 0); }
+      catch { return (n ?? 0) + " VND"; }
+    }
+
+    function buildAssetUrl(pathOrUrl) {
+      if (!pathOrUrl) return "";
+      if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://")) return pathOrUrl;
+      return API_BASE + pathOrUrl;
+    }
+
+    function fmtDateOnly(d) {
+      if (!d) return "-";
+      return String(d);
+    }
+
+    function prettyStatus(s) {
+      const t = String(s || "").toUpperCase();
+      const map = {
+        PENDING: "Đang đặt",
+        SHIPPING: "Đang giao",
+        DELIVERED: "Đã giao",
+        COMPLETED: "Hoàn thành",
+        CANCELLED: "Đã huỷ"
+      };
+      return map[t] || (s || "-");
+    }
+
+    function statusPillClass(s) {
+      const t = String(s || "").toUpperCase();
+      if (t === "COMPLETED" || t === "DELIVERED") return "green";
+      if (t === "CANCELLED") return "gray";
+      return "red";
+    }
+
+    function prettyPay(s) {
+      const t = String(s || "").toUpperCase();
+      const map = {
+        SUCCESS: "Đã thanh toán",
+        PAID: "Đã thanh toán",
+        PENDING: "Chờ thanh toán",
+        FAILED: "Thanh toán lỗi",
+        UNPAID: "Chưa thanh toán"
+      };
+      return map[t] || (s || "-");
+    }
+
+    function payPillClass(s) {
+      const t = String(s || "").toUpperCase();
+      if (t === "SUCCESS" || t === "PAID") return "green";
+      if (t === "FAILED") return "gray";
+      return "red";
+    }
+
+    async function loadDetail() {
+      const id = qs("id");
+      const token = getToken();
+      const root = document.getElementById("detail-root");
+
+      if (!token) {
+        root.className = "card";
+        root.innerHTML = `Bạn chưa đăng nhập. <a href="login.html">Đăng nhập</a> để xem chi tiết đơn.`;
+        return;
+      }
+      if (!id) {
+        root.className = "card";
+        root.innerHTML = `Thiếu id đơn hàng.`;
+        return;
+      }
+
+      const url = API_BASE + `/api/bookings/me/${encodeURIComponent(id)}/detail`;
+      const res = await fetch(url, {
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer " + token
+        }
+      });
+
+      if (!res.ok) {
+        root.className = "card";
+        root.innerHTML = `Không tải được chi tiết (HTTP ${res.status})<br>${await res.text()}`;
+        return;
+      }
+
+      const json = await res.json();
+      const d = json?.data;
+      if (!d) {
+        root.className = "card";
+        root.innerHTML = `Không có dữ liệu.`;
+        return;
+      }
+
+      const items = d.items || d.Items || [];
+
+      const totalDeposit = (items || []).reduce((sum, it) => {
+        const dep = (it.depositAmount ?? it.DepositAmount ?? 0);
+        return sum + Number(dep || 0);
+      }, 0);
+
+      const created = new Date(d.createdAt || d.CreatedAt).toLocaleString("vi-VN");
+      const bookingStatus = d.bookingStatus || d.BookingStatus;
+      const paymentStatus = d.paymentStatus || d.PaymentStatus;
+
+      root.className = "card";
+      root.innerHTML = `
+        <div class="top-grid">
+          <div class="info-block">
+            <h3>Đơn #${d.bookingId || d.BookingId}</h3>
+            <div class="info-line"><span class="muted">Ngày tạo:</span> <strong>${created}</strong></div>
+
+            <div class="meta-row">
+              <span class="pill ${statusPillClass(bookingStatus)}">
+                <i class="fa fa-truck"></i> ${prettyStatus(bookingStatus)}
+              </span>
+              <span class="pill ${payPillClass(paymentStatus)}">
+                <i class="fa fa-credit-card"></i> ${prettyPay(paymentStatus)}
+              </span>
+            </div>
+
+            <div class="hint">Bạn có thể theo dõi trạng thái đơn ở đây.</div>
+          </div>
+
+          <div class="price-box">
+            <div class="price-label">Tổng tiền thuê</div>
+            <div class="price-value">${formatVND(d.totalPrice || d.TotalPrice)}</div>
+            <div class="price-sub">
+              <span class="muted">Tổng tiền cọc:</span>
+              <strong>${formatVND(totalDeposit)}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">
+          <i class="fa fa-shopping-bag"></i> Sản phẩm trong đơn
+        </div>
+
+        <div class="items">
+          ${items.map(it => {
+        const img = buildAssetUrl(it.imageUrl || it.ImageUrl) || "../assets/dist/img/favorites/1.png";
+        const name = it.productName || it.ProductName || "Sản phẩm";
+        const variant = it.variantName || it.VariantName || "";
+        const size = it.sizeLabel ?? it.SizeLabel ?? "-";
+        const color = it.colorName ?? it.ColorName ?? "-";
+        const deposit = it.depositAmount ?? it.DepositAmount ?? 0;
+        const price = it.price ?? it.Price ?? 0;
+
+        const startD = fmtDateOnly(it.startDate || it.StartDate);
+        const endD = fmtDateOnly(it.endDate || it.EndDate);
+
+        return `
+              <div class="item-card">
+                <img class="thumb" src="${img}" alt="">
+                <div>
+                  <div class="item-name">${name}</div>
+                  ${variant ? `<div class="item-meta muted">${variant}</div>` : ""}
+
+                  <div class="meta-row">
+                    <span class="meta-tag"><i class="fa fa-arrows-h"></i> Size: <b>${size}</b></span>
+                    <span class="meta-tag"><i class="fa fa-tint"></i> Màu: <b>${color}</b></span>
+                    <span class="meta-tag"><i class="fa fa-shield"></i> Cọc: <b>${formatVND(deposit)}</b></span>
+                  </div>
+
+                  <div class="item-meta muted" style="margin-top:8px;">
+                    <i class="fa fa-calendar"></i> ${startD} &nbsp;→&nbsp; ${endD}
+                  </div>
+                </div>
+
+                <div class="right-col">
+                  <div class="right-label">Giá thuê</div>
+                  <div class="right-price">${formatVND(price)}</div>
+                </div>
+              </div>
+            `;
+      }).join("")}
+        </div>
+      `;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => loadDetail().catch(console.error));
+  </script>
+</body>
+
+</html>

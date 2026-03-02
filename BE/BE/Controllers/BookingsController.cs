@@ -5,6 +5,7 @@ using BE.Models;
 using BE.DTOs;
 using System.Threading.Tasks;
 using System;
+using System.Security.Claims;
 
 namespace BE.Controllers
 {
@@ -133,6 +134,40 @@ namespace BE.Controllers
                 return NotFound(new { success = false, message = "Booking not found (or not belong to provider)." });
 
             return Ok(new { success = true, data = item, message = "Fetched successfully" });
+        }
+        [Authorize(Roles = "customer,CUSTOMER")]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMyBookings([FromQuery] string? status)
+        {
+            if (!TryGetUserId(out var customerId))
+                return Unauthorized(new { success = false, message = "Missing userId in token." });
+
+            var data = await _service.GetMyBookingsAsync(customerId, status);
+            return Ok(new { success = true, data, message = "Fetched successfully" });
+        }
+
+        [Authorize(Roles = "customer,CUSTOMER")]
+        [HttpGet("me/{id}/detail")]
+        public async Task<IActionResult> GetMyBookingDetail(long id)
+        {
+            if (!TryGetUserId(out var customerId))
+                return Unauthorized(new { success = false, message = "Missing userId in token." });
+
+            var item = await _service.GetMyBookingDetailAsync(id, customerId);
+            if (item == null) return NotFound(new { success = false, message = "Booking not found" });
+
+            return Ok(new { success = true, data = item, message = "Fetched successfully" });
+        }
+        private bool TryGetUserId(out long userId)
+        {
+            userId = 0;
+
+            // ưu tiên claim "userId" nếu bạn đang dùng
+            var v = User.FindFirst("userId")?.Value
+                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? User.FindFirst("sub")?.Value;
+
+            return !string.IsNullOrWhiteSpace(v) && long.TryParse(v, out userId);
         }
     }
 }
