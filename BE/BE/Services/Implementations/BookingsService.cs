@@ -398,5 +398,184 @@ namespace BE.Services.Implementations
 
             return detail;
         }
+        public async Task<List<CustomerBookingListDto>> GetMyBookingsAsync(long customerId, string? status)
+        {
+            var list = new List<CustomerBookingListDto>();
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+
+            var sql = @"
+        SELECT
+            b.id,
+            b.created_at,
+            b.status,
+            COALESCE(pay.status, 'UNPAID') AS payment_status,
+            COALESCE(pay.payment_method, '') AS payment_method,
+            COALESCE(b.total_price, 0) AS total_price,
+            b.""RecipientName"",
+            b.""RecipientPhone"",
+            b.""RecipientAddress""
+        FROM bookings b
+        LEFT JOIN (
+            SELECT DISTINCT ON (booking_id) booking_id, status, payment_method
+            FROM payments
+            ORDER BY booking_id, paid_at DESC NULLS LAST, id DESC
+        ) pay ON pay.booking_id = b.id
+        WHERE b.customer_id = @customerId
+    ";
+
+            if (!string.IsNullOrWhiteSpace(status))
+                sql += "\n AND UPPER(b.status) = UPPER(@status)";
+
+            sql += "\n ORDER BY b.created_at DESC";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@customerId", customerId);
+
+            if (!string.IsNullOrWhiteSpace(status))
+                cmd.Parameters.AddWithValue("@status", status.Trim());
+
+            await conn.OpenAsync();
+            await using var rd = await cmd.ExecuteReaderAsync();
+
+            while (await rd.ReadAsync())
+            {
+                list.Add(new CustomerBookingListDto
+                {
+                    BookingId = rd.GetInt64(0),
+                    CreatedAt = rd.GetDateTime(1),
+                    BookingStatus = rd.IsDBNull(2) ? "" : rd.GetString(2),
+                    PaymentStatus = rd.IsDBNull(3) ? "UNPAID" : rd.GetString(3),
+                    PaymentMethod = rd.IsDBNull(4) ? "" : rd.GetString(4),
+                    TotalPrice = rd.IsDBNull(5) ? 0 : rd.GetDecimal(5),
+                    RecipientName = rd.IsDBNull(6) ? null : rd.GetString(6),
+                    RecipientPhone = rd.IsDBNull(7) ? null : rd.GetString(7),
+                    RecipientAddress = rd.IsDBNull(8) ? null : rd.GetString(8),
+                });
+            }
+
+            return list;
+        }
+
+        public async Task<BookingDetailDto?> GetMyBookingDetailAsync(long bookingId, long customerId)
+        {
+            // lấy detail như GetBookingDetailAsync nhưng bắt buộc booking thuộc customer này
+            BookingDetailDto? detail = null;
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            await using (var cmd = new NpgsqlCommand(@"
+        SELECT 
+            b.id, 
+            u.full_name, 
+            b.created_at, 
+            b.status, 
+            COALESCE(pay.status, 'UNPAID') as payment_status,
+            COALESCE(b.total_price, 0) as total_price
+        FROM bookings b
+        LEFT JOIN users u ON b.customer_id = u.id
+        LEFT JOIN (
+            SELECT DISTINCT ON (booking_id) booking_id, status
+            FROM payments
+            ORDER BY booking_id, paid_at DESC NULLS LAST, id DESC
+        ) pay ON pay.booking_id = b.id
+        WHERE b.id = @id AND b.customer_id = @customerId
+        LIMIT 1
+    ", conn))
+            {
+                cmd.Parameters.AddWithValue("@id", bookingId);
+                cmd.Parameters.AddWithValue("@customerId", customerId);
+
+                await using var rd = await cmd.ExecuteReaderAsync();
+                if (await rd.ReadAsync())
+                {
+                    detail = new BookingDetailDto
+                    {
+                        BookingId = rd.GetInt64(0),
+                        CustomerName = rd.IsDBNull(1) ? "Unknown" : rd.GetString(1),
+                        CreatedAt = rd.GetDateTime(2),
+                        BookingStatus = rd.IsDBNull(3) ? "" : rd.GetString(3),
+                        PaymentStatus = rd.IsDBNull(4) ? "UNPAID" : rd.GetString(4),
+                        TotalPrice = rd.IsDBNull(5) ? 0 : rd.GetDecimal(5),
+                        Items = new List<BookingItemDto>()
+                    };
+                }
+            }
+
+            if (detail == null) return null;
+
+            await using (var cmdItems = new NpgsqlCommand(@"
+    SELECT
+        p.name as product_name,
+        COALESCE(pv.size_label || ' ' || pv.color_name, '') as variant_name,
+        1 as quantity,
+        bi.price,
+        bi.start_date,
+        bi.end_date,
+        (SELECT image_file_id FROM product_images WHERE product_id = p.id LIMIT 1) as image_file_id,
+
+        pv.size_label,
+        pv.color_name,
+        COALESCE(pv.deposit_amount, 0) as deposit_amount
+    FROM booking_items bi
+    LEFT JOIN products p ON bi.product_id = p.id
+    LEFT JOIN product_variants pv ON bi.product_variant_id = pv.id
+    WHERE bi.booking_id = @id
+    ORDER BY bi.id
+", conn))
+            {
+                cmdItems.Parameters.AddWithValue("@id", bookingId);
+
+                await using var rdItems = await cmdItems.ExecuteReaderAsync();
+                while (await rdItems.ReadAsync())
+                {
+                    DateOnly? start = null;
+                    DateOnly? end = null;
+
+                    if (!rdItems.IsDBNull(4))
+                    {
+                        var raw = rdItems.GetValue(4);
+                        if (raw is DateTime dt) start = DateOnly.FromDateTime(dt);
+                        else if (raw is DateOnly d) start = d;
+                        else if (raw is string s && DateTime.TryParse(s, out var dt2)) start = DateOnly.FromDateTime(dt2);
+                    }
+
+                    if (!rdItems.IsDBNull(5))
+                    {
+                        var raw = rdItems.GetValue(5);
+                        if (raw is DateTime dt) end = DateOnly.FromDateTime(dt);
+                        else if (raw is DateOnly d) end = d;
+                        else if (raw is string s && DateTime.TryParse(s, out var dt2)) end = DateOnly.FromDateTime(dt2);
+                    }
+
+                    string imageUrl = "";
+                    if (!rdItems.IsDBNull(6))
+                    {
+                        var imgVal = rdItems.GetValue(6);
+                        if (imgVal is long l) imageUrl = $"/api/media-files/{l}";
+                        else if (imgVal is int i) imageUrl = $"/api/media-files/{i}";
+                        else if (imgVal is string ss && long.TryParse(ss, out var lv)) imageUrl = $"/api/media-files/{lv}";
+                    }
+
+                    detail.Items.Add(new BookingItemDto
+                    {
+                        ProductName = rdItems.IsDBNull(0) ? "Unknown" : rdItems.GetString(0),
+                        VariantName = rdItems.IsDBNull(1) ? "" : rdItems.GetString(1),
+                        Quantity = rdItems.GetInt32(2),
+                        Price = rdItems.IsDBNull(3) ? 0 : rdItems.GetDecimal(3),
+                        StartDate = start,
+                        EndDate = end,
+                        ImageUrl = imageUrl,
+
+                        SizeLabel = rdItems.IsDBNull(7) ? null : rdItems.GetString(7),
+                        ColorName = rdItems.IsDBNull(8) ? null : rdItems.GetString(8),
+                        DepositAmount = rdItems.IsDBNull(9) ? 0 : rdItems.GetDecimal(9),
+                    });
+                }
+            }
+
+            return detail;
+        }
     }
 }
