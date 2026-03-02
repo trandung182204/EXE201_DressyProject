@@ -104,6 +104,52 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (data?.userName) localStorage.setItem("fullName", data.userName);
         else if (data?.name) localStorage.setItem("fullName", data.name);
 
+        // Migrate anonymous cart (if any) into user-scoped cart
+        try {
+          const uid = data?.userId != null ? String(data.userId) : localStorage.getItem('userId');
+          if (uid) {
+            const anonRaw = localStorage.getItem('cartItems') || localStorage.getItem('cartItems:anon') || '[]';
+            const anon = JSON.parse(anonRaw || '[]');
+            const userKey = `cartItems:user:${uid}`;
+            const userRaw = localStorage.getItem(userKey) || '[]';
+            const userCart = JSON.parse(userRaw || '[]');
+            if (Array.isArray(anon) && anon.length > 0) {
+              // merge anon into userCart (by productId+color+size)
+              anon.forEach(a => {
+                const found = userCart.find(u => u.productId === a.productId && u.color === a.color && u.size === a.size);
+                if (found) { found.quantity = (found.quantity || 1) + (a.quantity || 1); }
+                else { userCart.push(a); }
+              });
+              localStorage.setItem(userKey, JSON.stringify(userCart));
+              // remove anon keys
+              localStorage.removeItem('cartItems');
+              localStorage.removeItem('cartItems:anon');
+            }
+          }
+        } catch (e) { console.warn('Cart migration failed', e); }
+
+        // Migrate anonymous cart (if any) into user-scoped cart (same logic as login)
+        try {
+          const uid = data?.userId != null ? String(data.userId) : localStorage.getItem('userId');
+          if (uid) {
+            const anonRaw = localStorage.getItem('cartItems') || localStorage.getItem('cartItems:anon') || '[]';
+            const anon = JSON.parse(anonRaw || '[]');
+            const userKey = `cartItems:user:${uid}`;
+            const userRaw = localStorage.getItem(userKey) || '[]';
+            const userCart = JSON.parse(userRaw || '[]');
+            if (Array.isArray(anon) && anon.length > 0) {
+              anon.forEach(a => {
+                const found = userCart.find(u => u.productId === a.productId && u.color === a.color && u.size === a.size);
+                if (found) { found.quantity = (found.quantity || 1) + (a.quantity || 1); }
+                else { userCart.push(a); }
+              });
+              localStorage.setItem(userKey, JSON.stringify(userCart));
+              localStorage.removeItem('cartItems');
+              localStorage.removeItem('cartItems:anon');
+            }
+          }
+        } catch (e) { console.warn('Cart migration failed', e); }
+
         const redirectUrl = mapRoleToRedirect(data.role);
         console.log("Redirecting to:", redirectUrl);
         window.location.href = redirectUrl;

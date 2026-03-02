@@ -738,7 +738,18 @@ function setupReserveButton() {
             };
 
             // Check stock including what's already in cart
-            const existingCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+            function readCartForBooking() {
+                const uid = localStorage.getItem('userId');
+                const keys = uid ? [`cartItems:user:${uid}`, 'cartItems:anon', 'cartItems'] : ['cartItems:anon', 'cartItems'];
+                for (const k of keys) {
+                    const raw = localStorage.getItem(k);
+                    if (!raw) continue;
+                    try { const arr = JSON.parse(raw); if (Array.isArray(arr)) return arr; } catch (e) {}
+                }
+                return [];
+            }
+
+            const existingCart = readCartForBooking();
             const existingItem = existingCart.find(ci =>
                 ci.productId === bookingInfo.productId &&
                 ci.color === bookingInfo.color &&
@@ -766,7 +777,11 @@ function setupReserveButton() {
             } else {
                 existingCart.push(bookingInfo);
             }
-            localStorage.setItem("cartItems", JSON.stringify(existingCart));
+            // Save to user-scoped key when possible
+            const uid = localStorage.getItem('userId');
+            const key = uid ? `cartItems:user:${uid}` : 'cartItems:anon';
+            localStorage.setItem(key, JSON.stringify(existingCart));
+            if (!uid) localStorage.setItem('cartItems', JSON.stringify(existingCart));
 
             window.location.href = `cart.html`;
         }
@@ -840,7 +855,16 @@ function setupAddToCartButton() {
         };
 
         // Check stock including cart
-        const existingCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+        const existingCart = (function(){
+            const uid = localStorage.getItem('userId');
+            const keys = uid ? [`cartItems:user:${uid}`, 'cartItems:anon', 'cartItems'] : ['cartItems:anon', 'cartItems'];
+            for (const k of keys) {
+                const raw = localStorage.getItem(k);
+                if (!raw) continue;
+                try { const arr = JSON.parse(raw); if (Array.isArray(arr)) return arr; } catch (e) {}
+            }
+            return [];
+        })();
         const existingItem = existingCart.find(ci =>
             ci.productId === bookingInfo.productId &&
             ci.color === bookingInfo.color &&
@@ -861,7 +885,10 @@ function setupAddToCartButton() {
         } else {
             existingCart.push(bookingInfo);
         }
-        localStorage.setItem("cartItems", JSON.stringify(existingCart));
+        const uid2 = localStorage.getItem('userId');
+        const key2 = uid2 ? `cartItems:user:${uid2}` : 'cartItems:anon';
+        localStorage.setItem(key2, JSON.stringify(existingCart));
+        if (!uid2) localStorage.setItem('cartItems', JSON.stringify(existingCart));
 
         showBookingToast(`✓ Đã thêm "${currentProduct.name}" vào giỏ hàng!`, 'success', 3000);
 
