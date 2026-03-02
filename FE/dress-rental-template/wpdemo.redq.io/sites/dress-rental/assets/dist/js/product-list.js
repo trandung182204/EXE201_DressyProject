@@ -121,8 +121,8 @@ function renderGrid(items) {
             <img class="img-responsive" src="${safeImg(p.thumbnailUrl)}" alt="${p.name || ""}" />
           </a>
           <figcaption>
-            <a href="#" class="left"><i class="fa fa-gift" aria-hidden="true"></i></a>
-            <a href="#" class="right"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+            
+            
             <div class="quick-view">
               <a href="booking.html?id=${p.id}">Xem chi tiết</a>
             </div>
