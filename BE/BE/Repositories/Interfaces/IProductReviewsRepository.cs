@@ -17,5 +17,9 @@ public interface IProductReviewsRepository
     /// Get a BookingItem with its parent Booking loaded (for security validation).
     /// </summary>
     Task<BookingItems?> GetBookingItemWithDetailsAsync(long bookingItemId);
+    /// <summary>
+    /// Check if a customer has already reviewed a specific product (any booking item).
+    /// </summary>
+    Task<bool> HasReviewedProductAsync(long customerId, long productId);
 }
 

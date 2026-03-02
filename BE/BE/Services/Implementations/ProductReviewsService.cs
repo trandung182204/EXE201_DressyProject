@@ -29,6 +29,18 @@ public class ProductReviewsService : IProductReviewsService
     /// </summary>
     public async Task<ReviewEligibilityDto> CheckEligibilityAsync(long customerId, long productId)
     {
+        // Check if already reviewed this product
+        var alreadyReviewed = await _reviewsRepo.HasReviewedProductAsync(customerId, productId);
+        if (alreadyReviewed)
+        {
+            return new ReviewEligibilityDto
+            {
+                CanReview = false,
+                BookingItemId = null,
+                Message = "Bạn đã đánh giá sản phẩm này rồi."
+            };
+        }
+
         var eligibleItem = await _reviewsRepo.GetEligibleBookingItemAsync(customerId, productId);
 
         if (eligibleItem == null)
@@ -37,7 +49,7 @@ public class ProductReviewsService : IProductReviewsService
             {
                 CanReview = false,
                 BookingItemId = null,
-                Message = "Bạn chỉ có thể đánh giá sản phẩm sau khi đã mua và chưa đánh giá."
+                Message = "Hãy đặt hàng để viết đánh giá"
             };
         }
 
@@ -51,21 +63,21 @@ public class ProductReviewsService : IProductReviewsService
 
     public async Task<ProductReviewDto> CreateReviewAsync(long customerId, CreateProductReviewDto request)
     {
-        // 1. Server-side eligibility: find the eligible booking item for this customer + product
+        // 1. Check if already reviewed this product (1 review per product per customer)
+        var alreadyReviewed = await _reviewsRepo.HasReviewedProductAsync(customerId, request.ProductId);
+        if (alreadyReviewed)
+        {
+            throw new InvalidOperationException("Bạn đã đánh giá sản phẩm này rồi.");
+        }
+
+        // 2. Server-side eligibility: find the eligible booking item for this customer + product
         var eligibleItem = await _reviewsRepo.GetEligibleBookingItemAsync(customerId, request.ProductId);
         if (eligibleItem == null)
         {
-            throw new InvalidOperationException("Bạn không đủ điều kiện để đánh giá sản phẩm này. Bạn cần mua sản phẩm trước hoặc đã đánh giá rồi.");
+            throw new InvalidOperationException("Bạn không đủ điều kiện để đánh giá sản phẩm này. Bạn cần đặt hàng trước.");
         }
 
         long bookingItemId = eligibleItem.Id;
-
-        // 2. Double-check: verify no existing review for this booking item (race condition guard)
-        var existingReview = await _reviewsRepo.GetReviewByBookingItemAsync(bookingItemId);
-        if (existingReview != null)
-        {
-            throw new InvalidOperationException("Bạn đã đánh giá cho đơn hàng này rồi.");
-        }
 
         // 3. Security: verify the booking item belongs to this customer and matches the product
         var bookingItem = await _reviewsRepo.GetBookingItemWithDetailsAsync(bookingItemId);

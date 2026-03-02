@@ -81,24 +81,32 @@ public class ProductReviewsRepository : IProductReviewsRepository
     /// Find the first BookingItem where:
     /// - The booking belongs to the specified customer
     /// - The item matches the specified product
-    /// - The booking status is valid (COMPLETED, PAID, CONFIRMED)
-    /// - No review has been submitted for this booking item yet
+    /// - The customer has NOT already reviewed this product (any booking item)
     /// </summary>
     public async Task<BookingItems?> GetEligibleBookingItemAsync(long customerId, long productId)
     {
-        var validStatuses = new[] { "COMPLETED", "PAID", "CONFIRMED" };
+        // If customer already reviewed this product, not eligible
+        var alreadyReviewed = await HasReviewedProductAsync(customerId, productId);
+        if (alreadyReviewed) return null;
 
         return await _db.BookingItems
             .Include(bi => bi.Booking)
             .Where(bi =>
                 bi.ProductId == productId &&
                 bi.Booking != null &&
-                bi.Booking.CustomerId == customerId &&
-                validStatuses.Contains(bi.Booking.Status!) &&
-                !_db.ProductReviews.Any(r => r.BookingItemId == bi.Id)
+                bi.Booking.CustomerId == customerId
             )
             .OrderByDescending(bi => bi.Booking!.CreatedAt)
             .FirstOrDefaultAsync();
+    }
+
+    /// <summary>
+    /// Check if a customer has already reviewed a specific product (any booking item).
+    /// </summary>
+    public async Task<bool> HasReviewedProductAsync(long customerId, long productId)
+    {
+        return await _db.ProductReviews
+            .AnyAsync(r => r.CustomerId == customerId && r.ProductId == productId);
     }
 
     /// <summary>

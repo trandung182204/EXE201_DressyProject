@@ -1036,15 +1036,26 @@ function initReviews() {
 
 /**
  * Check if user is eligible to review this product
+ * Always show the button; show toast if not eligible
  */
 function checkReviewEligibility() {
     var token = localStorage.getItem('token');
     var reviewBtn = document.getElementById('btn-open-review-modal');
     if (!reviewBtn) return;
 
-    // If not logged in, hide write review button
+    // Always show the button
+    reviewBtn.style.display = '';
+
+    // If not logged in: show button but prompt login on click
     if (!token) {
-        reviewBtn.style.display = 'none';
+        eligibleBookingItemId = null;
+        reviewBtn.removeAttribute('data-toggle');
+        reviewBtn.removeAttribute('data-target');
+        reviewBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            showBookingToast('Vui lòng đăng nhập để viết đánh giá.', 'error', 3000);
+            setTimeout(function () { window.location.href = 'login.html'; }, 1500);
+        });
         return;
     }
 
@@ -1061,27 +1072,21 @@ function checkReviewEligibility() {
         .then(function (data) {
             if (data.canReview && data.bookingItemId) {
                 eligibleBookingItemId = data.bookingItemId;
-                reviewBtn.style.display = '';
                 reviewBtn.disabled = false;
                 console.log('[REVIEW] Eligible, bookingItemId:', eligibleBookingItemId);
             } else {
                 eligibleBookingItemId = null;
-                reviewBtn.disabled = true;
-                reviewBtn.style.opacity = '0.5';
-                reviewBtn.style.cursor = 'not-allowed';
-                reviewBtn.title = data.message || 'Bạn chỉ có thể đánh giá sản phẩm sau khi đã mua.';
                 reviewBtn.removeAttribute('data-toggle');
                 reviewBtn.removeAttribute('data-target');
                 reviewBtn.addEventListener('click', function (e) {
                     e.preventDefault();
-                    showBookingToast(data.message || 'Bạn chỉ có thể đánh giá sản phẩm sau khi đã mua.', 'error', 4000);
+                    showBookingToast(data.message || 'Hãy đặt hàng để viết đánh giá', 'error', 4000);
                 });
                 console.log('[REVIEW] Not eligible:', data.message);
             }
         })
         .catch(function (err) {
             console.error('[REVIEW] Eligibility check error:', err);
-            reviewBtn.style.display = 'none';
         });
 }
 
@@ -1327,6 +1332,11 @@ function loadReviews(page, append) {
                     loadMoreDiv.style.display = 'none';
                 }
             }
+
+            // Load customer photos on first page
+            if (!append) {
+                loadCustomerReviewPhotos();
+            }
         })
         .catch(function (error) {
             console.error("Load reviews error:", error);
@@ -1334,6 +1344,114 @@ function loadReviews(page, append) {
                 container.innerHTML = '<div style="text-align:center; padding:20px; color:red;">Không thể tải đánh giá. Vui lòng tải lại trang.</div>';
             }
         });
+}
+
+/**
+ * Load all review images and display in "Ảnh từ khách hàng" section
+ * with uniform size and prev/next navigation arrows
+ */
+var customerPhotoIndex = 0;
+var customerPhotoPerPage = 6;
+var customerPhotoList = [];
+
+function loadCustomerReviewPhotos() {
+    var productId = getProductId();
+    if (!productId) return;
+
+    var container = document.getElementById('customer-review-photos');
+    if (!container) return;
+
+    fetch(API_BASE + '/api/ProductReviews?productId=' + productId + '&page=1&pageSize=100')
+        .then(function (res) {
+            if (!res.ok) throw new Error("Failed to fetch reviews for photos");
+            return res.json();
+        })
+        .then(function (data) {
+            if (!data.items || data.items.length === 0) return;
+
+            customerPhotoList = [];
+            data.items.forEach(function (review) {
+                if (review.imageUrls && review.imageUrls.length > 0) {
+                    review.imageUrls.forEach(function (url) {
+                        var fullUrl = url.startsWith('http') ? url : (API_BASE + url);
+                        customerPhotoList.push(fullUrl);
+                    });
+                }
+            });
+
+            if (customerPhotoList.length === 0) return;
+
+            customerPhotoIndex = 0;
+            renderCustomerPhotos(container);
+        })
+        .catch(function (err) {
+            console.error('[REVIEW] Load customer photos error:', err);
+        });
+}
+
+function renderCustomerPhotos(container) {
+    container.innerHTML = '';
+
+    // Wrapper with overflow hidden
+    var outerWrap = document.createElement('div');
+    outerWrap.style.cssText = 'position:relative; width:100%;';
+
+    // Left arrow
+    var btnLeft = document.createElement('button');
+    btnLeft.innerHTML = '<i class="fa fa-chevron-left"></i>';
+    btnLeft.style.cssText = 'position:absolute; left:-15px; top:50%; transform:translateY(-50%); z-index:2; width:32px; height:32px; border-radius:50%; border:1px solid #ddd; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.15); font-size:14px; color:#333;';
+    btnLeft.onclick = function () {
+        customerPhotoIndex = Math.max(0, customerPhotoIndex - customerPhotoPerPage);
+        renderCustomerPhotos(container);
+    };
+
+    // Right arrow
+    var btnRight = document.createElement('button');
+    btnRight.innerHTML = '<i class="fa fa-chevron-right"></i>';
+    btnRight.style.cssText = 'position:absolute; right:-15px; top:50%; transform:translateY(-50%); z-index:2; width:32px; height:32px; border-radius:50%; border:1px solid #ddd; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.15); font-size:14px; color:#333;';
+    btnRight.onclick = function () {
+        customerPhotoIndex = Math.min(customerPhotoList.length - customerPhotoPerPage, customerPhotoIndex + customerPhotoPerPage);
+        if (customerPhotoIndex < 0) customerPhotoIndex = 0;
+        renderCustomerPhotos(container);
+    };
+
+    // Hide arrows when not needed
+    if (customerPhotoIndex <= 0) btnLeft.style.display = 'none';
+    if (customerPhotoIndex + customerPhotoPerPage >= customerPhotoList.length) btnRight.style.display = 'none';
+
+    // Images row
+    var imagesRow = document.createElement('div');
+    imagesRow.style.cssText = 'display:flex; gap:10px; overflow:hidden; padding:0 5px;';
+
+    var visibleImages = customerPhotoList.slice(customerPhotoIndex, customerPhotoIndex + customerPhotoPerPage);
+    visibleImages.forEach(function (imgUrl) {
+        var wrapper = document.createElement('div');
+        wrapper.style.cssText = 'width:100px; height:100px; border-radius:8px; overflow:hidden; border:1px solid #eee; flex-shrink:0; cursor:pointer; transition:transform 0.2s;';
+        wrapper.onmouseenter = function () { this.style.transform = 'scale(1.05)'; };
+        wrapper.onmouseleave = function () { this.style.transform = 'scale(1)'; };
+        wrapper.onclick = function () { window.open(imgUrl, '_blank'); };
+
+        var img = document.createElement('img');
+        img.src = imgUrl;
+        img.alt = 'Ảnh khách hàng';
+        img.style.cssText = 'width:100%; height:100%; object-fit:cover; display:block;';
+
+        wrapper.appendChild(img);
+        imagesRow.appendChild(wrapper);
+    });
+
+    outerWrap.appendChild(btnLeft);
+    outerWrap.appendChild(imagesRow);
+    outerWrap.appendChild(btnRight);
+    container.appendChild(outerWrap);
+
+    // Counter
+    var counter = document.createElement('div');
+    counter.style.cssText = 'text-align:center; margin-top:8px; font-size:13px; color:#999;';
+    var from = customerPhotoIndex + 1;
+    var to = Math.min(customerPhotoIndex + customerPhotoPerPage, customerPhotoList.length);
+    counter.innerText = from + '-' + to + ' / ' + customerPhotoList.length + ' ảnh';
+    container.appendChild(counter);
 }
 
 function updateReviewHeaderStats(totalItems, items) {

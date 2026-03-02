@@ -384,9 +384,9 @@
 							<p>4 trên 5 sao</p>
 						</div>
 
-						<div class="rate">
-							<p class="font-18-for-reg-1">Đánh giá chung</p>
-							<div id="overall-star-rating" style="display:inline-block; margin-right: 10px;">
+						<div class="rate" style="margin-top: 20px;">
+							<p class="font-18-for-reg-1" style="margin-bottom: 5px;">Đánh giá chung</p>
+							<div id="overall-star-rating" style="display:block; margin-bottom: 15px;">
 								<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
 								<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
 								<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
@@ -394,7 +394,8 @@
 								<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
 							</div>
 							<button type="button" class="review-inner" data-toggle="modal" data-target="#rq_modal1"
-								data-whatever="@mdo" id="btn-open-review-modal">Viết đánh giá</button>
+								data-whatever="@mdo" id="btn-open-review-modal"
+								style="display: block; width: fit-content; margin-left: 50px;">Viết đánh giá</button>
 
 
 							<div class="modal fade rq-modal-2" id="rq_modal1" tabindex="-1" role="dialog"
@@ -482,25 +483,11 @@
 				</div>
 				<div class="col-sm-5 col-sm-offset-2 col-md-offset-3 custom-offset-3">
 					<h4 class="font-30-for-reg-0">Ảnh từ khách hàng</h4>
-					<div class="customer-carousel owl-carousel owl-theme">
-						<div class="item">
-							<figure><img src="../assets/dist/img/customer-photo/1.jpg" alt=""></figure>
-						</div>
-						<div class="item">
-							<figure><img src="../assets/dist/img/customer-photo/2.jpg" alt=""></figure>
-						</div>
-						<div class="item">
-							<figure><img src="../assets/dist/img/customer-photo/3.jpg" alt=""></figure>
-						</div>
-						<div class="item">
-							<figure><img src="../assets/dist/img/customer-photo/1.jpg" alt=""></figure>
-						</div>
-						<div class="item">
-							<figure><img src="../assets/dist/img/customer-photo/2.jpg" alt=""></figure>
-						</div>
-						<div class="item">
-							<figure><img src="../assets/dist/img/customer-photo/3.jpg" alt=""></figure>
-						</div>
+					<div id="customer-review-photos"
+						style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+						<!-- JS sẽ render ảnh từ đánh giá vào đây -->
+						<p id="no-customer-photos" style="color: #999; font-style: italic;">Chưa có ảnh từ khách hàng.
+						</p>
 					</div>
 				</div>
 			</div>
