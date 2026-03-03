@@ -301,6 +301,8 @@
       .then(html => {
         document.getElementById('header-placeholder').innerHTML = html;
         if (typeof renderAuthHeader === "function") renderAuthHeader();
+        if (typeof renderHeaderCart === "function") renderHeaderCart();
+        if (typeof initHeaderDelegatedHandlers === "function") initHeaderDelegatedHandlers();
       })
       .catch(console.error);
   </script>

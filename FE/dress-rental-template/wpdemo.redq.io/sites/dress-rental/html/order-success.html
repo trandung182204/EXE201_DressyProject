@@ -39,7 +39,9 @@
             })
             .then(data => {
                 document.getElementById('header-placeholder').innerHTML = data;
-                if (typeof renderAuthHeader === "function") renderAuthHeader();
+                    if (typeof renderAuthHeader === "function") renderAuthHeader();
+                    if (typeof renderHeaderCart === "function") renderHeaderCart();
+                    if (typeof initHeaderDelegatedHandlers === "function") initHeaderDelegatedHandlers();
             })
             .catch(error => console.error('Lỗi khi tải header:', error));
     </script>

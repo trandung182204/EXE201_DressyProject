@@ -63,6 +63,54 @@ function renderAuthHeader() {
   return true;
 }
 
+// Ensure header interactions work even if header/html was injected asynchronously.
+function initHeaderDelegatedHandlers() {
+  if (window.__headerDelegatesInstalled) return;
+  window.__headerDelegatesInstalled = true;
+
+  // Delegate cart toggle
+  document.addEventListener('click', function (e) {
+    const cartToggle = e.target.closest && e.target.closest('.rq-shopping-cart-items-list');
+    if (cartToggle) {
+      e.preventDefault();
+      cartToggle.classList.toggle('active');
+      const parent = cartToggle.parentElement;
+      if (!parent) return;
+      const panel = parent.querySelector('.rq-shopping-cart-inner-div');
+      if (!panel) return;
+      if (cartToggle.classList.contains('active')) panel.classList.add('rq-visible');
+      else panel.classList.remove('rq-visible');
+    }
+  }, false);
+
+  // Click outside to close cart (delegated)
+  document.addEventListener('click', function (e) {
+    const openPanels = document.querySelectorAll('.rq-shopping-cart-inner-div.rq-visible');
+    if (openPanels.length === 0) return;
+    // If click is inside any open panel or its toggle, ignore
+    for (const p of openPanels) {
+      if (p.contains(e.target) || (p.parentElement && p.parentElement.querySelector('.rq-shopping-cart-items-list')?.contains(e.target))) {
+        return;
+      }
+    }
+    // otherwise close all
+    openPanels.forEach(p => p.classList.remove('rq-visible'));
+    document.querySelectorAll('.rq-shopping-cart-items-list.active').forEach(a => a.classList.remove('active'));
+  }, false);
+
+  // Search open/close (delegated)
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('.rq_btn_header_search')) {
+      const event_taker = document.querySelector('.header-search.open-search');
+      if (event_taker) event_taker.classList.add('open');
+    }
+    if (e.target.closest && e.target.closest('.search-close.close')) {
+      const event_taker = document.querySelector('.header-search.open-search');
+      if (event_taker) event_taker.classList.remove('open');
+    }
+  }, false);
+}
+
 /**
  * Render header cart dropdown from localStorage.cartItems
  */
