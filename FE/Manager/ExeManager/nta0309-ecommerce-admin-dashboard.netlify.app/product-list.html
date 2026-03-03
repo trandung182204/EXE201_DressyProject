@@ -21,6 +21,16 @@
 		<link rel="icon" href="img/favicon.png">
 		
 		<!-- sherah Stylesheet -->
+        <style>
+        /* Fix product list overflow / badge alignment and truncate long titles */
+    	.sherah-product-card__content { display: flex; align-items: center; gap: 12px; }
+    	.sherah-product-card__title { flex: 1 1 auto; min-width: 0; }
+    	.sherah-product-card__title a { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    	.sherah-product-card__meta { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    	.sherah-product-card__img img { width: 56px; height: 56px; object-fit: cover; border-radius: 6px; }
+    	/* Ensure small lists align correctly */
+    	.sherah-product__bottom { display:flex; align-items:center; gap:8px; }
+        </style>
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/font-awesome-all.min.css">
 		<link rel="stylesheet" href="css/charts.min.css">

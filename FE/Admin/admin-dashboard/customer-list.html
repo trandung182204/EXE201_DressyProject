@@ -22,8 +22,6 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="style.css">
 
-
-
     <style>
         /* --- CUSTOM MODERN STYLES --- */
         :root {
@@ -170,6 +168,13 @@
             font-size: 13px;
         }
 
+        /* Tighten spacing and left-align first column contents */
+        .user-profile-cell { gap: 8px; }
+        .user-avatar-placeholder { margin-right: 6px; }
+        .user-profile-cell .user-info { margin-left: 6px; min-width: 0; }
+        .user-info h6, .user-info small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; margin: 0; }
+        .sherah-table__body td:first-child { padding-left: 10px; }
+
         /* Role Badges */
         .role-badge {
             display: inline-flex;
@@ -286,6 +291,13 @@
         /* Utility */
         .text-date { font-family: 'Roboto Mono', monospace; font-size: 13px; color: #64748b; }
         .text-phone { font-family: 'Roboto Mono', monospace; font-size: 13px; color: #475569; }
+
+        /* Force left alignment for first column content */
+        .table-card .table-responsive { padding: 0 !important; }
+        .sherah-table__body td:first-child, .sherah-table__head th:first-child { padding-left: 8px !important; }
+        .user-profile-cell { margin-left: 0 !important; }
+        .user-avatar-placeholder { margin-left: 0 !important; margin-right: 8px !important; }
+        .user-info { margin-left: 0 !important; }
     </style>
 </head>
 
@@ -361,8 +373,11 @@
                                             <table class="table">
                                                 <thead class="sherah-table__head">
                                                     <tr>
-                                                        <th class="sortable" data-sort="fullName" style="width: 30%;">
-                                                            Thông tin User <span class="sort-indicator"></span>
+                                                        <th class="sortable" data-sort="fullName" style="width: 24%;">
+                                                            Tên người dùng <span class="sort-indicator"></span>
+                                                        </th>
+                                                        <th class="sortable" data-sort="email" style="width: 24%;">
+                                                            Email <span class="sort-indicator"></span>
                                                         </th>
                                                         <th class="sortable" data-sort="phone">
                                                             Số điện thoại <span class="sort-indicator"></span>
@@ -414,12 +429,9 @@
     <script src="js/jvector-map.js"></script>
     <script src="js/slickslider.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/auth-header.js"></script>
+    <script src="js/auth.js"></script>
 
-    <!-- Auth / Header -->
-	<script src="js/auth.js"></script>
-	<script src="js/auth-header.js"></script>
-	<script src="js/load-sidebar.js"></script>
-	<script src="js/admin-ui.js"></script>
     
     <script>
         async function loadLayout() {
@@ -469,7 +481,7 @@
             if (users.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6" class="text-center py-5">
+                        <td colspan="7" class="text-center py-5">
                             <div class="d-flex flex-column align-items-center justify-content-center" style="opacity: 0.6;">
                                 <i class="fa fa-folder-open fa-3x mb-3 text-secondary"></i>
                                 <h6 class="text-secondary fw-normal">Không tìm thấy dữ liệu phù hợp</h6>
@@ -509,9 +521,11 @@
                             <div class="user-avatar-placeholder">${avatarChar}</div>
                             <div class="user-info">
                                 <h6><a href="#">${user.fullName || 'No Name'}</a></h6>
-                                <small>${user.email || 'No Email'}</small>
                             </div>
                         </div>
+                    </td>
+                    <td>
+                        <div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">${user.email || '--'}</div>
                     </td>
                     <td><span class="text-phone">${user.phone || '--'}</span></td>
                     <td>${roleHtml}</td>
@@ -669,35 +683,32 @@
                     // Update UI Class màu sắc
                     selectEl.className = `status-select ${newStatus === 'ACTIVE' ? 'status-active' : 'status-blocked'}`;
                 } else {
-                    showToast('Cập nhật thất bại: ' + (res.message || 'Lỗi không xác định'), 'danger');
+                    alert('Cập nhật thất bại: ' + (res.message || 'Lỗi không xác định'));
                     // Reset lại giá trị cũ
                     selectEl.value = newStatus === 'ACTIVE' ? 'BLOCKED' : 'ACTIVE';
                 }
             })
             .catch(err => {
                 selectEl.disabled = false;
-                showToast('Lỗi hệ thống: ' + (err || ''), 'danger');
+                alert('Lỗi hệ thống: ' + err);
             });
         }
 
-        async function deleteUser(id, btnEl) {
-            const ok = await showConfirm('Bạn có chắc chắn muốn xóa người dùng này?');
-            if (!ok) return;
-
-            try {
-                const r = await fetch(`${apiBase}/${id}`, { method: 'DELETE' });
-                const res = await r.json();
-                if (res.success) {
-                    // Xóa khỏi mảng local
-                    allUsers = allUsers.filter(u => u.id !== id);
-                    applyFiltersAndSort(); // Re-render
-                    showToast('Xóa người dùng thành công', 'success');
-                } else {
-                    showToast('Xóa thất bại: ' + (res.message || ''), 'danger');
-                }
-            } catch (err) {
-                showToast('Lỗi xóa: ' + (err || ''), 'danger');
-            }
+        function deleteUser(id, btnEl) {
+            if (!confirm('Bạn có chắc chắn muốn xóa người dùng này?')) return;
+            
+            fetch(`${apiBase}/${id}`, { method: 'DELETE' })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        // Xóa khỏi mảng local
+                        allUsers = allUsers.filter(u => u.id !== id);
+                        applyFiltersAndSort(); // Re-render
+                    } else {
+                        alert('Xóa thất bại: ' + res.message);
+                    }
+                })
+                .catch(err => alert('Lỗi xóa: ' + err));
         }
 
         // --- 4. HELPERS ---

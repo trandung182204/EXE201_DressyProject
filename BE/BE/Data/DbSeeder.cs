@@ -40,7 +40,9 @@ public static class DbSeeder
         {
             Email = adminEmail,
             FullName = "System Admin",
-            Status = "ACTIVE"
+            Status = "ACTIVE",
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
         adminUser.PasswordHash = hasher.HashPassword(adminUser, adminPassword);
 

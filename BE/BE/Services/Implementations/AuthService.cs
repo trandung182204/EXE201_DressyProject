@@ -57,6 +57,8 @@ public class AuthService : IAuthService
                 FullName = req.FullName,
                 Phone = req.Phone,
                 Status = "ACTIVE",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
             };
             user.PasswordHash = _hasher.HashPassword(user, req.Password);
 

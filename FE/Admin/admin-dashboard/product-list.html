@@ -30,7 +30,7 @@
             border-radius: 8px;
             margin-bottom: 20px;
             border: 1px solid #eee;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
         }
 
         .filter-label {
@@ -64,7 +64,7 @@
             border: 1px solid #eee;
             overflow-x: auto;
         }
-        
+
         .sherah-table__head th {
             font-weight: 600;
             color: #333;
@@ -80,11 +80,14 @@
             border-bottom: 1px solid #f0f0f0;
         }
 
+        /* Make first column content sit closer to left edge */
+        .sherah-table__body td:first-child { padding-left: 10px; }
+
         /* Product Info Cell */
         .product-info-cell {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 6px;
         }
 
         .product-img-wrapper {
@@ -95,15 +98,24 @@
             border: 1px solid #eee;
             background: #f9f9f9;
             flex-shrink: 0;
-            display: flex; /* Căn giữa nội dung nếu ảnh lỗi */
+            display: flex;
+            /* Căn giữa nội dung nếu ảnh lỗi */
             align-items: center;
             justify-content: center;
         }
+
+        .product-img-wrapper { margin-right: 6px; }
 
         .product-img-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .product-details {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
         }
 
         .product-details h6 {
@@ -113,10 +125,17 @@
             color: #222;
             line-height: 1.2;
         }
-        
+
         .product-details small {
             color: #888;
             font-size: 13px;
+        }
+
+        .product-details h6, .product-details small {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
         }
 
         .badge-type {
@@ -143,8 +162,18 @@
             -webkit-appearance: none;
             width: 120px;
         }
-        .status-available { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
-        .status-unavailable { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+        .status-available {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-unavailable {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
 
         /* --- 4. Pagination & Sort --- */
         .pagination-btn {
@@ -156,13 +185,41 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .pagination-btn:hover:not(:disabled) { background: #f3f4f6; }
-        .pagination-btn.active { background: #0d6efd; color: #fff; border-color: #0d6efd; }
-        .pagination-btn:disabled { color: #ccc; cursor: not-allowed; }
 
-        .sortable { cursor: pointer; user-select: none; }
-        .sortable:hover { background-color: #f1f5f9; }
-        .sort-indicator { margin-left: 5px; font-size: 10px; }
+        .pagination-btn:hover:not(:disabled) {
+            background: #f3f4f6;
+        }
+
+        .pagination-btn.active {
+            background: #0d6efd;
+            color: #fff;
+            border-color: #0d6efd;
+        }
+
+        .pagination-btn:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sortable:hover {
+            background-color: #f1f5f9;
+        }
+
+        .sort-indicator {
+            margin-left: 5px;
+            font-size: 10px;
+        }
+        /* Force left alignment for product first column */
+        .table-responsive { padding: 0 !important; }
+        .sherah-table__body td:first-child, .sherah-table__head th:first-child { padding-left: 8px !important; }
+        .product-info-cell { margin-left: 0 !important; }
+        .product-img-wrapper { margin-left: 0 !important; margin-right: 8px !important; }
+        .product-details { margin-left: 0 !important; }
     </style>
 </head>
 
@@ -178,33 +235,35 @@
                     <div class="col-12">
                         <div class="sherah-body">
                             <div class="sherah-dsinner">
-                                
+
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="sherah-breadcrumb mg-top-30">
                                             <h2 class="sherah-breadcrumb__title">Quản lý sản phẩm</h2>
                                             <ul class="sherah-breadcrumb__list">
                                                 <li><a href="#">Trang chủ</a></li>
-                                                <li class="active"><a href='product-list.html'>Danh sách sản phẩm</a></li>
+                                                <li class="active"><a href='product-list.html'>Danh sách sản phẩm</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="sherah-page-inner mg-top-25">
-                                    
+
                                     <div class="filter-toolbar">
                                         <div class="row g-3 align-items-end">
                                             <div class="col-lg-3 col-md-6 col-12">
                                                 <label class="filter-label">Tìm kiếm</label>
-                                                <input id="search-input" type="text" class="filter-input" placeholder="Tên sản phẩm, NCC...">
+                                                <input id="search-input" type="text" class="filter-input"
+                                                    placeholder="Tên sản phẩm, NCC...">
                                             </div>
 
                                             <div class="col-lg-2 col-md-6 col-6">
                                                 <label class="filter-label">Loại sản phẩm</label>
                                                 <select id="type-filter" class="filter-input">
                                                     <option value="">Tất cả loại</option>
-                                                    </select>
+                                                </select>
                                             </div>
 
                                             <div class="col-lg-2 col-md-6 col-6">
@@ -219,13 +278,16 @@
                                             <div class="col-lg-3 col-md-6 col-12">
                                                 <label class="filter-label">Ngày tạo</label>
                                                 <div class="d-flex gap-2" style="gap:5px">
-                                                    <input type="date" id="date-from" class="filter-input" title="Từ ngày">
-                                                    <input type="date" id="date-to" class="filter-input" title="Đến ngày">
+                                                    <input type="date" id="date-from" class="filter-input"
+                                                        title="Từ ngày">
+                                                    <input type="date" id="date-to" class="filter-input"
+                                                        title="Đến ngày">
                                                 </div>
                                             </div>
 
                                             <div class="col-lg-2 col-md-12 col-12 text-end">
-                                                <button id="btn-reset" class="btn btn-light border w-100" style="padding: 9px;" onclick="resetFilters()">
+                                                <button id="btn-reset" class="btn btn-light border w-100"
+                                                    style="padding: 9px;" onclick="resetFilters()">
                                                     <i class="fa fa-sync"></i> Làm mới
                                                 </button>
                                             </div>
@@ -236,8 +298,11 @@
                                         <table class="table table-hover mb-0">
                                             <thead class="sherah-table__head">
                                                 <tr>
-                                                    <th class="sortable" data-sort="name" style="width: 35%;">
+                                                    <th class="sortable" data-sort="name" style="width: 30%;">
                                                         Sản phẩm <span class="sort-indicator"></span>
+                                                    </th>
+                                                    <th class="sortable" data-sort="categories" style="width: 14%;">
+                                                        Thể loại <span class="sort-indicator"></span>
                                                     </th>
                                                     <th class="sortable" data-sort="providerName">
                                                         Nhà cung cấp <span class="sort-indicator"></span>
@@ -252,20 +317,21 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="sherah-table__body" id="product-table-body">
-                                                </tbody>
+                                            </tbody>
                                         </table>
                                     </div>
 
                                     <div class="d-flex justify-content-between align-items-center mt-4">
                                         <div class="text-muted small">
-                                            Hiển thị <span id="showing-count" style="font-weight:bold;">0</span> sản phẩm
+                                            Hiển thị <span id="showing-count" style="font-weight:bold;">0</span> sản
+                                            phẩm
                                         </div>
                                         <div id="pagination" class="d-flex">
-                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
-                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -285,22 +351,18 @@
     <script src="js/jvector-map.js"></script>
     <script src="js/slickslider.min.js"></script>
     <script src="js/main.js"></script>
-   
+    <script src="js/auth-header.js"></script>
+    <script src="js/auth.js"></script>
 
-    <!-- Auth / Header -->
-	<script src="js/auth.js"></script>
-	<script src="js/auth-header.js"></script>
-	<script src="js/load-sidebar.js"></script>
-	<script src="js/admin-ui.js"></script>
 
     <script>
         async function loadLayout() {
             try {
                 const headerRes = await fetch("header.html");
-                if(headerRes.ok) document.getElementById("header-container").innerHTML = await headerRes.text();
+                if (headerRes.ok) document.getElementById("header-container").innerHTML = await headerRes.text();
 
                 const dashRes = await fetch("dashboard.html");
-                if(dashRes.ok) document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+                if (dashRes.ok) document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
                 if (typeof initSherahLayout === 'function') initSherahLayout();
                 if (window.loadAuthToHeader) window.loadAuthToHeader();
@@ -314,12 +376,13 @@
     <script>
         // --- CONFIG & STATE ---
         const API_BASE = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-                ? "http://localhost:5135/api"
-                : "/api";
+            ? "http://localhost:5135/api"
+            : "/api";
         const endpoints = {
             products: `${API_BASE}/Products`,
             providers: `${API_BASE}/Providers`,
-            images: `${API_BASE}/ProductImages`
+            images: `${API_BASE}/ProductImages`,
+            categories: `${API_BASE}/Categories`
         };
 
         // API_HOST is API_BASE without trailing '/api' so we can prefix media URLs
@@ -328,7 +391,8 @@
         let allProducts = [];
         let allProviders = [];
         let allImages = [];
-        
+        let allCategories = [];
+
         let currentPage = 1;
         const pageSize = 6;
         let currentSort = { field: 'createdAt', dir: 'desc' };
@@ -347,13 +411,19 @@
             Promise.all([
                 fetch(endpoints.products).then(res => res.json()),
                 fetch(endpoints.providers).then(res => res.json()),
-                fetch(endpoints.images).then(res => res.json())
-            ]).then(([prodRes, provRes, imgRes]) => {
-                if (prodRes.success) allProducts = prodRes.data || [];
-                if (provRes.success) allProviders = provRes.data || [];
-                if (imgRes.success) allImages = imgRes.data || [];
-                
-                populateTypeFilter(); 
+                fetch(endpoints.images).then(res => res.json()),
+                fetch(endpoints.categories).then(res => res.json())
+            ]).then(([prodRes, provRes, imgRes, catRes]) => {
+                if (prodRes && prodRes.success) allProducts = prodRes.data || [];
+                if (provRes && provRes.success) allProviders = provRes.data || [];
+                if (imgRes && imgRes.success) allImages = imgRes.data || [];
+                if (catRes) {
+                    if (catRes.success && Array.isArray(catRes.data)) allCategories = catRes.data;
+                    else if (Array.isArray(catRes)) allCategories = catRes;
+                    else allCategories = [];
+                }
+
+                populateTypeFilter();
                 applyFiltersAndSort();
             }).catch(err => console.error('Error fetching data:', err));
         }
@@ -391,9 +461,25 @@
         }
 
         function populateTypeFilter() {
-            const types = [...new Set(allProducts.map(p => p.productType || p.ProductType).filter(Boolean))];
             const select = filters.type;
             select.innerHTML = '<option value="">Tất cả loại</option>';
+
+            // Prefer categories loaded from API
+            if (Array.isArray(allCategories) && allCategories.length) {
+                // normalize name and id fields
+                const cats = allCategories.map(c => ({ id: c.id ?? c.ID ?? c.categoryId ?? c.CategoryId, name: (c.name || c.categoryName || c.Name || c.CategoryName || String(c.id || c.ID || '')).toString().trim() }));
+                cats.sort((a,b) => a.name.localeCompare(b.name));
+                cats.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = String(c.id);
+                    opt.textContent = c.name;
+                    select.appendChild(opt);
+                });
+                return;
+            }
+
+            // Fallback to productType when categories not available
+            const types = [...new Set(allProducts.map(p => p.productType || p.ProductType).filter(Boolean))];
             types.sort().forEach(t => {
                 const opt = document.createElement('option');
                 opt.value = t;
@@ -409,6 +495,32 @@
                 finalProviderName: getProviderName(p.providerId, p),
                 finalImage: getProductImage(p.id, p),
                 finalType: p.productType || p.ProductType || '',
+                finalCategories: (function(){
+                    // Try several shapes: array of objects [{id,name}], array of ids [1,2], single id, or name string
+                    const srcObj = p.categories || p.productCategories || p.ProductCategories || p.productCategory || p.categoriesList;
+                    // 1) If srcObj is an array of objects with names, use them
+                    if (Array.isArray(srcObj) && srcObj.length && typeof srcObj[0] === 'object') {
+                        return srcObj.map(c => (c.name || c.Name || c.categoryName || c.CategoryName || c.title || c.Title || String(c))).join(', ');
+                    }
+                    // 2) If srcObj is array of ids (numbers or strings), map using allCategories
+                    if (Array.isArray(srcObj) && srcObj.length) {
+                        const names = srcObj.map(id => {
+                            const mid = String(id);
+                            const found = allCategories.find(cat => String(cat.id) === mid || String(cat.ID) === mid || String(cat.categoryId) === mid);
+                            return found ? (found.name || found.categoryName || found.Name || found.CategoryName || String(found)) : String(id);
+                        }).filter(Boolean);
+                        if (names.length) return names.join(', ');
+                    }
+                    // 3) If product has a single category id field
+                    const singleId = p.categoryId || p.category_id || p.CategoryId || p.CategoryId || p.category || p.Category;
+                    if (singleId != null && (typeof singleId === 'number' || typeof singleId === 'string')) {
+                        const sid = String(singleId);
+                        const found = allCategories.find(cat => String(cat.id) === sid || String(cat.ID) === sid || String(cat.categoryId) === sid);
+                        if (found) return found.name || found.categoryName || found.Name || found.CategoryName || String(found);
+                    }
+                    // 4) Fallback to string fields
+                    return p.categories || p.category || p.Category || p.categoryNames || '';
+                })(),
                 finalStatus: (p.status || p.Status || 'UNAVAILABLE').toUpperCase(),
                 finalDate: p.createdAt || p.CreatedAt
             }));
@@ -416,20 +528,54 @@
             // Filter Logic (Search, Type, Status, Date)
             const searchVal = filters.search.value.trim().toLowerCase();
             if (searchVal) {
-                result = result.filter(p => 
+                result = result.filter(p =>
                     (p.name || '').toLowerCase().includes(searchVal) ||
-                    p.finalProviderName.toLowerCase().includes(searchVal)
+                    p.finalProviderName.toLowerCase().includes(searchVal) ||
+                    (p.finalType || '').toLowerCase().includes(searchVal) ||
+                    (p.finalCategories || '').toLowerCase().includes(searchVal)
                 );
             }
             const typeVal = filters.type.value;
-            if (typeVal) result = result.filter(p => p.finalType === typeVal);
-            
+            if (typeVal) {
+                // typeVal may be a category id (from allCategories) or a productType string (fallback)
+                const cat = (Array.isArray(allCategories) && allCategories.find(c => String(c.id) === String(typeVal))) || null;
+                if (cat) {
+                    const catName = (cat.name || cat.categoryName || cat.Name || cat.CategoryName || '').toString().toLowerCase();
+                    result = result.filter(p => {
+                        // 1) check if product has category ids array
+                        const catArr = p.categories || p.productCategories || p.ProductCategories || p.categoriesList || [];
+                        if (Array.isArray(catArr) && catArr.length) {
+                            // elements may be ids or objects
+                            for (const it of catArr) {
+                                if (it == null) continue;
+                                if (typeof it === 'object') {
+                                    if (String(it.id) === String(typeVal) || String(it.ID) === String(typeVal) || String(it.categoryId) === String(typeVal)) return true;
+                                    const n = (it.name || it.categoryName || it.Name || it.CategoryName || '').toString().toLowerCase();
+                                    if (n && n === catName) return true;
+                                } else {
+                                    if (String(it) === String(typeVal)) return true;
+                                }
+                            }
+                        }
+                        // 2) check single id fields
+                        const singleId = p.categoryId || p.category_id || p.CategoryId || p.category || p.Category;
+                        if (singleId != null && String(singleId) === String(typeVal)) return true;
+                        // 3) check finalCategories string for name match
+                        if ((p.finalCategories || '').toString().toLowerCase().split(',').map(s => s.trim()).includes(catName)) return true;
+                        return false;
+                    });
+                } else {
+                    // fallback: filter by product type string
+                    result = result.filter(p => p.finalType === typeVal);
+                }
+            }
+
             const statusVal = filters.status.value;
             if (statusVal) result = result.filter(p => p.finalStatus === statusVal);
 
             if (filters.dateFrom.value || filters.dateTo.value) {
-                const dFrom = filters.dateFrom.value ? new Date(filters.dateFrom.value).setHours(0,0,0,0) : null;
-                const dTo = filters.dateTo.value ? new Date(filters.dateTo.value).setHours(23,59,59,999) : null;
+                const dFrom = filters.dateFrom.value ? new Date(filters.dateFrom.value).setHours(0, 0, 0, 0) : null;
+                const dTo = filters.dateTo.value ? new Date(filters.dateTo.value).setHours(23, 59, 59, 999) : null;
                 result = result.filter(p => {
                     if (!p.finalDate) return false;
                     const time = new Date(p.finalDate).getTime();
@@ -445,10 +591,11 @@
                     let va, vb;
                     if (currentSort.field === 'name') { va = a.name; vb = b.name; }
                     else if (currentSort.field === 'providerName') { va = a.finalProviderName; vb = b.finalProviderName; }
+                    else if (currentSort.field === 'categories') { va = a.finalCategories; vb = b.finalCategories; }
                     else if (currentSort.field === 'status') { va = a.finalStatus; vb = b.finalStatus; }
-                    else if (currentSort.field === 'createdAt') { 
-                        va = a.finalDate ? new Date(a.finalDate).getTime() : 0; 
-                        vb = b.finalDate ? new Date(b.finalDate).getTime() : 0; 
+                    else if (currentSort.field === 'createdAt') {
+                        va = a.finalDate ? new Date(a.finalDate).getTime() : 0;
+                        vb = b.finalDate ? new Date(b.finalDate).getTime() : 0;
                     }
                     else { va = a[currentSort.field]; vb = b[currentSort.field]; }
 
@@ -476,12 +623,12 @@
             tbody.innerHTML = '';
 
             if (products.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted"><i class="fa fa-box-open fa-2x mb-2"></i><br>Không tìm thấy sản phẩm</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-muted"><i class="fa fa-box-open fa-2x mb-2"></i><br>Không tìm thấy sản phẩm</td></tr>`;
                 return;
             }
 
             // URL ảnh dự phòng online (đảm bảo luôn hiển thị được)
-            const fallbackImg = "https://placehold.co/100x100?text=No+Img"; 
+            const fallbackImg = "https://placehold.co/100x100?text=No+Img";
 
             // Normalize image URLs so relative paths like '/api/...' load correctly using API_HOST
             function safeImg(url) {
@@ -495,7 +642,7 @@
 
             products.forEach(p => {
                 const isAvailable = p.finalStatus === 'AVAILABLE';
-                
+
                 // Logic xử lý ảnh: Nếu p.finalImage null thì dùng fallback ngay lập tức
                 // Nếu p.finalImage có link nhưng link chết -> onerror sẽ bắt
                 const imgSrc = safeImg(p.finalImage) || fallbackImg;
@@ -511,9 +658,11 @@
                             </div>
                             <div class="product-details">
                                 <h6>${p.name || 'No Name'}</h6>
-                                <span class="badge-type">${p.finalType}</span>
                             </div>
                         </div>
+                    </td>
+                    <td>
+                        <div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px;">${p.finalCategories || (p.finalType || '--')}</div>
                     </td>
                     <td>${p.finalProviderName}</td>
                     <td class="text-center">
@@ -562,22 +711,22 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus })
             })
-            .then(res => res.json())
-            .then(res => {
-                selectEl.disabled = false;
-                if (res.success) {
-                    const prod = allProducts.find(p => p.id === id);
-                    if(prod) prod.status = newStatus;
-                    selectEl.className = `status-select ${newStatus === 'AVAILABLE' ? 'status-available' : 'status-unavailable'}`;
-                } else {
-                    showToast('Lỗi cập nhật: ' + (res.message || 'Có lỗi'), 'danger');
-                    selectEl.value = newStatus === 'AVAILABLE' ? 'UNAVAILABLE' : 'AVAILABLE';
-                }
-            })
-            .catch(err => {
-                selectEl.disabled = false;
-                showToast('Lỗi kết nối: ' + (err || ''), 'danger');
-            });
+                .then(res => res.json())
+                .then(res => {
+                    selectEl.disabled = false;
+                    if (res.success) {
+                        const prod = allProducts.find(p => p.id === id);
+                        if (prod) prod.status = newStatus;
+                        selectEl.className = `status-select ${newStatus === 'AVAILABLE' ? 'status-available' : 'status-unavailable'}`;
+                    } else {
+                        alert('Lỗi cập nhật: ' + res.message);
+                        selectEl.value = newStatus === 'AVAILABLE' ? 'UNAVAILABLE' : 'AVAILABLE';
+                    }
+                })
+                .catch(err => {
+                    selectEl.disabled = false;
+                    alert('Lỗi kết nối: ' + err);
+                });
         }
 
         function _readToken() {
@@ -590,8 +739,7 @@
         }
 
         async function deleteProduct(id) {
-            const ok = await showConfirm('Bạn có chắc muốn xóa sản phẩm này?');
-            if (!ok) return;
+            if (!confirm("Bạn có chắc muốn xóa sản phẩm này?")) return;
 
             const url = `${endpoints.products}/${id}`;
             const token = _readToken();
@@ -603,25 +751,25 @@
                 });
 
                 let payload = {};
-                try { payload = await res.json(); } catch(_) { payload = {}; }
+                try { payload = await res.json(); } catch (_) { payload = {}; }
 
                 if (res.ok && (payload.success === undefined || payload.success === true)) {
                     // remove from local array and re-render
                     allProducts = allProducts.filter(p => Number(p.id) !== Number(id));
                     applyFiltersAndSort();
-                    showToast('Xóa sản phẩm thành công', 'success');
+                    alert('Xóa sản phẩm thành công');
                 } else {
                     const msg = payload?.message || payload?.error || ('HTTP ' + res.status);
-                    showToast('Xóa thất bại: ' + msg, 'danger');
+                    alert('Xóa thất bại: ' + msg);
                 }
             } catch (err) {
                 console.error('Delete product failed', err);
-                showToast('Lỗi kết nối khi xóa sản phẩm', 'danger');
+                alert('Lỗi kết nối khi xóa sản phẩm');
             }
         }
 
         function gotoPage(p) { currentPage = p; applyFiltersAndSort(); }
-        
+
         function resetFilters() {
             filters.search.value = '';
             filters.type.value = '';
@@ -664,4 +812,5 @@
         });
     </script>
 </body>
+
 </html>
