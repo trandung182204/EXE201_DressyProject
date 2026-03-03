@@ -1,116 +1,57 @@
 /**
- * Kiểm tra xem có đang ở môi trường local không
- */
-function isLocalEnv() {
-  return location.hostname === "localhost" ||
-    location.hostname === "127.0.0.1";
-}
-
-/**
  * Lấy đường dẫn redirect sau khi logout
- * Vì tất cả file HTML đều ở cùng thư mục (html/), chỉ cần dùng relative path
  */
 function getLogoutRedirect() {
-  // Relative path hoạt động cho cả production và local
-  // vì logout được gọi từ các trang trong cùng thư mục html/
-  console.log("[AUTH-HEADER] Logout redirect to: index.html");
   return "index.html";
 }
 
+/**
+ * Hàm xử lý Đăng xuất
+ */
+function processLogout() {
+  try {
+    const uid = localStorage.getItem('userId');
+    if (uid) {
+      localStorage.removeItem(`cartItems:user:${uid}`);
+    }
+    localStorage.removeItem('cartItems:anon');
+    localStorage.removeItem('cartItems');
+  } catch (e) { console.warn('[AUTH-HEADER] Lỗi xóa giỏ hàng', e); }
+
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  localStorage.removeItem("fullName");
+  localStorage.removeItem("userId");
+  localStorage.removeItem("providerId");
+  localStorage.removeItem("currentBooking"); 
+  window.location.href = getLogoutRedirect();
+}
+
+/**
+ * Cập nhật giao diện Đăng nhập/Đăng xuất
+ */
 function renderAuthHeader() {
   const label = document.getElementById("auth-label");
   const title = document.getElementById("auth-title");
   const list = document.getElementById("auth-list");
 
-  // Nếu header chưa vào DOM thì thôi
   if (!label || !title || !list) return false;
 
   const token = localStorage.getItem("token");
   const fullName = localStorage.getItem("fullName");
 
-  // CHƯA LOGIN -> giữ nguyên HTML cứng trong header.html (ĐĂNG NHẬP + login/register)
-  if (!token || !fullName) return true;
+  if (!token || !fullName) return true; // Chưa login
 
-  // ĐÃ LOGIN -> đổi sang tên + logout
+  // Đã login -> Cập nhật tên và chèn nút Đăng xuất
   label.textContent = fullName;
   title.textContent = fullName;
-  list.innerHTML = `<li><a href="javascript:void(0)" id="btn-logout">Đăng xuất</a></li>`;
-
-  document.getElementById("btn-logout")?.addEventListener("click", () => {
-    try {
-      // clear cart keys associated with this user to avoid leaking cart between users
-      const uid = localStorage.getItem('userId');
-      if (uid) {
-        localStorage.removeItem(`cartItems:user:${uid}`);
-      }
-      // clear anon/legacy carts as well to ensure a clean state after logout
-      localStorage.removeItem('cartItems:anon');
-      localStorage.removeItem('cartItems');
-    } catch (e) { console.warn('[AUTH-HEADER] clearing cart on logout failed', e); }
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("fullName");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("providerId");
-    localStorage.removeItem("cartItems"); // Clear cart on logout
-    localStorage.removeItem("currentBooking"); // Clear cart on logout
-    window.location.href = getLogoutRedirect();
-  });
+  list.innerHTML = `<li><a href="#" id="btn-logout">Đăng xuất</a></li>`;
 
   return true;
 }
 
-// Ensure header interactions work even if header/html was injected asynchronously.
-function initHeaderDelegatedHandlers() {
-  if (window.__headerDelegatesInstalled) return;
-  window.__headerDelegatesInstalled = true;
-
-  // Delegate cart toggle
-  document.addEventListener('click', function (e) {
-    const cartToggle = e.target.closest && e.target.closest('.rq-shopping-cart-items-list');
-    if (cartToggle) {
-      e.preventDefault();
-      cartToggle.classList.toggle('active');
-      const parent = cartToggle.parentElement;
-      if (!parent) return;
-      const panel = parent.querySelector('.rq-shopping-cart-inner-div');
-      if (!panel) return;
-      if (cartToggle.classList.contains('active')) panel.classList.add('rq-visible');
-      else panel.classList.remove('rq-visible');
-    }
-  }, false);
-
-  // Click outside to close cart (delegated)
-  document.addEventListener('click', function (e) {
-    const openPanels = document.querySelectorAll('.rq-shopping-cart-inner-div.rq-visible');
-    if (openPanels.length === 0) return;
-    // If click is inside any open panel or its toggle, ignore
-    for (const p of openPanels) {
-      if (p.contains(e.target) || (p.parentElement && p.parentElement.querySelector('.rq-shopping-cart-items-list')?.contains(e.target))) {
-        return;
-      }
-    }
-    // otherwise close all
-    openPanels.forEach(p => p.classList.remove('rq-visible'));
-    document.querySelectorAll('.rq-shopping-cart-items-list.active').forEach(a => a.classList.remove('active'));
-  }, false);
-
-  // Search open/close (delegated)
-  document.addEventListener('click', function (e) {
-    if (e.target.closest && e.target.closest('.rq_btn_header_search')) {
-      const event_taker = document.querySelector('.header-search.open-search');
-      if (event_taker) event_taker.classList.add('open');
-    }
-    if (e.target.closest && e.target.closest('.search-close.close')) {
-      const event_taker = document.querySelector('.header-search.open-search');
-      if (event_taker) event_taker.classList.remove('open');
-    }
-  }, false);
-}
-
 /**
- * Render header cart dropdown from localStorage.cartItems
+ * Render giỏ hàng từ LocalStorage
  */
 window.renderHeaderCart = function () {
   var listEl = document.getElementById('header-cart-items');
@@ -120,14 +61,13 @@ window.renderHeaderCart = function () {
 
   if (!listEl) return false;
 
-  // Read cart considering user-specific storage to avoid mixing carts between users
   function readHeaderCart() {
     const uid = localStorage.getItem('userId');
     const keys = uid ? [`cartItems:user:${uid}`, 'cartItems:anon', 'cartItems'] : ['cartItems:anon', 'cartItems'];
     for (const k of keys) {
       const r = localStorage.getItem(k);
       if (!r) continue;
-      try { const parsed = JSON.parse(r); if (Array.isArray(parsed)) return parsed; } catch (e) { /* ignore */ }
+      try { const parsed = JSON.parse(r); if (Array.isArray(parsed)) return parsed; } catch (e) {}
     }
     return [];
   }
@@ -138,7 +78,6 @@ window.renderHeaderCart = function () {
     if (single) { try { items = [JSON.parse(single)]; } catch (e) { } }
   }
 
-  // Badge
   if (countEl) {
     if (items.length > 0) { countEl.textContent = items.length; countEl.style.display = 'inline'; }
     else { countEl.style.display = 'none'; }
@@ -172,14 +111,8 @@ window.renderHeaderCart = function () {
     var q = item.quantity || 1;
     var per = _fd(item.startDate) + ' - ' + _fd(item.endDate);
     var cls = i === items.length - 1 ? ' class="last"' : '';
-
-    // Add to subtotal
-    var itemTotal = (item.pricePerDay || 0) * (item.days || 1) * q;
-    subtotal += itemTotal;
-
-    var colorStr = item.color || '';
-    var sizeStr = item.size || '';
-    var variantStr = [colorStr, sizeStr].filter(Boolean).join(' - ');
+    subtotal += (item.pricePerDay || 0) * (item.days || 1) * q;
+    var variantStr = [item.color || '', item.size || ''].filter(Boolean).join(' - ');
 
     return '<li' + cls + '>' +
       '<div class="wrapper" style="display:flex;gap:10px;align-items:flex-start;">' +
@@ -202,19 +135,83 @@ window.renderHeaderCart = function () {
   return true;
 };
 
-// chạy ngay khi DOM ready
+// ==========================================
+// CƠ CHẾ BẮT CLICK TỔNG LỰC (KHÔNG BAO GIỜ TRƯỢT)
+// ==========================================
+if (!window.__globalClickBound) {
+  window.__globalClickBound = true;
+
+  document.addEventListener('click', function(e) {
+    const target = e.target;
+
+    // 1. Nếu click vào nút Đăng xuất
+    if (target.closest('#btn-logout')) {
+      e.preventDefault();
+      processLogout();
+      return;
+    }
+
+    // 2. Nếu click vào nút mở Menu (Giỏ hàng / Đăng nhập)
+    const toggleBtn = target.closest('.rq-shopping-cart-items-list');
+    if (toggleBtn) {
+      e.preventDefault();
+      e.stopPropagation(); // Cấm các thư viện khác can thiệp
+
+      const parent = toggleBtn.parentElement;
+      const panel = parent ? parent.querySelector('.rq-shopping-cart-inner-div') : null;
+
+      // Đóng các menu khác
+      document.querySelectorAll('.rq-shopping-cart-inner-div.rq-visible').forEach(p => {
+        if (p !== panel) p.classList.remove('rq-visible');
+      });
+      document.querySelectorAll('.rq-shopping-cart-items-list.active').forEach(a => {
+        if (a !== toggleBtn) a.classList.remove('active');
+      });
+
+      // Bật/tắt menu hiện tại
+      if (panel) {
+        toggleBtn.classList.toggle('active');
+        panel.classList.toggle('rq-visible');
+      }
+      return;
+    }
+
+    // 3. Nếu click vào mở/đóng Search
+    if (target.closest('.rq_btn_header_search')) {
+      const searchPanel = document.querySelector('.header-search.open-search');
+      if (searchPanel) searchPanel.classList.add('open');
+      return;
+    }
+    if (target.closest('.search-close.close')) {
+      const searchPanel = document.querySelector('.header-search.open-search');
+      if (searchPanel) searchPanel.classList.remove('open');
+      return;
+    }
+
+    // 4. Bỏ qua nếu click TRONG nội dung của menu đang mở
+    if (target.closest('.rq-shopping-cart-inner-div.rq-visible')) {
+      return; 
+    }
+
+    // 5. Nếu click ra khoảng trắng bên ngoài -> Đóng sạch các menu
+    document.querySelectorAll('.rq-shopping-cart-inner-div.rq-visible').forEach(p => p.classList.remove('rq-visible'));
+    document.querySelectorAll('.rq-shopping-cart-items-list.active').forEach(a => a.classList.remove('active'));
+
+  }, true); // "true" ở đây là chìa khóa: Ép sự kiện này chạy TRƯỚC mọi thứ khác
+}
+
+// Khởi chạy việc đổ dữ liệu
 document.addEventListener("DOMContentLoaded", () => {
   var authDone = renderAuthHeader();
   var cartDone = window.renderHeaderCart();
 
-  if (authDone && cartDone) return;
-
-  // nếu header được inject sau đó -> observer để bắt đúng thời điểm
-  const obs = new MutationObserver(() => {
-    var a = renderAuthHeader();
-    var c = window.renderHeaderCart();
-    if (a && c) obs.disconnect();
-  });
-  obs.observe(document.documentElement, { childList: true, subtree: true });
+  // Chỉ dùng Observer để điền DATA vào giỏ hàng/login, KHÔNG dùng để gắn sự kiện click nữa
+  if (!authDone || !cartDone) {
+    const obs = new MutationObserver(() => {
+      var a = renderAuthHeader();
+      var c = window.renderHeaderCart();
+      if (a && c) obs.disconnect();
+    });
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  }
 });
-
