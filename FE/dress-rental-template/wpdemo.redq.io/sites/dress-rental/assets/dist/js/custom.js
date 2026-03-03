@@ -57,7 +57,7 @@ jQuery(function ($) {
       loop: true,
       margin: 10,
       nav: true,
-      navText: ["<img src='../assets/dist/img/left.png'/>", "<img src='../assets/dist/img/right.png'/>"],
+      // navText: ["<img src='../assets/dist/img/left.png'/>", "<img src='../assets/dist/img/right.png'/>"],
       responsive: {
         0: {
           items: 1
@@ -95,7 +95,7 @@ jQuery(function ($) {
       loop: true,
       margin: 10,
       nav: true,
-      navText: ["<img src='../assets/dist/img/left.png'/>", "<img src='../assets/dist/img/right.png'/>"],
+      // navText: ["<img src='../assets/dist/img/left.png'/>", "<img src='../assets/dist/img/right.png'/>"],
       responsive: {
         0: {
           items: 1
