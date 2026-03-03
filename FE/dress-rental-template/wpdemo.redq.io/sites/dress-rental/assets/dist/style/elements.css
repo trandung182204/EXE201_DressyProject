@@ -1,3 +1,4 @@
+
 @charset "UTF-8";
 
 /*!
@@ -6,6 +7,8 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');
+
 html {
   font-family: sans-serif;
   -webkit-text-size-adjust: 100%;
@@ -15669,7 +15672,7 @@ button.close {
 }
 
 body:after {
-  content: url(../img/close.png) url(../img/loading.gif) url(../img/prev.png) url(../img/next.png);
+  content: url(../img/close.png)  url(../img/prev.png) url(../img/next.png);
   display: none;
 }
 
@@ -15745,7 +15748,7 @@ body.lb-disable-scrolling {
   width: 32px;
   height: 32px;
   margin: 0 auto;
-  background: url(../img/loading.gif) no-repeat;
+  background:  no-repeat;
 }
 
 .lb-nav {
@@ -21009,7 +21012,6 @@ div.DateInput {
 /* ======================================== */
 /* Be Vietnam Pro – Global Font Override    */
 /* ======================================== */
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');
 
 html,
 body,
