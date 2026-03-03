@@ -121,8 +121,8 @@ function renderGrid(items) {
             <img class="img-responsive" src="${safeImg(p.thumbnailUrl)}" alt="${p.name || ""}" />
           </a>
           <figcaption>
-            <a href="#" class="left"><i class="fa fa-gift" aria-hidden="true"></i></a>
-            <a href="#" class="right"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+            
+            
             <div class="quick-view">
               <a href="booking.html?id=${p.id}">Xem chi tiết</a>
             </div>
@@ -364,19 +364,21 @@ async function loadCategories() {
       return;
     }
 
-    // Group categories by name to show only unique items in the list
+    // Group categories by name to show only unique items in the list (case-insensitive)
     const grouped = [];
     const nameMap = new Map();
 
     rawCategories.forEach(cat => {
       // Use name or categoryName, trim and default if both missing
       const name = (cat.name || cat.categoryName || "Danh mục " + cat.id).trim();
-      if (!nameMap.has(name)) {
-        const group = { name: name, ids: [cat.id] };
-        nameMap.set(name, group);
+      const key = name.toLowerCase(); // Use lowercase for grouping to avoid Váy/váy duplicates
+
+      if (!nameMap.has(key)) {
+        const group = { name: name, ids: [cat.id] }; // Keep original name for display
+        nameMap.set(key, group);
         grouped.push(group);
       } else {
-        nameMap.get(name).ids.push(cat.id);
+        nameMap.get(key).ids.push(cat.id);
       }
     });
 

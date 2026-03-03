@@ -3,6 +3,9 @@
  * =====================================
  * Uses original template CSS classes (.diva.short-dress, .shopping-bag, etc.)
  * Depends on: api.js (must be loaded first)
+ * 
+ * When logged in, cart is loaded from server (GET /api/Carts/me).
+ * When not logged in, cart uses localStorage (guest cart).
  */
 
 // ============================================================
@@ -13,6 +16,7 @@ const cartState = {
     discount: 0,
     voucherCode: "",
     voucherApplied: false,
+    serverCartItems: [], // holds server cart item IDs for delete operations
 };
 
 let editingIndex = -1;
@@ -22,56 +26,62 @@ let editingIndex = -1;
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
     console.log("[CART] Initializing...");
-    loadCartFromStorage();
-    renderAll();
-    setupEventListeners();
-    autoFillDeliveryForm();
+    loadCart();
 });
 
 /**
- * Load cart items from localStorage
+ * Load cart: from server if logged in, from localStorage otherwise
  */
-function loadCartFromStorage() {
-    // Read cart using user-specific key if available, otherwise fallback to anon/generic keys
-    function readCart() {
-        const uid = localStorage.getItem('userId');
-        const keys = uid ? [`cartItems:user:${uid}`, 'cartItems:anon', 'cartItems'] : ['cartItems:anon', 'cartItems'];
-        for (const k of keys) {
-            const raw = localStorage.getItem(k);
-            if (!raw) continue;
-            try {
-                const items = JSON.parse(raw);
-                if (Array.isArray(items)) return items;
-            } catch (e) { console.warn('[CART] Failed to parse', k, e); }
-        }
-        return null;
-    }
-
-    const items = readCart();
-    if (items && items.length > 0) {
-        cartState.items = items;
-        console.log('[CART] Loaded', items.length, 'items from storage');
+async function loadCart() {
+    if (!isLoggedIn()) {
+        cartState.items = [];
+        renderAll();
         return;
     }
 
-    // Fallback: single currentBooking (backward compat)
-    const raw = localStorage.getItem("currentBooking");
-    if (raw) {
-        try {
-            const booking = JSON.parse(raw);
-            cartState.items = [booking];
-            // Migrate to user-specific / anon key
-            saveCartToStorage();
-            console.log("[CART] Migrated single booking to cartItems");
-            return;
-        } catch (e) {
-            console.error("[CART] Failed to parse currentBooking:", e);
+    try {
+        const data = await apiFetch("GET", "/api/Carts/me", null, false);
+        const detail = data.data || data;
+        if (detail && detail.items && detail.items.length > 0) {
+            cartState.serverCartItems = detail.items.map(i => ({
+                cartItemId: i.cartItemId,
+                productVariantId: i.productVariantId
+            }));
+            cartState.items = detail.items.map(item => ({
+                productId: item.productId,
+                variantId: item.productVariantId,
+                productName: item.productName,
+                color: item.colorName || 'N/A',
+                size: item.sizeLabel || 'N/A',
+                startDate: item.startDate ? item.startDate + 'T00:00:00' : null,
+                endDate: item.endDate ? item.endDate + 'T00:00:00' : null,
+                days: item.rentalDays || 0,
+                quantity: item.quantity || 1,
+                pricePerDay: item.pricePerDay || 0,
+                depositAmount: item.depositAmount || 0,
+                totalPrice: item.totalPrice || 0,
+                thumbnailUrl: item.imageUrl || '',
+                cartItemId: item.cartItemId,
+            }));
+            // Also sync to localStorage for header dropdown
+            localStorage.setItem("cartItems", JSON.stringify(cartState.items));
+            console.log("[CART] Loaded", cartState.items.length, "items from server");
+        } else {
+            // Server cart empty
+            cartState.items = [];
+            localStorage.removeItem("cartItems");
         }
+    } catch (err) {
+        console.warn("[CART] Server cart load failed:", err.message);
+        cartState.items = [];
     }
 
-    console.warn("[CART] No cart data found in localStorage");
-    cartState.items = [];
+    renderAll();
+    setupEventListeners();
+    autoFillDeliveryForm();
 }
+
+
 
 // ============================================================
 // 3. RENDER ALL
@@ -251,6 +261,15 @@ function saveEdit() {
 }
 
 function removeItem(index) {
+    const item = cartState.items[index];
+
+    // Remove from server if logged in and has cartItemId
+    if (isLoggedIn() && item && item.cartItemId) {
+        apiFetch("DELETE", "/api/Carts/me/items/" + item.cartItemId, null, false)
+            .then(() => console.log("[CART] Removed from server, cartItemId:", item.cartItemId))
+            .catch(err => console.warn("[CART] Server remove failed:", err.message));
+    }
+
     cartState.items.splice(index, 1);
     saveCartToStorage();
     renderAll();
@@ -378,7 +397,6 @@ async function submitOrder() {
 
     // Build BookingItems array matching BE.Models.BookingItems
     const bookingItems = cartState.items.map(item => {
-        // Convert ISO date string to "yyyy-MM-dd" for DateOnly
         const startDateOnly = item.startDate ? item.startDate.split("T")[0] : null;
         const endDateOnly = item.endDate ? item.endDate.split("T")[0] : null;
 
@@ -410,16 +428,17 @@ async function submitOrder() {
         const data = await apiFetch("POST", "/api/Bookings", payload);
         console.log("[CART] Booking response:", data);
 
-        // Get booking ID from response
         const bookingId = data?.data?.id || data?.id || "";
 
-        // remove all known cart keys (user-scoped and legacy)
-        const uidToClear = localStorage.getItem('userId');
-        localStorage.removeItem('cartItems');
-        localStorage.removeItem('cartItems:anon');
-        if (uidToClear) localStorage.removeItem(`cartItems:user:${uidToClear}`);
-        localStorage.removeItem('currentBooking');
+        // Clear server cart
+        apiFetch("DELETE", "/api/Carts/me", null, false)
+            .then(() => console.log("[CART] Server cart cleared"))
+            .catch(err => console.warn("[CART] Server cart clear failed:", err.message));
+
+        localStorage.removeItem("cartItems");
+        localStorage.removeItem("currentBooking");
         cartState.items = [];
+        cartState.serverCartItems = [];
         cartState.discount = 0;
         cartState.voucherCode = "";
         cartState.voucherApplied = false;

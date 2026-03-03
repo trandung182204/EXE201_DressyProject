@@ -38,5 +38,11 @@ namespace BE.Repositories.Implementations
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<Carts?> GetByCustomerIdAsync(long customerId)
+        {
+            return await _context.Carts
+                .Include(c => c.CartItems)
+                .FirstOrDefaultAsync(c => c.CustomerId == customerId);
+        }
     }
 }

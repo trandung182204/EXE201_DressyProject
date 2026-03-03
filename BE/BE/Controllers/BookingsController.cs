@@ -162,7 +162,6 @@ namespace BE.Controllers
         {
             userId = 0;
 
-            // ưu tiên claim "userId" nếu bạn đang dùng
             var v = User.FindFirst("userId")?.Value
                 ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? User.FindFirst("sub")?.Value;

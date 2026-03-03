@@ -53,10 +53,8 @@ function renderAuthHeader() {
     localStorage.removeItem("fullName");
     localStorage.removeItem("userId");
     localStorage.removeItem("providerId");
-
-    // ensure header cart UI updates immediately if page doesn't reload
-    try { if (typeof window.renderHeaderCart === 'function') window.renderHeaderCart(); } catch (e) {}
-
+    localStorage.removeItem("cartItems"); // Clear cart on logout
+    localStorage.removeItem("currentBooking"); // Clear cart on logout
     window.location.href = getLogoutRedirect();
   });
 

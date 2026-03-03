@@ -29,16 +29,16 @@ function mapRoleToRedirect(role) {
 
   // PRODUCTION
   // PRODUCTION
-if (!isLocal) {
-  switch (roleLower) {
-    case "admin":
-      return "/Admin/";
-    case "provider":
-      return "/Manager/";
-    default:
-      return "/index.html";
+  if (!isLocal) {
+    switch (roleLower) {
+      case "admin":
+        return "/Admin/";
+      case "provider":
+        return "/Manager/";
+      default:
+        return "/index.html";
+    }
   }
-}
 
 
   // LOCAL (giữ nguyên code của bạn)
@@ -104,51 +104,14 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (data?.userName) localStorage.setItem("fullName", data.userName);
         else if (data?.name) localStorage.setItem("fullName", data.name);
 
-        // Migrate anonymous cart (if any) into user-scoped cart
-        try {
-          const uid = data?.userId != null ? String(data.userId) : localStorage.getItem('userId');
-          if (uid) {
-            const anonRaw = localStorage.getItem('cartItems') || localStorage.getItem('cartItems:anon') || '[]';
-            const anon = JSON.parse(anonRaw || '[]');
-            const userKey = `cartItems:user:${uid}`;
-            const userRaw = localStorage.getItem(userKey) || '[]';
-            const userCart = JSON.parse(userRaw || '[]');
-            if (Array.isArray(anon) && anon.length > 0) {
-              // merge anon into userCart (by productId+color+size)
-              anon.forEach(a => {
-                const found = userCart.find(u => u.productId === a.productId && u.color === a.color && u.size === a.size);
-                if (found) { found.quantity = (found.quantity || 1) + (a.quantity || 1); }
-                else { userCart.push(a); }
-              });
-              localStorage.setItem(userKey, JSON.stringify(userCart));
-              // remove anon keys
-              localStorage.removeItem('cartItems');
-              localStorage.removeItem('cartItems:anon');
-            }
+        // SYNC CART
+        if (data?.token && (data?.role || "customer").toLowerCase().trim() === "customer") {
+          try {
+            await syncCartToServer(data.token);
+          } catch (syncErr) {
+            console.warn("Cart sync failed:", syncErr);
           }
-        } catch (e) { console.warn('Cart migration failed', e); }
-
-        // Migrate anonymous cart (if any) into user-scoped cart (same logic as login)
-        try {
-          const uid = data?.userId != null ? String(data.userId) : localStorage.getItem('userId');
-          if (uid) {
-            const anonRaw = localStorage.getItem('cartItems') || localStorage.getItem('cartItems:anon') || '[]';
-            const anon = JSON.parse(anonRaw || '[]');
-            const userKey = `cartItems:user:${uid}`;
-            const userRaw = localStorage.getItem(userKey) || '[]';
-            const userCart = JSON.parse(userRaw || '[]');
-            if (Array.isArray(anon) && anon.length > 0) {
-              anon.forEach(a => {
-                const found = userCart.find(u => u.productId === a.productId && u.color === a.color && u.size === a.size);
-                if (found) { found.quantity = (found.quantity || 1) + (a.quantity || 1); }
-                else { userCart.push(a); }
-              });
-              localStorage.setItem(userKey, JSON.stringify(userCart));
-              localStorage.removeItem('cartItems');
-              localStorage.removeItem('cartItems:anon');
-            }
-          }
-        } catch (e) { console.warn('Cart migration failed', e); }
+        }
 
         const redirectUrl = mapRoleToRedirect(data.role);
         console.log("Redirecting to:", redirectUrl);
@@ -197,14 +160,107 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Redirecting to:", redirectUrl);
         window.location.href = redirectUrl;
       } catch (err) {
-          console.error("Register error:", err);
-          const text = err?.message || "Đăng ký thất bại";
-          if (window && typeof window.showToast === 'function') {
-            window.showToast(text, 'error');
-          } else {
-            setMsg("registerMsg", text);
-          }
+        console.error("Register error:", err);
+        const text = err?.message || "Đăng ký thất bại";
+        if (window && typeof window.showToast === 'function') {
+          window.showToast(text, 'error');
+        } else {
+          setMsg("registerMsg", text);
+        }
       }
     });
   }
 });
+
+/**
+ * Syncs the local guest cart to the server after successful login
+ */
+async function syncCartToServer(token) {
+  if (!token) return;
+
+  // 1. Push guest items to server
+  const rawItems = localStorage.getItem("cartItems");
+  if (rawItems) {
+    try {
+      const items = JSON.parse(rawItems);
+      if (Array.isArray(items) && items.length > 0) {
+        console.log(`[AUTH-PAGE] Syncing ${items.length} guest cart items to server...`);
+
+        for (const item of items) {
+          if (!item.variantId) continue;
+
+          const startDateOnly = item.startDate ? item.startDate.split('T')[0] : null;
+          const endDateOnly = item.endDate ? item.endDate.split('T')[0] : null;
+
+          try {
+            const res = await fetch(`${API_BASE}/api/Carts/me/items`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                productVariantId: item.variantId,
+                quantity: item.quantity || 1,
+                startDate: startDateOnly,
+                endDate: endDateOnly
+              })
+            });
+            if (!res.ok) console.warn('[AUTH-PAGE] Sync item failed', await res.text());
+          } catch (err) {
+            console.warn('[AUTH-PAGE] Sync item fetch error:', err);
+          }
+        }
+        console.log('[AUTH-PAGE] Guest cart sync push complete');
+      }
+    } catch (e) {
+      console.error('[AUTH-PAGE] Error parsing cartItems for sync:', e);
+    }
+  }
+
+  // 2. Fetch the final merged cart from server and save to localStorage 
+  // This ensures the header cart dropdown is instantly populated upon redirect
+  try {
+    console.log('[AUTH-PAGE] Fetching final server cart to populate header...');
+    const res = await fetch(`${API_BASE}/api/Carts/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const detail = data.data || data;
+
+      if (detail && detail.items && detail.items.length > 0) {
+        const finalItems = detail.items.map(item => ({
+          productId: item.productId,
+          variantId: item.productVariantId,
+          productName: item.productName,
+          color: item.colorName || 'N/A',
+          size: item.sizeLabel || 'N/A',
+          startDate: item.startDate ? item.startDate + 'T00:00:00' : null,
+          endDate: item.endDate ? item.endDate + 'T00:00:00' : null,
+          days: item.rentalDays || 0,
+          quantity: item.quantity || 1,
+          pricePerDay: item.pricePerDay || 0,
+          depositAmount: item.depositAmount || 0,
+          totalPrice: item.totalPrice || 0,
+          thumbnailUrl: item.imageUrl || '',
+          cartItemId: item.cartItemId,
+        }));
+        localStorage.setItem("cartItems", JSON.stringify(finalItems));
+        console.log(`[AUTH-PAGE] Downloaded ${finalItems.length} items to localStorage`);
+      } else {
+        localStorage.removeItem("cartItems"); // Empty cart
+      }
+    } else {
+      // Fallback to empty if server fails to ensure clean state
+      localStorage.removeItem("cartItems");
+    }
+  } catch (fetchErr) {
+    console.warn('[AUTH-PAGE] Failed to pull auth cart state:', fetchErr);
+  }
+}

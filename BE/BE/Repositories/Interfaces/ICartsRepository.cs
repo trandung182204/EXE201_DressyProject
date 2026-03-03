@@ -11,5 +11,6 @@ namespace BE.Repositories.Interfaces
         Task<Carts> AddAsync(Carts model);
         Task<Carts?> UpdateAsync(int id, Carts model);
         Task<bool> DeleteAsync(int id);
+        Task<Carts?> GetByCustomerIdAsync(long customerId);
     }
 }
