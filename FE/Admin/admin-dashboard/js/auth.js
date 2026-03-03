@@ -30,7 +30,8 @@ const Auth = (function () {
 
     function getLoginPath() {
         const basePath = getBasePath();
-        return `${basePath}dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html`;
+        // build absolute URL using current origin so CSS/assets load correctly
+        return `${location.origin}${basePath}dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html`;
     }
 
     function getRoleRedirectMap() {
