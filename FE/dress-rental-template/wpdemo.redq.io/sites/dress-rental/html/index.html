@@ -199,6 +199,25 @@
 			pointer-events: auto !important;
 			transform: translate(-50%, -50%) scale(1) !important;
 		}
+
+		/* ===============================
+		   FAVORITES - improved styling for original markup
+		================================= */
+		.favorites { padding: 36px 0; }
+		.favorites h2 { text-align:center; font-weight:700; margin-bottom:18px; }
+
+		.owl-favorites .item { display:flex; justify-content:center; }
+		/* Keep fixed aspect ratio so provider images always render consistently */
+		.owl-favorites .item figure { width:260px; max-width:100%; margin:0; position:relative; overflow:hidden; border-radius:8px; box-shadow:0 8px 20px rgba(32,32,32,0.06); aspect-ratio: 13/16; }
+		.owl-favorites .item figure img { width:100%; height:100%; object-fit:cover; display:block; }
+		.owl-favorites .item figure a { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.6); color:#fff; padding:10px 14px; border-radius:4px; text-decoration:none; opacity:0; transition:opacity .15s ease; font-weight:600; }
+		.owl-favorites .item figure:hover a { opacity:1; }
+
+		.owl-favorites .item h3.font-25-for-reg-0 { margin:10px 0 6px; font-size:16px; font-weight:700; text-align:center; }
+		.owl-favorites .item .elements { text-align:center; padding:0 6px 10px; }
+		.owl-favorites .item .elements .font-16-for-reg-0 { color:#c21807; font-weight:700; display:block; }
+		.owl-favorites .item .elements .font-15-for-reg-0 { color:#666; font-size:13px; display:block; }
+
 	</style>
 </head>
 
@@ -641,24 +660,23 @@
 
 				const detailUrl = `booking.html?id=${encodeURIComponent(id)}`;
 
-				return `
-        <div class="item">
-          <figure>
-            <img src="${img}" alt="${name}">
-            <a href="${detailUrl}">Xem ngay</a>
-			
-          </figure>
+								return `
+				<div class="item">
+					<figure>
+						<img src="${img}" alt="${name}">
+						<a href="${detailUrl}">Xem ngay</a>
+					</figure>
 
-          <h3 class="font-25-for-reg-0"><a href="${detailUrl}">${nameText}</a></h3>
-          <div class="elements" style="display:block;">
-            <!-- Dòng giá -->
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <span class="font-16-for-reg-0">Giá thuê: ${priceText}</span>
-              <span class="font-15-for-reg-0">Giá cọc: ${depositText}</span>
-            </div>        
-          </div>
-        </div>
-      `;
+					<h3 class="font-25-for-reg-0"><a href="${detailUrl}">${nameText}</a></h3>
+					<div class="elements" style="display:block;">
+						<!-- Dòng giá -->
+						<div style="display:flex; flex-direction:column; gap:6px;">
+							<span class="font-16-for-reg-0">Giá thuê: ${priceText}</span>
+							<span class="font-15-for-reg-0">Giá cọc: ${depositText}</span>
+						</div>
+					</div>
+				</div>
+			`;
 			}).join("");
 
 			container.insertAdjacentHTML("beforeend", html);

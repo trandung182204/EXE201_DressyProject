@@ -13,6 +13,7 @@ public class ProductListCustomerItemDto
     public string? ThumbnailUrl { get; set; }
 
     public decimal? MinPricePerDay { get; set; }
+    public decimal? DepositAmount { get; set; }
     public DateTime? CreatedAt { get; set; }
 
     public List<string> Sizes { get; set; } = new();

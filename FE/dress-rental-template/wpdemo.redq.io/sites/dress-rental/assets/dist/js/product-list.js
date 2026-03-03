@@ -113,29 +113,63 @@ function renderGrid(items) {
     return;
   }
 
-  grid.innerHTML = items.map(p => `
+  // helper to compute min numeric from array (skip invalid)
+  function calcMin(values) {
+    const nums = (values || []).map(v => Number(v)).filter(v => !Number.isNaN(v) && v > 0);
+    return nums.length ? Math.min(...nums) : 0;
+  }
+
+  // Helper hàm money (vì trong code của bạn có gọi money(p.minPricePerDay) nhưng chưa define ở đây)
+  // Nếu bạn đã có hàm money() ở file khác (global) thì có thể bỏ hàm này đi.
+  function money(n) {
+    if (!n) return '--';
+    return new Intl.NumberFormat('vi-VN').format(n) + ' ₫';
+  }
+
+  function safeImg(url) {
+    if (!url) return "../assets/dist/img/product-details/1.jpg";
+    if (url.startsWith("http")) return url;
+    const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    return (isLocal ? "http://localhost:5135" : "") + url;
+  }
+
+  grid.innerHTML = items.map(p => {
+    // 1. Cố gắng lấy cọc từ variants (Nếu API có trả về variants)
+    const variants = p.variants ?? p.Variants ?? [];
+    const minDepositFromVariants = calcMin(variants.map(v => v.depositAmount ?? v.DepositAmount ?? v.deposit ?? v.Deposit));
+
+    // 2. BỔ SUNG FIX Ở ĐÂY: Thêm minDepositAmount / MinDepositAmount để bắt đúng data của List API
+    const fallbackDeposit = p.minDepositAmount ?? p.MinDepositAmount ?? p.depositAmount ?? p.DepositAmount ?? p.deposit ?? p.Deposit ?? 0;
+    
+    const deposit = minDepositFromVariants || fallbackDeposit || 0;
+    const depositText = deposit ? new Intl.NumberFormat('vi-VN').format(deposit) + ' ₫' : '--';
+
+    return `
     <div class="col-sm-4 col-def">
-      <div class="product-list">
-        <figure>
-          <a href="${safeImg(p.thumbnailUrl)}" data-lightbox="roadtrip">
-            <img class="img-responsive" src="${safeImg(p.thumbnailUrl)}" alt="${p.name || ""}" />
+      <div class="product-card">
+        <div class="product-media">
+          <a href="booking.html?id=${p.id}">
+            <img src="${safeImg(p.thumbnailUrl)}" alt="${p.name || ""}" />
           </a>
-          <figcaption>
-            
-            
-            <div class="quick-view">
-              <a href="booking.html?id=${p.id}">Xem chi tiết</a>
-            </div>
-          </figcaption>
-        </figure>
+          <button class="wish" aria-label="Yêu thích">
+            <img src="../assets/dist/img/favorites/wish.png" alt="wish" style="width:18px;height:18px;"/>
+          </button>
+        </div>
         <div class="description">
-          <a href="booking.html?id=${p.id}" class="font-18-for-reg-0">${p.name || ""}</a>
-          <p>${p.categoryName || ""}</p>
-          <h5>${money(p.minPricePerDay)}</h5>
+          <a href="booking.html?id=${p.id}" class="prod-title">${p.name || ""}</a>
+          <p class="prod-cat">${p.categoryName || ""}</p>
+          <div class="prod-meta">
+            <div class="price">${money(p.minPricePerDay)}</div>
+            <div class="deposit">Cọc: ${depositText}</div>
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary" href="booking.html?id=${p.id}">Xem chi tiết</a>
+          </div>
         </div>
       </div>
     </div>
-  `).join("");
+  `;
+  }).join("");
 }
 
 /**

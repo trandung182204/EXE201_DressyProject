@@ -89,6 +89,7 @@ public class ProductsCustomerRepository : IProductsCustomerRepository
                     .FirstOrDefault(),
 
                 MinPricePerDay = p.ProductVariants.Min(v => (decimal?)v.PricePerDay),
+                DepositAmount = p.ProductVariants.Min(v => (decimal?)v.DepositAmount),
                 CreatedAt = p.CreatedAt,
                 Sizes = p.ProductVariants.Where(v => v.SizeLabel != null).Select(v => v.SizeLabel!).Distinct().ToList(),
                 Colors = p.ProductVariants.Where(v => v.ColorName != null).Select(v => v.ColorName!).Distinct().ToList()

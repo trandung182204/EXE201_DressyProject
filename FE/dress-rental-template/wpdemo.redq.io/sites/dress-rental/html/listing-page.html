@@ -18,6 +18,37 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
+	<style>
+		/* Product list - modern card */
+		.product-display .prod-title { font-weight:700; color:#222; display:block; margin-bottom:6px; }
+		.product-card { background:#fff; border-radius:8px; box-shadow:0 8px 20px rgba(32,32,32,0.06); overflow:hidden; margin-bottom:20px; display:flex; flex-direction:column; height:100%; }
+		/* Use a fixed height so all product images render the same visible frame regardless of source size */
+		.product-card .product-media { position:relative; overflow:hidden; height:320px; flex:0 0 auto; }
+		.product-card img { width:100%; height:100%; object-fit:cover; display:block; }
+		@media (max-width: 991px) {
+			.product-card .product-media { height:260px; }
+		}
+		@media (max-width: 575px) {
+			.product-card .product-media { height:200px; }
+		}
+		/* Make columns stretch so cards align in rows */
+		.col-def { display:flex; align-items:stretch; }
+		.product-card .description { padding:14px 16px; display:flex; flex-direction:column; justify-content:space-between; flex:1 1 auto; }
+		.product-card .actions { margin-top:12px; }
+		.product-card .actions .btn { margin-top:auto; }
+		/* Limit title to 2 lines to keep card heights consistent */
+		.product-card .prod-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+		.product-card .wish { position:absolute; right:10px; top:10px; background:rgba(255,255,255,0.92); border-radius:50%; padding:6px; border:none; }
+		.product-card .description { padding:14px 16px; }
+		.product-card .price { color:#c21807; font-weight:800; margin-top:8px; }
+		.product-card .prod-cat { color:#888; font-size:13px; margin:6px 0 0 0; }
+		.product-card .actions { margin-top:12px; }
+		.product-card .btn { padding:8px 12px; border-radius:4px; text-decoration:none; }
+		.product-card .btn-primary { background:#222; color:#fff; }
+		@media (max-width:767px){ .product-card .product-media { height:240px; } }
+
+	</style>
+
 
 
 </head>
