@@ -196,14 +196,28 @@ jQuery(function ($) {
   //      STICKY NAV        //
   //////////////////////////// 
 
-  var sticky = $("#stickynav").offset().top;
-  window_select.on('scroll', function () {
-    if (window_select.scrollTop() > sticky) {
-      $("#stickynav").addClass("navFixed"); 7;
-    } else {
-      $("#stickynav").removeClass("navFixed");
-    }
-  });
+  // Ví dụ: sticky nav / scroll code
+$(function () {
+  function initStickyNav() {
+    var $nav = $("#stickynav"); // hoặc selector mà bạn đang dùng ở line 199
+    if (!$nav.length) return;   // CHỐT: không có element thì bỏ qua
+
+    var off = $nav.offset();
+    var navTop = (off && typeof off.top === "number") ? off.top : 0;
+
+    $(window).off("scroll.stickyNav").on("scroll.stickyNav", function () {
+      var scrollTop = $(window).scrollTop();
+      if (scrollTop >= navTop) $nav.addClass("sticky");
+      else $nav.removeClass("sticky");
+    });
+  }
+
+  // chạy luôn nếu header đã có
+  initStickyNav();
+
+  // chạy lại khi header load xong (vì bạn fetch header)
+  document.addEventListener("header:loaded", initStickyNav);
+});
 
   ///////////////////////////// 
   //      RANGE SLIDER       //
