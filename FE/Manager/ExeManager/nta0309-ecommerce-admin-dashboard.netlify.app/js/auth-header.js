@@ -6,10 +6,16 @@
   // ✅ Login nằm trong: FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html
   // Auth-header đang chạy từ: FE/Manager/ExeManager/... (các trang dashboard)
   // => đi lên FE/: ../../../ rồi sang dress-rental-template/...
-  const LOGIN_URL = new URL(
-    "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
-    location.href
-  ).href;
+  function getLoginUrl() {
+    const host = window.location.hostname;
+
+    if (host === "127.0.0.1" || host === "localhost") {
+      return "/FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html";
+    }
+
+    // deploy
+    return "/login.html";
+  }
 
   function waitForEl(selector, timeout = 4000) {
     return new Promise((resolve, reject) => {
@@ -135,17 +141,17 @@
 
     // Fallback: clear common auth keys from storage
     ["token", "accessToken", "role", "fullName", "userId", "providerId", "avatarUrl", "user", "currentUser", "username", "cartItems", "cartItems:anon"].forEach((k) => {
-      try { localStorage.removeItem(k); } catch (e) {}
-      try { sessionStorage.removeItem(k); } catch (e) {}
+      try { localStorage.removeItem(k); } catch (e) { }
+      try { sessionStorage.removeItem(k); } catch (e) { }
     });
 
     try {
       const uid = localStorage.getItem('userId') || localStorage.getItem('auth_userId');
       if (uid) localStorage.removeItem(`cartItems:user:${uid}`);
-    } catch (e) {}
+    } catch (e) { }
 
     // redirect to login page
-    window.location.href = LOGIN_URL;
+    window.location.href = getLoginUrl();
   });
 
   window.loadAuthToHeader = loadAuthToHeader;

@@ -29,10 +29,16 @@ const Auth = (function () {
     }
 
     function getLoginPath() {
-        const basePath = getBasePath();
-        // build absolute URL using current origin so CSS/assets load correctly
-        return `${location.origin}${basePath}dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html`;
+    const host = window.location.hostname;
+
+    if (host === "127.0.0.1" || host === "localhost") {
+        return "/FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html";
+    } else if (host === "xungxinh.io.vn" || host === "www.xungxinh.io.vn") {
+        return "/login.html";
+    } else {
+        return "login.html";
     }
+}
 
     function getRoleRedirectMap() {
         const basePath = getBasePath();
@@ -94,14 +100,14 @@ const Auth = (function () {
         Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
         // remove legacy / alternate keys some pages use
         ["accessToken", "token", "user", "currentUser", "username", "role", "userId", "cartItems", "cartItems:anon"].forEach(k => {
-            try { localStorage.removeItem(k); } catch(e){}
-            try { sessionStorage.removeItem(k); } catch(e){}
+            try { localStorage.removeItem(k); } catch (e) { }
+            try { sessionStorage.removeItem(k); } catch (e) { }
         });
         // also clear any per-user cart keys
         try {
             const uid = localStorage.getItem(STORAGE_KEYS.userId) || localStorage.getItem('userId');
             if (uid) localStorage.removeItem(`cartItems:user:${uid}`);
-        } catch (e) {}
+        } catch (e) { }
 
         window.location.href = getLoginPath();
     }
@@ -109,8 +115,8 @@ const Auth = (function () {
     function clearAuth() {
         Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
         ["accessToken", "token", "user", "currentUser", "username", "role", "userId", "cartItems", "cartItems:anon"].forEach(k => {
-            try { localStorage.removeItem(k); } catch(e){}
-            try { sessionStorage.removeItem(k); } catch(e){}
+            try { localStorage.removeItem(k); } catch (e) { }
+            try { sessionStorage.removeItem(k); } catch (e) { }
         });
     }
 
