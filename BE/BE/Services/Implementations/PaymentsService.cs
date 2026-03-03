@@ -15,9 +15,9 @@ namespace BE.Services.Implementations
         }
 
         public Task<IEnumerable<Payments>> GetAllAsync() => _repo.GetAllAsync();
-        public Task<Payments?> GetByIdAsync(int id) => _repo.GetByIdAsync(id);
+        public Task<Payments?> GetByIdAsync(long id) => _repo.GetByIdAsync(id);
         public Task<Payments> AddAsync(Payments payment) => _repo.AddAsync(payment);
-        public Task<Payments?> UpdateAsync(int id, Payments payment) => _repo.UpdateAsync(id, payment);
-        public Task<bool> DeleteAsync(int id) => _repo.DeleteAsync(id);
+        public Task<Payments?> UpdateAsync(long id, Payments payment) => _repo.UpdateAsync(id, payment);
+        public Task<bool> DeleteAsync(long id) => _repo.DeleteAsync(id);
     }
 }

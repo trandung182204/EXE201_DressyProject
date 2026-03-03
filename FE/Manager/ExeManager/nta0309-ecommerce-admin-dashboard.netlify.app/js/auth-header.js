@@ -128,11 +128,23 @@
     const a = e.target.closest("#btn-logout");
     if (!a) return;
     e.preventDefault();
-    ["token", "role", "fullName", "userId", "providerId", "avatarUrl"].forEach((k) =>
-      localStorage.removeItem(k)
-    );
+    // Prefer global Auth.logout() if available for consistent behavior
+    if (window.Auth && typeof window.Auth.logout === 'function') {
+      try { window.Auth.logout(); return; } catch (err) { console.warn('Auth.logout failed, falling back', err); }
+    }
 
-    // ✅ chuyển về đúng login trong folder dress-rental-template
+    // Fallback: clear common auth keys from storage
+    ["token", "accessToken", "role", "fullName", "userId", "providerId", "avatarUrl", "user", "currentUser", "username", "cartItems", "cartItems:anon"].forEach((k) => {
+      try { localStorage.removeItem(k); } catch (e) {}
+      try { sessionStorage.removeItem(k); } catch (e) {}
+    });
+
+    try {
+      const uid = localStorage.getItem('userId') || localStorage.getItem('auth_userId');
+      if (uid) localStorage.removeItem(`cartItems:user:${uid}`);
+    } catch (e) {}
+
+    // redirect to login page
     window.location.href = LOGIN_URL;
   });
 

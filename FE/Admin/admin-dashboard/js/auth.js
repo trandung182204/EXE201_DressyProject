@@ -89,12 +89,28 @@ const Auth = (function () {
     }
 
     function logout() {
+        // remove known auth keys
         Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
+        // remove legacy / alternate keys some pages use
+        ["accessToken", "token", "user", "currentUser", "username", "role", "userId", "cartItems", "cartItems:anon"].forEach(k => {
+            try { localStorage.removeItem(k); } catch(e){}
+            try { sessionStorage.removeItem(k); } catch(e){}
+        });
+        // also clear any per-user cart keys
+        try {
+            const uid = localStorage.getItem(STORAGE_KEYS.userId) || localStorage.getItem('userId');
+            if (uid) localStorage.removeItem(`cartItems:user:${uid}`);
+        } catch (e) {}
+
         window.location.href = getLoginPath();
     }
 
     function clearAuth() {
         Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
+        ["accessToken", "token", "user", "currentUser", "username", "role", "userId", "cartItems", "cartItems:anon"].forEach(k => {
+            try { localStorage.removeItem(k); } catch(e){}
+            try { sessionStorage.removeItem(k); } catch(e){}
+        });
     }
 
     function requireAuth() {

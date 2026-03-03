@@ -285,7 +285,13 @@
     <script src="js/jvector-map.js"></script>
     <script src="js/slickslider.min.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/auth-header.js"></script>
+   
+
+    <!-- Auth / Header -->
+	<script src="js/auth.js"></script>
+	<script src="js/auth-header.js"></script>
+	<script src="js/load-sidebar.js"></script>
+	<script src="js/admin-ui.js"></script>
 
     <script>
         async function loadLayout() {
@@ -564,13 +570,13 @@
                     if(prod) prod.status = newStatus;
                     selectEl.className = `status-select ${newStatus === 'AVAILABLE' ? 'status-available' : 'status-unavailable'}`;
                 } else {
-                    alert('Lỗi cập nhật: ' + res.message);
+                    showToast('Lỗi cập nhật: ' + (res.message || 'Có lỗi'), 'danger');
                     selectEl.value = newStatus === 'AVAILABLE' ? 'UNAVAILABLE' : 'AVAILABLE';
                 }
             })
             .catch(err => {
                 selectEl.disabled = false;
-                alert('Lỗi kết nối: ' + err);
+                showToast('Lỗi kết nối: ' + (err || ''), 'danger');
             });
         }
 
@@ -584,7 +590,8 @@
         }
 
         async function deleteProduct(id) {
-            if (!confirm("Bạn có chắc muốn xóa sản phẩm này?")) return;
+            const ok = await showConfirm('Bạn có chắc muốn xóa sản phẩm này?');
+            if (!ok) return;
 
             const url = `${endpoints.products}/${id}`;
             const token = _readToken();
@@ -602,14 +609,14 @@
                     // remove from local array and re-render
                     allProducts = allProducts.filter(p => Number(p.id) !== Number(id));
                     applyFiltersAndSort();
-                    alert('Xóa sản phẩm thành công');
+                    showToast('Xóa sản phẩm thành công', 'success');
                 } else {
                     const msg = payload?.message || payload?.error || ('HTTP ' + res.status);
-                    alert('Xóa thất bại: ' + msg);
+                    showToast('Xóa thất bại: ' + msg, 'danger');
                 }
             } catch (err) {
                 console.error('Delete product failed', err);
-                alert('Lỗi kết nối khi xóa sản phẩm');
+                showToast('Lỗi kết nối khi xóa sản phẩm', 'danger');
             }
         }
 

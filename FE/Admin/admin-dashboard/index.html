@@ -83,7 +83,6 @@
 												</div>
 												<div class="sherah-progress-card__button">
 
-													<a href="#" class="sherah-see-all">View net earnings</a>
 												</div>
 
 											</div>
@@ -113,7 +112,6 @@
 															class="count-animate">$854.66k</b></h4>
 												</div>
 												<div class="sherah-progress-card__button">
-													<a href="#" class="sherah-see-all">View all orders</a>
 												</div>
 
 											</div>
@@ -151,7 +149,6 @@
 												</div>
 												<div class="sherah-progress-card__button">
 
-													<a href="#" class="sherah-see-all">See details</a>
 												</div>
 
 											</div>
@@ -189,7 +186,6 @@
 												</div>
 												<div class="sherah-progress-card__button">
 
-													<a href="#" class="sherah-see-all">See details</a>
 												</div>
 											</div>
 										</div>
@@ -234,26 +230,7 @@
 												<h3 class="sherah-heading__title">Monthly Statistics</h3>
 											</div>
 											<div class="sherah-flex-between mg-btm-30">
-												<div class="charts-main__middle m-0">
-													<ul
-														class="sherah-progress-list sherah-progress-list__bg sherah-progress-list__inline sherah-gap-50">
-														<li>
-															<span
-																class="sherah-progress-list__color sherah-color4__bg"></span>
-															<p>Profit <span>0</span></p>
-														</li>
-														<li>
-															<span
-																class="sherah-progress-list__color sherah-color1__bg"></span>
-															<p>Refunds<span>0</span></p>
-														</li>
-														<li>
-															<span
-																class="sherah-progress-list__color sherah-color3__bg"></span>
-															<p>Expenses<span>0</span></p>
-														</li>
-													</ul>
-												</div>
+												
 												<!-- Chart Dropdown Menu -->
 												<div class="sherah-chart__dropdown sherah-chart__dropdown--bg">
 													<ul class="nav nav-tabs sherah-dropdown__list" id="nav-tab"
@@ -321,15 +298,10 @@
 	<script src="js/main.js"></script>
 
 	<!-- Auth / Header -->
+	<script src="js/auth.js"></script>
 	<script src="js/auth-header.js"></script>
-
-	<script>
-		fetch("sidebar.html")
-			.then(res => res.text())
-			.then(html => {
-				document.getElementById("sidebar").innerHTML = html;
-			});
-	</script>
+	<script src="js/load-sidebar.js"></script>
+	<script src="js/admin-ui.js"></script>
 
 	<script>
 		$(document).ready(function () {
@@ -361,15 +333,13 @@
 	</script>
 
 	<script>
-		new CircleProgress('.circle__one', {
-			max: 100,
-			value: 0
-		});
+		(function(){
+			const el1 = document.querySelector('.circle__one');
+			if (el1) try { new CircleProgress(el1, { max: 100, value: 0 }); } catch(e){ console.warn('CircleProgress init failed', e); }
 
-		new CircleProgress('.circle__two', {
-			max: 100,
-			value: 0
-		});
+			const el2 = document.querySelector('.circle__two');
+			if (el2) try { new CircleProgress(el2, { max: 100, value: 0 }); } catch(e){ console.warn('CircleProgress init failed', e); }
+		})();
 	</script>
 	<script>
 		/* ===============================

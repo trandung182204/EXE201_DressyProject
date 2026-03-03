@@ -20,7 +20,7 @@ namespace BE.Repositories.Implementations
             return await _context.Payments.ToListAsync();
         }
 
-        public async Task<Payments?> GetByIdAsync(int id)
+        public async Task<Payments?> GetByIdAsync(long id)
         {
             return await _context.Payments.FindAsync(id);
         }
@@ -32,7 +32,7 @@ namespace BE.Repositories.Implementations
             return payment;
         }
 
-        public async Task<Payments?> UpdateAsync(int id, Payments payment)
+        public async Task<Payments?> UpdateAsync(long id, Payments payment)
         {
             var existing = await _context.Payments.FindAsync(id);
             if (existing == null) return null;
@@ -41,7 +41,7 @@ namespace BE.Repositories.Implementations
             return existing;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(long id)
         {
             var existing = await _context.Payments.FindAsync(id);
             if (existing == null) return false;

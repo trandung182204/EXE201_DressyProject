@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="style.css">
 
+
+
     <style>
         /* --- CUSTOM MODERN STYLES --- */
         :root {
@@ -412,7 +414,12 @@
     <script src="js/jvector-map.js"></script>
     <script src="js/slickslider.min.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/auth-header.js"></script>
+
+    <!-- Auth / Header -->
+	<script src="js/auth.js"></script>
+	<script src="js/auth-header.js"></script>
+	<script src="js/load-sidebar.js"></script>
+	<script src="js/admin-ui.js"></script>
     
     <script>
         async function loadLayout() {
@@ -662,32 +669,35 @@
                     // Update UI Class màu sắc
                     selectEl.className = `status-select ${newStatus === 'ACTIVE' ? 'status-active' : 'status-blocked'}`;
                 } else {
-                    alert('Cập nhật thất bại: ' + (res.message || 'Lỗi không xác định'));
+                    showToast('Cập nhật thất bại: ' + (res.message || 'Lỗi không xác định'), 'danger');
                     // Reset lại giá trị cũ
                     selectEl.value = newStatus === 'ACTIVE' ? 'BLOCKED' : 'ACTIVE';
                 }
             })
             .catch(err => {
                 selectEl.disabled = false;
-                alert('Lỗi hệ thống: ' + err);
+                showToast('Lỗi hệ thống: ' + (err || ''), 'danger');
             });
         }
 
-        function deleteUser(id, btnEl) {
-            if (!confirm('Bạn có chắc chắn muốn xóa người dùng này?')) return;
-            
-            fetch(`${apiBase}/${id}`, { method: 'DELETE' })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.success) {
-                        // Xóa khỏi mảng local
-                        allUsers = allUsers.filter(u => u.id !== id);
-                        applyFiltersAndSort(); // Re-render
-                    } else {
-                        alert('Xóa thất bại: ' + res.message);
-                    }
-                })
-                .catch(err => alert('Lỗi xóa: ' + err));
+        async function deleteUser(id, btnEl) {
+            const ok = await showConfirm('Bạn có chắc chắn muốn xóa người dùng này?');
+            if (!ok) return;
+
+            try {
+                const r = await fetch(`${apiBase}/${id}`, { method: 'DELETE' });
+                const res = await r.json();
+                if (res.success) {
+                    // Xóa khỏi mảng local
+                    allUsers = allUsers.filter(u => u.id !== id);
+                    applyFiltersAndSort(); // Re-render
+                    showToast('Xóa người dùng thành công', 'success');
+                } else {
+                    showToast('Xóa thất bại: ' + (res.message || ''), 'danger');
+                }
+            } catch (err) {
+                showToast('Lỗi xóa: ' + (err || ''), 'danger');
+            }
         }
 
         // --- 4. HELPERS ---

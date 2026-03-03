@@ -2,7 +2,7 @@
  * Lấy đường dẫn redirect sau khi logout
  */
 function getLogoutRedirect() {
-  return "index.html";
+  return "login.html";
 }
 
 /**
@@ -22,6 +22,10 @@ function processLogout() {
   localStorage.removeItem("userId");
   localStorage.removeItem("providerId");
   localStorage.removeItem("currentBooking");
+  // If Auth helper exists, delegate to it for consistent behavior
+  if (window.Auth && typeof window.Auth.logout === 'function') {
+    try { window.Auth.logout(); return; } catch (e) { console.warn('Auth.logout failed, falling back', e); }
+  }
   window.location.href = getLogoutRedirect();
 }
 
@@ -143,11 +147,16 @@ if (!window.__globalClickBound) {
     const target = e.target;
 
     // 1. Nếu click vào nút Đăng xuất
-    if (target.closest('#btn-logout')) {
-      e.preventDefault();
-      processLogout();
-      return;
-    }
+      if (target.closest('#btn-logout')) {
+        e.preventDefault();
+        // prefer global Auth.logout when available
+        if (window.Auth && typeof window.Auth.logout === 'function') {
+          try { window.Auth.logout(); } catch (err) { console.warn('Auth.logout error', err); processLogout(); }
+        } else {
+          processLogout();
+        }
+        return;
+      }
 
     // 2. Nếu click vào nút mở Menu (Giỏ hàng / Đăng nhập)
     const toggleBtn = target.closest('.rq-shopping-cart-items-list');

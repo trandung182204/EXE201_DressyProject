@@ -13,20 +13,44 @@ namespace BE.Services.Implementations
     public class BookingsService : IBookingsService
     {
         private readonly IBookingsRepository _repo;
+        private readonly BE.Services.Interfaces.IPaymentsService _paymentsService;
         private readonly string _connectionString;
 
         public BookingsService(
             IBookingsRepository repo,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            BE.Services.Interfaces.IPaymentsService paymentsService)
         {
             _repo = repo;
+            _paymentsService = paymentsService;
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
 
         // --- Basic CRUD ---
         public async Task<IEnumerable<Bookings>> GetAllAsync() => await _repo.GetAllAsync();
         public async Task<Bookings?> GetByIdAsync(long id) => await _repo.GetByIdAsync((int)id);
-        public async Task<Bookings> AddAsync(Bookings model) => await _repo.AddAsync(model);
+        public async Task<Bookings> AddAsync(Bookings model)
+        {
+            var created = await _repo.AddAsync(model);
+
+            try
+            {
+                var payment = new Payments
+                {
+                    BookingId = created.Id,
+                    Status = "UNPAID",
+                    Amount = created.TotalPrice
+                };
+
+                await _paymentsService.AddAsync(payment);
+            }
+            catch
+            {
+                // Swallow exceptions to avoid breaking booking creation if payment insert fails
+            }
+
+            return created;
+        }
         public async Task<Bookings?> UpdateAsync(long id, Bookings model) => await _repo.UpdateAsync((int)id, model);
         public async Task<bool> DeleteAsync(long id) => await _repo.DeleteAsync((int)id);
 

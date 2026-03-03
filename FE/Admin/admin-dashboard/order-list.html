@@ -291,7 +291,7 @@
                                                 <select id="payment-filter" class="filter-input">
                                                     <option value="">Tất cả</option>
                                                     <option value="success">Đã thanh toán</option>
-                                                    <option value="pending">Chờ thanh toán</option>
+                                                    <option value="unpaid">Chờ thanh toán</option>
                                                     <option value="failed">Thanh toán thất bại</option>
                                                 </select>
                                             </div>
@@ -402,7 +402,7 @@
                             <select id="modal-payment-select" class="form-select" style="max-width:200px;">
                                 <option value="success">Thanh toán thành công</option>
                                 <option value="failed">Thanh toán thất bại</option>
-                                <option value="pending">Chờ thanh toán</option>
+                                <option value="unpaid">Chờ thanh toán</option>
                             </select>
                             <button id="btn-save-payment" class="btn btn-outline-primary text-nowrap">
                                 <i class="fa fa-save"></i> Lưu thanh toán
@@ -418,6 +418,27 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Toast container -->
+    <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 10850;">
+        <div id="toast-container"></div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="confirmModalBody">Bạn có chắc không?</div>
+                <div class="modal-footer">
+                    <button type="button" id="confirmCancelBtn" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" id="confirmOkBtn" class="btn btn-primary">Đồng ý</button>
                 </div>
             </div>
         </div>
@@ -447,7 +468,9 @@
             bookings: `${API_BASE}/bookings/list`,
             detail: (id) => `${API_BASE}/bookings/${id}/detail`,
             updateStatus: (id) => `${API_BASE}/bookings/${id}/status`,
-            updatePayment: (id) => `${API_BASE}/bookings/${id}/payment-status`,
+            // payment endpoints: update payment record (payments controller)
+            payments: (id) => `${API_BASE}/payments/${id}`,
+            createPayment: () => `${API_BASE}/payments`,
             delete: (id) => `${API_BASE}/bookings/${id}`
         };
 
@@ -479,6 +502,8 @@
         };
 
         let currentBookingId = null;
+        let currentPaymentId = null;
+        let currentBookingTotal = 0;
 
         // DOM Elements
         const els = {
@@ -671,6 +696,9 @@
                         document.getElementById('modal-date').innerText = new Date(d.createdAt).toLocaleString('vi-VN');
                         document.getElementById('modal-price').innerText = d.totalPrice.toLocaleString('vi-VN') + ' đ';
                         document.getElementById('modal-payment-status').innerText = d.paymentStatus || 'Unknown';
+                        // store current payment id and booking total for later updates
+                        currentPaymentId = d.paymentId || null;
+                        currentBookingTotal = d.totalPrice || 0;
 
                         const statusSelect = document.getElementById('modal-status-select');
                         if (statusSelect) statusSelect.value = (d.bookingStatus || 'pending').toLowerCase();
@@ -748,20 +776,20 @@
                 })
                     .then(res => res.json())
                     .then(res => {
-                        if (res.success) {
-                            alert('Cập nhật thành công!');
-                            const itemIndex = state.data.findIndex(x => x.bookingId == currentBookingId);
-                            if (itemIndex > -1) {
-                                state.data[itemIndex].bookingStatus = newStatus;
-                                state.data[itemIndex].statusRaw = newStatus.toLowerCase();
-                                applyFilters();
+                            if (res.success) {
+                                showToast('Cập nhật thành công!', 'success');
+                                const itemIndex = state.data.findIndex(x => x.bookingId == currentBookingId);
+                                if (itemIndex > -1) {
+                                    state.data[itemIndex].bookingStatus = newStatus;
+                                    state.data[itemIndex].statusRaw = newStatus.toLowerCase();
+                                    applyFilters();
+                                }
+                                bootstrap.Modal.getInstance(document.getElementById('orderDetailModal')).hide();
+                            } else {
+                                showToast('Lỗi: ' + (res.message || 'Có lỗi'), 'danger');
                             }
-                            bootstrap.Modal.getInstance(document.getElementById('orderDetailModal')).hide();
-                        } else {
-                            alert('Lỗi: ' + res.message);
-                        }
-                    })
-                    .catch(err => alert('Lỗi kết nối!'))
+                        })
+                        .catch(err => showToast('Lỗi kết nối!', 'danger'))
                     .finally(() => {
                         btnSave.disabled = false;
                         btnSave.innerHTML = 'Lưu thay đổi';
@@ -772,57 +800,104 @@
         // Nút Lưu trạng thái thanh toán
         const btnSavePayment = document.getElementById('btn-save-payment');
         if (btnSavePayment) {
-            btnSavePayment.addEventListener('click', () => {
+                btnSavePayment.addEventListener('click', () => {
                 if (!currentBookingId) return;
                 const newStatus = document.getElementById('modal-payment-select').value.toUpperCase();
 
                 btnSavePayment.disabled = true;
                 btnSavePayment.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
 
-                fetch(endpoints.updatePayment(currentBookingId), {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: newStatus })
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        if (res.success) {
-                            alert('Cập nhật trạng thái thanh toán thành công!');
-                            const itemIndex = state.data.findIndex(x => x.bookingId == currentBookingId);
-                            if (itemIndex > -1) {
-                                state.data[itemIndex].paymentStatus = newStatus;
-                                state.data[itemIndex].paymentRaw = newStatus.toLowerCase();
-                                applyFilters();
+                // If we have an existing payment record, fetch it, modify status and PUT
+                if (currentPaymentId) {
+                    fetch(endpoints.payments(currentPaymentId))
+                        .then(r => r.json())
+                        .then(r => {
+                            if (!r.success || !r.data) throw new Error('Payment not found');
+                            const payment = r.data;
+                            payment.status = newStatus;
+                            return fetch(endpoints.payments(currentPaymentId), {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payment)
+                            });
+                        })
+                        .then(r => r.json())
+                        .then(r => {
+                            if (r.success) {
+                                showToast('Cập nhật trạng thái thanh toán thành công!', 'success');
+                                const itemIndex = state.data.findIndex(x => x.bookingId == currentBookingId);
+                                if (itemIndex > -1) {
+                                    state.data[itemIndex].paymentStatus = newStatus;
+                                    state.data[itemIndex].paymentRaw = newStatus.toLowerCase();
+                                    applyFilters();
+                                }
+                                bootstrap.Modal.getInstance(document.getElementById('orderDetailModal')).hide();
+                            } else {
+                                showToast('Lỗi: ' + (r.message || 'Có lỗi'), 'danger');
                             }
-                            bootstrap.Modal.getInstance(document.getElementById('orderDetailModal')).hide();
-                        } else {
-                            alert('Lỗi: ' + res.message);
-                        }
+                        })
+                        .catch(err => showToast('Lỗi kết nối hoặc cập nhật: ' + (err.message || err), 'danger'))
+                        .finally(() => {
+                            btnSavePayment.disabled = false;
+                            btnSavePayment.innerHTML = 'Lưu thanh toán';
+                        });
+
+                } else {
+                    // No payment record exists yet: create one linked to booking
+                    const newPayment = {
+                        bookingId: currentBookingId,
+                        status: newStatus,
+                        amount: currentBookingTotal
+                    };
+
+                    fetch(endpoints.createPayment(), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newPayment)
                     })
-                    .catch(err => alert('Lỗi kết nối!'))
-                    .finally(() => {
-                        btnSavePayment.disabled = false;
-                        btnSavePayment.innerHTML = 'Lưu thanh toán';
-                    });
+                        .then(r => r.json())
+                        .then(r => {
+                            if (r.success && r.data) {
+                                currentPaymentId = r.data.id || r.data.id || null;
+                                showToast('Tạo & cập nhật trạng thái thanh toán thành công!', 'success');
+                                const itemIndex = state.data.findIndex(x => x.bookingId == currentBookingId);
+                                if (itemIndex > -1) {
+                                    state.data[itemIndex].paymentStatus = newStatus;
+                                    state.data[itemIndex].paymentRaw = newStatus.toLowerCase();
+                                    applyFilters();
+                                }
+                                bootstrap.Modal.getInstance(document.getElementById('orderDetailModal')).hide();
+                            } else {
+                                showToast('Lỗi: ' + (r.message || 'Có lỗi'), 'danger');
+                            }
+                        })
+                        .catch(err => showToast('Lỗi kết nối!', 'danger'))
+                        .finally(() => {
+                            btnSavePayment.disabled = false;
+                            btnSavePayment.innerHTML = 'Lưu thanh toán';
+                        });
+                }
             });
         }
 
         // Xóa đơn hàng
-        function deleteBooking(id) {
-            if (!confirm(`Xóa đơn hàng #${id}?`)) return;
+        async function deleteBooking(id) {
+            const ok = await showConfirm(`Xóa đơn hàng #${id}?`);
+            if (!ok) return;
 
-            fetch(endpoints.delete(id), { method: 'DELETE' })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.success) {
-                        state.data = state.data.filter(item => item.bookingId !== id);
-                        applyFilters();
-                        alert('Đã xóa!');
-                    } else {
-                        alert('Xóa thất bại: ' + res.message);
-                    }
-                })
-                .catch(err => alert('Lỗi kết nối!'));
+            try {
+                const r = await fetch(endpoints.delete(id), { method: 'DELETE' });
+                const res = await r.json();
+                if (res.success) {
+                    state.data = state.data.filter(item => item.bookingId !== id);
+                    applyFilters();
+                    showToast('Đã xóa!', 'success');
+                } else {
+                    showToast('Xóa thất bại: ' + (res.message || 'Có lỗi'), 'danger');
+                }
+            } catch (err) {
+                showToast('Lỗi kết nối!', 'danger');
+            }
         }
 
         // --- 6. HELPERS & EVENTS ---
@@ -851,6 +926,57 @@
                 const icon = activeTh.querySelector('.sort-indicator');
                 if (icon) icon.textContent = state.sort.dir === 'asc' ? ' ▲' : ' ▼';
             }
+        }
+
+        // --- UI Helpers: toast & confirm (Bootstrap) ---
+        function showToast(message, type = 'info', timeout = 3000) {
+            try {
+                const container = document.getElementById('toast-container');
+                if (!container) return;
+                const id = 'toast-' + Date.now() + Math.floor(Math.random() * 1000);
+                const colorClass = type === 'success' ? 'bg-success text-white' : (type === 'danger' ? 'bg-danger text-white' : 'bg-primary text-white');
+                const toastHtml = `
+                    <div id="${id}" class="toast align-items-center ${colorClass} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="${timeout}">
+                        <div class="d-flex">
+                            <div class="toast-body">${message}</div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>`;
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = toastHtml;
+                const el = wrapper.firstElementChild;
+                container.appendChild(el);
+                const bsToast = new bootstrap.Toast(el);
+                bsToast.show();
+                el.addEventListener('hidden.bs.toast', () => { try { el.remove(); } catch (e) { } });
+            } catch (e) { console.warn('toast error', e); }
+        }
+
+        function showConfirm(message) {
+            return new Promise((resolve) => {
+                const modalEl = document.getElementById('confirmModal');
+                const body = document.getElementById('confirmModalBody');
+                const okBtn = document.getElementById('confirmOkBtn');
+                const cancelBtn = document.getElementById('confirmCancelBtn');
+                if (!modalEl || !body || !okBtn || !cancelBtn) {
+                    resolve(confirm(message));
+                    return;
+                }
+                body.innerText = message;
+                const modal = new bootstrap.Modal(modalEl, { backdrop: 'static' });
+
+                function cleanup() {
+                    okBtn.removeEventListener('click', onOk);
+                    cancelBtn.removeEventListener('click', onCancel);
+                }
+
+                function onOk() { cleanup(); modal.hide(); resolve(true); }
+                function onCancel() { cleanup(); modal.hide(); resolve(false); }
+
+                okBtn.addEventListener('click', onOk);
+                cancelBtn.addEventListener('click', onCancel);
+                modal.show();
+            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
