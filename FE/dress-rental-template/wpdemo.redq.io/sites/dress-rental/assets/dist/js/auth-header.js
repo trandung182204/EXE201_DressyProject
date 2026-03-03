@@ -10,10 +10,8 @@ function getLogoutRedirect() {
  */
 function processLogout() {
   try {
-    const uid = localStorage.getItem('userId');
-    if (uid) {
-      localStorage.removeItem(`cartItems:user:${uid}`);
-    }
+    // Giữ lại cartItems:user:${uid} để khi đăng nhập lại vẫn còn giỏ hàng
+    // Key này được phân tách theo userId nên user khác sẽ không thấy
     localStorage.removeItem('cartItems:anon');
     localStorage.removeItem('cartItems');
   } catch (e) { console.warn('[AUTH-HEADER] Lỗi xóa giỏ hàng', e); }
@@ -23,7 +21,7 @@ function processLogout() {
   localStorage.removeItem("fullName");
   localStorage.removeItem("userId");
   localStorage.removeItem("providerId");
-  localStorage.removeItem("currentBooking"); 
+  localStorage.removeItem("currentBooking");
   window.location.href = getLogoutRedirect();
 }
 
@@ -67,7 +65,7 @@ window.renderHeaderCart = function () {
     for (const k of keys) {
       const r = localStorage.getItem(k);
       if (!r) continue;
-      try { const parsed = JSON.parse(r); if (Array.isArray(parsed)) return parsed; } catch (e) {}
+      try { const parsed = JSON.parse(r); if (Array.isArray(parsed)) return parsed; } catch (e) { }
     }
     return [];
   }
@@ -141,7 +139,7 @@ window.renderHeaderCart = function () {
 if (!window.__globalClickBound) {
   window.__globalClickBound = true;
 
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     const target = e.target;
 
     // 1. Nếu click vào nút Đăng xuất
@@ -190,7 +188,7 @@ if (!window.__globalClickBound) {
 
     // 4. Bỏ qua nếu click TRONG nội dung của menu đang mở
     if (target.closest('.rq-shopping-cart-inner-div.rq-visible')) {
-      return; 
+      return;
     }
 
     // 5. Nếu click ra khoảng trắng bên ngoài -> Đóng sạch các menu

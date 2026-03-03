@@ -744,7 +744,7 @@ function setupReserveButton() {
                 for (const k of keys) {
                     const raw = localStorage.getItem(k);
                     if (!raw) continue;
-                    try { const arr = JSON.parse(raw); if (Array.isArray(arr)) return arr; } catch (e) {}
+                    try { const arr = JSON.parse(raw); if (Array.isArray(arr)) return arr; } catch (e) { }
                 }
                 return [];
             }
@@ -865,13 +865,13 @@ function setupAddToCartButton() {
         };
 
         // Check stock including cart
-        const existingCart = (function(){
+        const existingCart = (function () {
             const uid = localStorage.getItem('userId');
             const keys = uid ? [`cartItems:user:${uid}`, 'cartItems:anon', 'cartItems'] : ['cartItems:anon', 'cartItems'];
             for (const k of keys) {
                 const raw = localStorage.getItem(k);
                 if (!raw) continue;
-                try { const arr = JSON.parse(raw); if (Array.isArray(arr)) return arr; } catch (e) {}
+                try { const arr = JSON.parse(raw); if (Array.isArray(arr)) return arr; } catch (e) { }
             }
             return [];
         })();
@@ -994,8 +994,7 @@ function init() {
         showError("Thiếu id sản phẩm");
         return;
     }
-    setupDateValidation();
-    setupReserveButton();
+    setupDateValidation(); // This already calls setupReserveButton() internally
     setupAddToCartButton();
     loadProduct(productId);
 }

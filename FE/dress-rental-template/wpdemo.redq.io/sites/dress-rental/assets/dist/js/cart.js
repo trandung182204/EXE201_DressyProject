@@ -30,7 +30,34 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
- * Load cart: from server if logged in, from localStorage otherwise
+ * Read cart items from localStorage (same logic as header uses)
+ */
+function readCartFromStorage() {
+    const uid = localStorage.getItem('userId');
+    const keys = uid
+        ? [`cartItems:user:${uid}`, 'cartItems:anon', 'cartItems']
+        : ['cartItems:anon', 'cartItems'];
+    for (const k of keys) {
+        const raw = localStorage.getItem(k);
+        if (!raw) continue;
+        try {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch (e) { }
+    }
+    // Also check currentBooking (single item fallback)
+    const single = localStorage.getItem('currentBooking');
+    if (single) {
+        try {
+            const item = JSON.parse(single);
+            if (item && item.productId) return [item];
+        } catch (e) { }
+    }
+    return [];
+}
+
+/**
+ * Load cart: try server first (if logged in), then fall back to localStorage
  */
 async function loadCart() {
     if (!isLoggedIn()) {
@@ -38,6 +65,8 @@ async function loadCart() {
         renderAll();
         return;
     }
+
+    let loadedFromServer = false;
 
     try {
         const data = await apiFetch("GET", "/api/Carts/me", null, false);
@@ -63,17 +92,27 @@ async function loadCart() {
                 thumbnailUrl: item.imageUrl || '',
                 cartItemId: item.cartItemId,
             }));
-            // Also sync to localStorage for header dropdown
+            // Sync to localStorage for header dropdown AND for booking.js readCartForBooking()
             localStorage.setItem("cartItems", JSON.stringify(cartState.items));
+            const uid = localStorage.getItem('userId');
+            if (uid) localStorage.setItem(`cartItems:user:${uid}`, JSON.stringify(cartState.items));
+            loadedFromServer = true;
             console.log("[CART] Loaded", cartState.items.length, "items from server");
-        } else {
-            // Server cart empty
-            cartState.items = [];
-            localStorage.removeItem("cartItems");
         }
     } catch (err) {
         console.warn("[CART] Server cart load failed:", err.message);
-        cartState.items = [];
+    }
+
+    // Fallback: if server returned nothing, read from localStorage
+    // (booking.js saves items to localStorage only, not to server)
+    if (!loadedFromServer) {
+        const localItems = readCartFromStorage();
+        if (localItems.length > 0) {
+            cartState.items = localItems;
+            console.log("[CART] Loaded", localItems.length, "items from localStorage");
+        } else {
+            cartState.items = [];
+        }
     }
 
     renderAll();
