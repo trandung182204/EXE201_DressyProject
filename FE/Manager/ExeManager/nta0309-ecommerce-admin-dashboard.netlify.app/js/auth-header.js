@@ -3,6 +3,14 @@
   const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
   const API_BASE = isLocal ? "http://localhost:5135" : "";
 
+  // ✅ Login nằm trong: FE/dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html
+  // Auth-header đang chạy từ: FE/Manager/ExeManager/... (các trang dashboard)
+  // => đi lên FE/: ../../../ rồi sang dress-rental-template/...
+  const LOGIN_URL = new URL(
+    "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
+    location.href
+  ).href;
+
   function waitForEl(selector, timeout = 4000) {
     return new Promise((resolve, reject) => {
       const start = Date.now();
@@ -123,7 +131,9 @@
     ["token", "role", "fullName", "userId", "providerId", "avatarUrl"].forEach((k) =>
       localStorage.removeItem(k)
     );
-    window.location.href = "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/index.html";
+
+    // ✅ chuyển về đúng login trong folder dress-rental-template
+    window.location.href = LOGIN_URL;
   });
 
   window.loadAuthToHeader = loadAuthToHeader;
