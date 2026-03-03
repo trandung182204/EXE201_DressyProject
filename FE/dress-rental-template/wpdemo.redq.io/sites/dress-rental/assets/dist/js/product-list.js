@@ -157,7 +157,6 @@ function renderGrid(items) {
         </div>
         <div class="description">
           <a href="booking.html?id=${p.id}" class="prod-title">${p.name || ""}</a>
-          <p class="prod-cat">${p.categoryName || ""}</p>
           <div class="prod-meta">
             <div class="price">${money(p.minPricePerDay)}</div>
             <div class="deposit">Cọc: ${depositText}</div>
