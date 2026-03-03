@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+
+<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/order-list by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:14 GMT -->
+<!-- Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+
+<head>
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="keywords" content="Site keywords here">
+	<meta name="description" content="#">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Site Title -->
+	<title>Danh sách đơn hàng</title>
+
+	<!-- Font -->
+	<link
+		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+		rel="stylesheet">
+
+	<!-- Fav Icon -->
+	<link rel="icon" href="img/favicon.png">
+
+	<!-- sherah Stylesheet -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/font-awesome-all.min.css">
+	<link rel="stylesheet" href="css/charts.min.css">
+	<link rel="stylesheet" href="css/datatables.min.css">
+	<link rel="stylesheet" href="css/jvector-map.css">
+	<link rel="stylesheet" href="css/slickslider.min.css">
+	<link rel="stylesheet" href="css/jquery-ui.css">
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body id="sherah-dark-light">
+
+	<div class="sherah-body-area">
+		<!-- sherah Admin Menu -->
+		<div id="header-container"></div>
+		<!-- End sherah Admin Menu -->
+		<div id="dashboard-container"></div>
+		<!-- End Header -->
+
+		<!-- sherah Dashboard -->
+		<section class="sherah-adashboard sherah-show">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<div class="sherah-body">
+							<!-- Dashboard Inner -->
+							<div class="sherah-dsinner">
+								<div class="row mg-top-30">
+									<div class="col-12 sherah-flex-between">
+										<!-- Sherah Breadcrumb -->
+										<div class="sherah-breadcrumb">
+											<h2 class="sherah-breadcrumb__title">Danh sách đơn hàng</h2>
+											<ul class="sherah-breadcrumb__list">
+												<li><a href="#">Trang chủ</a></li>
+												<li class="active"><a href='order-list.html'>Danh sách đơn hàng</a></li>
+											</ul>
+										</div>
+										<!-- End Sherah Breadcrumb -->
+
+									</div>
+								</div>
+								<!-- Filters -->
+								<div class="sherah-page-inner sherah-border sherah-default-bg mg-top-25"
+									style="padding:16px;">
+									<div class="row g-3 align-items-end">
+										<div class="col-lg-3 col-md-6 col-12">
+											<label class="form-label" style="font-weight:600;">Từ ngày</label>
+											<input id="filter-date-from" type="date" class="form-control">
+										</div>
+										<div class="col-lg-3 col-md-6 col-12">
+											<label class="form-label" style="font-weight:600;">Đến ngày</label>
+											<input id="filter-date-to" type="date" class="form-control">
+										</div>
+
+										<div class="col-lg-3 col-md-6 col-12">
+											<label class="form-label" style="font-weight:600;">Trạng thái đơn
+												hàng</label>
+											<select id="filter-status" class="form-control">
+												<option value="">Tất cả</option>
+												<option value="PENDING">PENDING</option>
+												<option value="COMPLETED">COMPLETED</option>
+												<option value="CANCELLED">CANCELLED</option>
+											</select>
+										</div>
+
+										<div class="col-lg-3 col-md-6 col-12 d-flex gap-2">
+											<button id="btn-apply-filter" class="sherah-btn sherah-gbcolor"
+												type="button" style="width:100%;">
+												Lọc
+											</button>
+											<button id="btn-reset-filter" class="sherah-btn" type="button"
+												style="width:100%; background:#ff4d4f; border-color:#ff4d4f; color:#fff;">
+												Làm mới
+											</button>
+										</div>
+									</div>
+								</div>
+								<!-- End Filters -->
+								<div class="sherah-table sherah-page-inner sherah-border sherah-default-bg mg-top-25">
+									<table id="sherah-table__vendor" class="sherah-table__main sherah-table__main-v3">
+										<!-- sherah Table Head -->
+										<thead class="sherah-table__head">
+											<tr>
+												<th class="sherah-table__column-1 sherah-table__h1">Mã đơn</th>
+
+												<th class="sherah-table__column-3 sherah-table__h3">Ngày tạo</th>
+												<th class="sherah-table__column-4 sherah-table__h4">Trạng thái thanh
+													toán</th>
+												<th class="sherah-table__column-5 sherah-table__h5">Tổng tiền</th>
+
+												<th class="sherah-table__column-7 sherah-table__h7">Trạng thái đơn hàng
+												</th>
+												<th class="sherah-table__column-8 sherah-table__h8">Hành động</th>
+											</tr>
+										</thead>
+										<tbody id="orders-tbody" class="sherah-table__body"></tbody>
+									</table>
+								</div>
+							</div>
+							<!-- End Dashboard Inner -->
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</section>
+		<!-- End sherah Dashboard -->
+
+	</div>
+
+	<!-- sherah Scripts -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery-migrate.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
+	<script src="js/popper.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/charts.js"></script>
+	<script src="js/datatables.min.js"></script>
+	<script src="js/circle-progress.min.js"></script>
+	<script src="js/jquery-jvectormap.js"></script>
+	<script src="js/jvector-map.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/auth-header.js"></script>
+	<script src="js/provider-notifications.js"></script>
+
+
+	<script>
+		async function loadLayout() {
+			const headerRes = await fetch("header.html");
+			document.getElementById("header-container").innerHTML = await headerRes.text();
+
+			const dashRes = await fetch("dashboard.html");
+			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+
+			initSherahLayout();
+
+			// ✅ quan trọng: gọi sau khi header đã có trong DOM
+			if (window.loadAuthToHeader) window.loadAuthToHeader();
+			if (window.initProviderNotifications) window.initProviderNotifications();
+		}
+	</script>
+	<script>
+		function bindThemeToggle() {
+			const btn = document.getElementById("sherah-dark-light-button");
+			const body = document.getElementById("sherah-dark-light") || document.body;
+
+			if (!btn) return;
+
+			// apply theme from storage
+			const saved = localStorage.getItem("sherah_theme") || "light";
+			body.classList.toggle("sherah-dark", saved === "dark");
+
+			// avoid double bind
+			if (btn.dataset.bound === "1") return;
+			btn.dataset.bound = "1";
+
+			btn.addEventListener("click", () => {
+				const isDark = body.classList.toggle("sherah-dark");
+				localStorage.setItem("sherah_theme", isDark ? "dark" : "light");
+			});
+		}
+
+		// Nếu bạn có loadLayout() thì gọi bindThemeToggle sau khi inject header
+		// bindThemeToggle();
+	</script>
+	<script>
+		const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+		const API_BASE = isLocal ? "http://localhost:5135" : "";
+
+		function getToken() {
+			return localStorage.getItem("token") || "";
+		}
+
+		function formatDateTime(iso) {
+			if (!iso) return "";
+			const d = new Date(iso);
+			const date = d.toLocaleDateString("vi-VN");
+			const time = d.toLocaleTimeString("vi-VN");
+			return `${date} <span class="sherah-table__time">${time}</span>`;
+		}
+
+		function paymentHtml(status) {
+			const s = (status || "").toUpperCase();
+			if (s === "SUCCESS" || s === "PAID") {
+				return `<div class="sherah-table__status sherah-color2 sherah-color2__bg--opactity">Đã thanh toán</div>`;
+			}
+			return `<div class="sherah-table__status sherah-color1 sherah-color1__bg--opactity">Chưa thanh toán</div>`;
+		}
+
+		function orderHtml(status) {
+			const s = (status || "").toUpperCase();
+			if (s === "COMPLETED" || s === "SHIPPED") {
+				return `<div class="sherah-table__status sherah-color2 sherah-color2__bg--opactity">${s}</div>`;
+			}
+			return `<div class="sherah-table__status sherah-color1 sherah-color1__bg--opactity">${s}</div>`;
+		}
+
+		function buildUrl() {
+			const from = document.getElementById("filter-date-from").value;
+			const to = document.getElementById("filter-date-to").value;
+			const status = document.getElementById("filter-status").value;
+
+			const qs = new URLSearchParams();
+			if (from) qs.set("from", from);
+			if (to) qs.set("to", to);
+			if (status) qs.set("status", status);
+
+			const q = qs.toString();
+			const url = API_BASE + "/api/Bookings/provider" + (q ? `?${q}` : "");
+			console.log("FILTER URL:", url);
+			return url;
+		}
+
+		
+
+		let dt;
+
+		async function bootOrderList() {
+			await loadLayout();
+
+			dt = $("#sherah-table__vendor").DataTable({
+				searching: true,
+				autoWidth: false,
+				info: false,
+				lengthChange: true,
+				scrollCollapse: true,
+				paging: true,
+
+				order: [[1, "desc"]], 
+
+				columnDefs: [
+					{ targets: 1, type: "date" }
+				],
+
+				language: {
+					paginate: { next: '<i class="fas fa-angle-right"></i>', previous: '<i class="fas fa-angle-left"></i>' },
+					lengthMenu: "Showing _MENU_",
+					searchPlaceholder: "Search...",
+					search: '<span class="sherah-data-table-label">Search</span>',
+				},
+				ajax: {
+					url: API_BASE + "/api/Bookings/provider",
+					type: "GET",
+					dataSrc: (json) => json.data || [],
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader("Authorization", "Bearer " + getToken());
+					},
+					error: function (xhr) {
+						console.error("AJAX error:", xhr.status, xhr.responseText);
+					}
+				},
+				columns: [
+					{
+						data: "bookingId",
+						render: (id) => `
+            <div class="sherah-language-form__input">
+              <p class="crany-table__product--number">
+                <a href="#" class="sherah-color1">#${id}</a>
+              </p>
+            </div>`
+					},
+					{ data: "createdAt", render: (v) => `<p class="sherah-table__product-desc">${formatDateTime(v)}</p>` },
+					{ data: "paymentStatus", render: (v) => `<div class="sherah-table__product-content">${paymentHtml(v)}</div>` },
+					{ data: "providerRevenue", render: (v) => `<p class="sherah-table__product-desc">${(v ?? 0).toLocaleString("vi-VN")}</p>` },
+					{ data: "bookingStatus", render: (v) => orderHtml(v) },
+					{
+						data: null,
+						orderable: false,
+						render: (row) => `
+            <a href="order-details.html?id=${row.bookingId}"
+               class="sherah-table__action sherah-color2 sherah-color3__bg--opactity">
+               Xem chi tiết
+            </a>`
+					}
+				]
+			});
+
+			document.getElementById("btn-apply-filter").addEventListener("click", () => {
+				dt.ajax.url(buildUrl()).load();
+			});
+
+			document.getElementById("btn-reset-filter").addEventListener("click", () => {
+				document.getElementById("filter-date-from").value = "";
+				document.getElementById("filter-date-to").value = "";
+				document.getElementById("filter-status").value = "";
+				dt.ajax.url(API_BASE + "/api/Bookings/provider").load();
+			});
+		}
+
+		bootOrderList();
+	</script>
+
+
+
+</body>
+
+<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/order-list by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:14 GMT -->
+
+</html>

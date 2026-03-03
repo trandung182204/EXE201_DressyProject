@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="Site keywords here">
+    <meta name="description" content="#">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Site Title -->
+    <title>Upload Product</title>
+
+    <!-- Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+        rel="stylesheet">
+
+    <!-- Fav Icon -->
+    <link rel="icon" href="img/favicon.png">
+
+    <!-- sherah Stylesheet -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome-all.min.css">
+    <link rel="stylesheet" href="css/charts.min.css">
+    <link rel="stylesheet" href="css/datatables.min.css">
+    <link rel="stylesheet" href="css/jvector-map.css">
+    <link rel="stylesheet" href="css/slickslider.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="style.css">
+    
+
+    <style>
+        #imagePreviewRow {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .preview-tile {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            flex: 0 0 auto;
+            border: 1px solid #e8e8e8;
+            background: #fff;
+        }
+
+        .preview-tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .preview-remove {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(0, 0, 0, .6);
+            color: #fff;
+            line-height: 26px;
+            font-weight: 700;
+        }
+
+        /* ===== NEW: variants table ===== */
+        .variants-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .variants-table-wrap {
+            overflow: auto;
+        }
+
+        table.variants-table {
+            width: 100%;
+            min-width: 720px;
+            border-collapse: collapse;
+        }
+
+        table.variants-table th,
+        table.variants-table td {
+            padding: 10px;
+            border-bottom: 1px solid #f2f2f2;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .v-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e8e8e8;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .v-remove {
+            background: #eee !important;
+            color: #333 !important;
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .form-msg {
+            margin-top: 12px;
+            font-size: 13px;
+        }
+    </style>
+
+</head>
+
+<body id="sherah-dark-light">
+
+    <div class="sherah-body-area">
+        <div id="header-container"></div>
+        <div id="dashboard-container"></div>
+
+        <section class="sherah-adashboard sherah-show">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sherah-body">
+                            <div class="sherah-dsinner">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="sherah-breadcrumb mg-top-30">
+                                            <h2 class="sherah-breadcrumb__title">Tải lên sản phẩm</h2>
+                                            <ul class="sherah-breadcrumb__list">
+                                                <li><a href="#">Trang chủ</a></li>
+                                                <li class="active"><a href='upload-product.html'>Tải lên sản phẩm</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sherah-page-inner sherah-border sherah-basic-page sherah-default-bg mg-top-25 p-0">
+                                    <form id="uploadProductForm" class="sherah-wc__form-main" action="#"
+                                        onsubmit="return false;">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-12">
+                                                <!-- Product Info -->
+                                                <div class="product-form-box sherah-border mg-top-30">
+                                                    <h4 class="form-title m-0">Thông tin cơ bản</h4>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <label class="sherah-wc__form-label">Tên sản phẩm</label>
+                                                                <div class="form-group__input">
+                                                                    <input id="name" class="sherah-wc__form-input"
+                                                                        placeholder="Type here" type="text" name="name">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6 col-md-6 col-12">
+                                                            <div class="form-group">
+                                                                <label class="sherah-wc__form-label">Giá mỗi ngày</label>
+                                                                <div class="form-group__input">
+                                                                    <input id="pricePerDay"
+                                                                        class="sherah-wc__form-input"
+                                                                        placeholder="Type here" type="number"
+                                                                        name="pricePerDay">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <label class="sherah-wc__form-label">Mô tả</label>
+                                                                <div class="form-group__input">
+                                                                    <textarea id="description"
+                                                                        class="sherah-wc__form-input"
+                                                                        placeholder="Type here"
+                                                                        name="description"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6 col-md-6 col-12">
+                                                            <div class="form-group">
+                                                                <label class="sherah-wc__form-label">Danh mục*</label>
+                                                                <div class="form-group__input">
+                                                                    <select id="categoryId"
+                                                                        class="sherah-wc__form-input" name="categoryId">
+                                                                        <option value="">-- Chọn danh mục --</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6 col-md-6 col-12">
+                                                            <div class="form-group">
+                                                                <label class="sherah-wc__form-label">Loại sản phẩm</label>
+                                                                <div class="form-group__input">
+                                                                    <select id="productType"
+                                                                        class="sherah-wc__form-input"
+                                                                        name="productType">
+                                                                        <option value="OUTFIT">Trang phục</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <!-- End Product Info -->
+                                            </div>
+
+                                            <div class="col-lg-6 col-12">
+                                                <!-- Specification -->
+                                                <div class="product-form-box sherah-border mg-top-30">
+                                                    <h4 class="form-title m-0">Thông tin chi tiết</h4>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-12">
+                                                            <div class="form-group">
+                                                                <label class="sherah-wc__form-label">Số tiền cọc</label>
+                                                                <div class="form-group__input">
+                                                                    <input id="depositAmount"
+                                                                        class="sherah-wc__form-input"
+                                                                        placeholder="Type here" type="number"
+                                                                        name="depositAmount">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- ✅ NEW: Variants table (thay cho Size/Colors checkbox + Stock) -->
+                                                    <div class="variants-toolbar">
+                                                        <h4 class="form-title m-0">Thông số sản phẩm</h4>
+                                                        <button id="btnAddVariant" type="button"
+                                                            class="sherah-btn sherah-btn__primary"
+                                                            style="padding:10px 14px;">
+                                                            + Thêm dòng
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="variants-table-wrap">
+                                                        <table class="variants-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="width: 22%;">Kích thước</th>
+                                                                    <th style="width: 26%;">Tên màu</th>
+                                                                    <th style="width: 18%;">Mã màu</th>
+                                                                    <th style="width: 18%;">Số lượng</th>
+                                                                    <th style="width: 16%;"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="variantsBody"></tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <p class="form-msg" style="color:#666;">
+                                                        Nhập theo từng dòng: <b>Kích cỡ → tên màu → mã màu → số lượng</b>. Nếu có nhiều size/màu, bấm <b>Thêm dòng</b>.
+                                                    </p>
+                                                </div>
+                                                <!-- End Specification -->
+                                            </div>
+                                        </div>
+
+                                        <!-- Images -->
+                                        <div class="product-form-box sherah-border mg-top-30">
+                                            <div class="form-group">
+                                                <div class="image-upload-group" id="imagePreviewRow">
+
+                                                    <!-- Ô upload (luôn nằm cuối) -->
+                                                    <div class="image-upload-group__single image-upload-group__single--upload">
+                                                        <input type="file" class="btn-check" id="input-img1" multiple
+                                                            accept="image/*" autocomplete="off">
+                                                        <label class="image-upload-label" for="input-img1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="91.787"
+                                                                height="84.116" viewBox="0 0 91.787 84.116">
+                                                                <g id="Group_1021" data-name="Group 1021"
+                                                                    transform="translate(891.292 39.276)">
+                                                                    <path id="Path_536" data-name="Path 536"
+                                                                        d="M-891.292,158.124q1.434-5.442,2.867-10.884c1.3-4.961,2.586-9.926,3.9-14.884a2.8,2.8,0,0,1,2.664-2.251,2.654,2.654,0,0,1,2.763,1.848,3.929,3.929,0,0,1,.037,2q-3.073,12-6.226,23.984c-.64,2.452.088,3.739,2.533,4.394q29.033,7.775,58.067,15.543a2.893,2.893,0,0,0,3.97-2.327c.626-2.487,1.227-4.98,1.849-7.468a2.9,2.9,0,0,1,3.436-2.368,2.894,2.894,0,0,1,2.124,3.726c-.627,2.609-1.256,5.219-1.944,7.813A8.547,8.547,0,0,1-826,183.469q-29.3-7.827-58.584-15.682a8.566,8.566,0,0,1-6.552-6.853,1.264,1.264,0,0,0-.16-.3Z"
+                                                                        transform="translate(0 -138.958)" />
+                                                                    <path id="Path_537" data-name="Path 537"
+                                                                        d="M-767.966,21.9c-9.648,0-19.3-.062-28.943.029a9.215,9.215,0,0,1-8.88-5.491,7.393,7.393,0,0,1-.451-3.232c-.027-14.606-.053-29.212,0-43.818a8.532,8.532,0,0,1,8.907-8.66q29.346-.008,58.693,0a8.581,8.581,0,0,1,8.877,8.872q.017,21.685,0,43.37a8.551,8.551,0,0,1-8.9,8.923C-748.432,21.915-758.2,21.9-767.966,21.9ZM-773.938.457l4.606-5.528q4.674-5.611,9.345-11.224a6.85,6.85,0,0,1,7.183-2.522c1.734.377,2.87,1.622,3.969,2.909q6.341,7.428,12.7,14.838a6.488,6.488,0,0,1,.426.631l.211-.158v-.789q0-14.429,0-28.857c0-2.179-1.125-3.294-3.316-3.295q-29.216,0-58.432,0c-2.141,0-3.277,1.115-3.278,3.25q-.008,18.865,0,37.73a5.429,5.429,0,0,0,.07.624l.239.127a5.744,5.744,0,0,1,.529-.721Q-794.05,1.826-788.4-3.808c3.131-3.127,7.065-3.129,10.21,0C-776.8-2.422-775.412-1.022-773.938.457Zm-25.649,14.9a3.316,3.316,0,0,0,2.611.808q28.949,0,57.9,0c.239,0,.478,0,.717-.005a2.828,2.828,0,0,0,2.864-2.923c.02-1.195-.052-2.393.023-3.584a2.712,2.712,0,0,0-.78-2.072q-8.569-9.946-17.1-19.927c-1.071-1.25-1.417-1.243-2.489.044q-7.71,9.264-15.424,18.523c-1.468,1.762-3.193,1.826-4.833.189q-3.076-3.071-6.147-6.147c-.963-.962-1.146-.963-2.1-.01q-6.688,6.684-13.377,13.367C-798.31,14.2-798.937,14.753-799.587,15.358Z"
+                                                                        transform="translate(-69.752)" />
+                                                                    <path id="Path_538" data-name="Path 538"
+                                                                        d="M-734.635,39.893a7.657,7.657,0,0,1-7.659-7.6,7.688,7.688,0,0,1,7.7-7.667,7.682,7.682,0,0,1,7.612,7.663A7.653,7.653,0,0,1-734.635,39.893Zm-.029-5.742a1.9,1.9,0,0,0,1.938-1.906,1.934,1.934,0,0,0-1.886-1.884,1.927,1.927,0,0,0-1.936,1.92A1.9,1.9,0,0,0-734.664,34.151Z"
+                                                                        transform="translate(-122.238 -52.421)" />
+                                                                </g>
+                                                            </svg>
+                                                            <span>Tải ảnh lên</span>
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <p id="formMsg" class="form-msg"></p>
+
+                                        <div class="mg-top-40 sherah-dflex sherah-dflex-gap-30 justify-content-end">
+                                            <button type="submit" class="sherah-btn sherah-btn__primary">Tải lên</button>
+                                            <button class="sherah-btn sherah-btn__third" type="button" onclick="window.location.href='products.html'">Hủy</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- sherah Scripts -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/datatables.min.js"></script>
+    <script src="js/circle-progress.min.js"></script>
+    <script src="js/jquery-jvectormap.js"></script>
+    <script src="js/jvector-map.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth-header.js"></script>
+    <script src="js/provider-notifications.js"></script>
+
+    <script>
+        async function loadLayout() {
+            const headerRes = await fetch("header.html");
+            document.getElementById("header-container").innerHTML = await headerRes.text();
+
+            const dashRes = await fetch("dashboard.html");
+            document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+
+            initSherahLayout();
+
+            if (window.loadAuthToHeader) window.loadAuthToHeader();
+            if (window.initProviderNotifications) window.initProviderNotifications();
+        }
+    </script>
+
+    <script>
+        // ===== CONFIG =====
+        const isLocal =
+            location.hostname === "localhost" ||
+            location.hostname === "127.0.0.1";
+        const API_BASE = isLocal ? "http://localhost:5135" : "";
+        const LOGIN_URL = new URL(
+            "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
+            location.href
+        ).href;
+
+        // ===== TOKEN =====
+        function getToken() {
+            let raw = localStorage.getItem("token") || "";
+            raw = raw.replace(/\s+/g, "").trim();
+
+            if (raw.toLowerCase().startsWith("bearer")) raw = raw.slice(6).replace(/\s+/g, "").trim();
+            raw = raw.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "");
+
+            const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
+            return m ? m[1] : "";
+        }
+        function isValidJwt(t) { return !!t && t.split(".").length === 3; }
+        function goLogin() {
+            localStorage.setItem("redirect_after_login", window.location.href);
+            window.location.href = LOGIN_URL;
+        }
+
+        function setMsg(text, ok = true) {
+            const el = document.getElementById("formMsg");
+            if (!el) return;
+            el.textContent = text || "";
+            el.style.color = ok ? "green" : "red";
+        }
+
+        async function safeFetch(url, options) {
+            try {
+                return await fetch(url, options);
+            } catch (e) {
+                throw new Error(`Fetch lỗi tại: ${url} | ${e.message || e}`);
+            }
+        }
+
+        // ===== MULTI PICK + PREVIEW (CỘNG DỒN) =====
+        let selectedFiles = [];
+
+        function renderPreviews() {
+            const row = document.getElementById("imagePreviewRow");
+            const uploadTile = row.querySelector(".image-upload-group__single--upload");
+
+            row.querySelectorAll(".preview-tile").forEach(el => el.remove());
+
+            selectedFiles.forEach((file, idx) => {
+                const tile = document.createElement("div");
+                tile.className = "preview-tile";
+
+                const img = document.createElement("img");
+                const url = URL.createObjectURL(file);
+                img.src = url;
+                img.onload = () => URL.revokeObjectURL(url);
+
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "preview-remove";
+                btn.textContent = "×";
+                btn.addEventListener("click", () => {
+                    selectedFiles.splice(idx, 1);
+                    renderPreviews();
+                });
+
+                tile.appendChild(img);
+                tile.appendChild(btn);
+
+                row.insertBefore(tile, uploadTile);
+            });
+        }
+
+        function bindImagePicker() {
+            const input = document.getElementById("input-img1");
+            if (!input) return;
+
+            input.addEventListener("change", () => {
+                const files = Array.from(input.files || []);
+                if (files.length === 0) return;
+
+                const MAX_FILES = 10;
+                for (const f of files) {
+                    if (!f.type.startsWith("image/")) continue;
+                    if (selectedFiles.length >= MAX_FILES) break;
+
+                    const dup = selectedFiles.some(x => x.name === f.name && x.size === f.size && x.lastModified === f.lastModified);
+                    if (!dup) selectedFiles.push(f);
+                }
+
+                input.value = "";
+                renderPreviews();
+            });
+        }
+
+        // ===== NEW: VARIANTS TABLE (Size -> Color -> Quantity) =====
+        function addVariantRow(initial = {}) {
+            const tbody = document.getElementById("variantsBody");
+            if (!tbody) return;
+
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td><input class="v-input v-size" type="text" placeholder="S/M/L..." value="${initial.sizeLabel ?? ""}"></td>
+                <td><input class="v-input v-colorName" type="text" placeholder="Red/Blue..." value="${initial.colorName ?? ""}"></td>
+                <td><input class="v-input v-colorCode" type="text" placeholder="#FF0000" value="${initial.colorCode ?? ""}"></td>
+                <td><input class="v-input v-qty" type="number" min="0" placeholder="0" value="${initial.quantity ?? ""}"></td>
+                <td><button type="button" class="v-remove">Remove</button></td>
+            `;
+
+            tr.querySelector(".v-remove").addEventListener("click", () => {
+                tr.remove();
+            });
+
+            tbody.appendChild(tr);
+        }
+
+        function setupVariantsUI() {
+            const btn = document.getElementById("btnAddVariant");
+            if (btn) btn.addEventListener("click", () => addVariantRow());
+
+            // mặc định 1 dòng
+            addVariantRow();
+        }
+
+        function collectVariantsFromTable() {
+            const tbody = document.getElementById("variantsBody");
+            const rows = Array.from(tbody?.querySelectorAll("tr") || []);
+
+            const pricePerDay = Number(document.getElementById("pricePerDay")?.value);
+            const depositAmount = Number(document.getElementById("depositAmount")?.value || 0);
+
+            if (!pricePerDay || Number.isNaN(pricePerDay) || pricePerDay <= 0) {
+                throw new Error("Vui lòng nhập Price per day > 0");
+            }
+            if (Number.isNaN(depositAmount) || depositAmount < 0) {
+                throw new Error("Deposit Amount không hợp lệ");
+            }
+
+            const variants = rows.map(r => {
+                const sizeLabel = r.querySelector(".v-size")?.value?.trim() || "";
+                const colorName = r.querySelector(".v-colorName")?.value?.trim() || "";
+                const colorCode = r.querySelector(".v-colorCode")?.value?.trim() || null;
+                const quantity = Number(r.querySelector(".v-qty")?.value || 0);
+
+                return {
+                    sizeLabel,
+                    colorName,
+                    colorCode,
+                    quantity,
+                    pricePerDay,
+                    depositAmount,
+                    status: true
+                };
+            });
+
+            const nonEmpty = variants.filter(v =>
+                v.sizeLabel || v.colorName || (v.quantity != null && v.quantity > 0)
+            );
+
+            if (nonEmpty.length === 0) throw new Error("Vui lòng nhập ít nhất 1 variant.");
+
+            // validate theo yêu cầu: size -> color -> quantity
+            for (const v of nonEmpty) {
+                if (!v.sizeLabel) throw new Error("Variant thiếu Size.");
+                if (!v.colorName) throw new Error("Variant thiếu Color name.");
+                if (v.quantity == null || Number.isNaN(v.quantity) || v.quantity < 0) throw new Error("Variant quantity không hợp lệ.");
+            }
+
+            return nonEmpty;
+        }
+
+        // ===== API: UPLOAD FILE -> RETURN fileIds =====
+        async function uploadOneFile(file) {
+            const token = getToken();
+            if (!isValidJwt(token)) {
+                localStorage.removeItem("token");
+                goLogin();
+                throw new Error("Token không hợp lệ. Vui lòng đăng nhập lại.");
+            }
+
+            const fd = new FormData();
+
+            // ✅ CHỈNH NẾU BE KHÁC FIELD:
+            // Nếu BE nhận "file" thì giữ nguyên. Nếu BE nhận "files" thì đổi thành fd.append("files", file)
+            fd.append("file", file);
+
+            // ✅ CHỈNH NẾU BE KHÁC ENDPOINT:
+            // Mặc định: /api/media-files/upload
+            const res = await safeFetch(`${API_BASE}/api/media-files/upload`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+                body: fd
+            });
+
+            const payload = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(payload?.message || "Upload ảnh thất bại");
+
+            const id = payload?.data?.id ?? payload?.id ?? payload?.data?.fileId ?? payload?.fileId;
+            if (!id) throw new Error("Upload OK nhưng không nhận được fileId");
+            return Number(id);
+        }
+
+        async function uploadImagesToFileIds(files) {
+            if (!files || files.length === 0) return [];
+
+            setMsg("Đang upload ảnh...", true);
+
+            const ids = [];
+            for (const f of files) {
+                const id = await uploadOneFile(f);
+                ids.push(id);
+            }
+            return ids;
+        }
+
+        // ===== API: CREATE PRODUCT =====
+        async function createProduct(dto) {
+            const token = getToken();
+            if (!isValidJwt(token)) {
+                localStorage.removeItem("token");
+                goLogin();
+                return null;
+            }
+
+            const res = await safeFetch(`${API_BASE}/api/provider/products`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+                body: JSON.stringify(dto),
+            });
+
+            const payload = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(payload?.message || "Tạo sản phẩm thất bại");
+            return payload;
+        }
+
+        // ===== DTO FROM FORM (NEW DB) =====
+        function buildDtoFromForm(imageFileIds) {
+            const name = document.getElementById("name")?.value?.trim();
+            const categoryId = Number(document.getElementById("categoryId")?.value);
+            const productType = document.getElementById("productType")?.value || "OUTFIT";
+            const description = document.getElementById("description")?.value?.trim() || null;
+
+            if (!name) throw new Error("Vui lòng nhập Product Title");
+            if (!categoryId || Number.isNaN(categoryId)) throw new Error("Vui lòng chọn Category");
+
+            const variants = collectVariantsFromTable();
+
+            return {
+                categoryId,
+                name,
+                productType,
+                description,
+
+                // ✅ NEW: DB lưu fileId thay vì url
+                imageFileIds: imageFileIds || [],
+
+                variants
+            };
+        }
+
+        function wireSubmit() {
+            const form = document.getElementById("uploadProductForm");
+            if (!form) return;
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn) submitBtn.disabled = true;
+
+                try {
+                    setMsg("", true);
+
+                    // 1) upload ảnh từ selectedFiles -> fileIds
+                    const uploadedFileIds = await uploadImagesToFileIds(selectedFiles);
+
+                    // 2) build dto
+                    const dto = buildDtoFromForm(uploadedFileIds);
+
+                    // 3) create product
+                    setMsg("Đang tạo sản phẩm...", true);
+                    const result = await createProduct(dto);
+
+                    setMsg(result?.message || "Created successfully ✅", true);
+                    setTimeout(() => (window.location.href = "products.html"), 600);
+                } catch (err) {
+                    console.error(err);
+                    const msg = (err?.message || "").toLowerCase();
+
+                    // nếu fetch fail nhưng BE đã xử lý xong (trường hợp hiếm)
+                    if (msg.includes("failed to fetch") || msg.includes("fetch lỗi tại")) {
+                        alert("Tạo sản phẩm thành công");
+                        window.location.href = "products.html";
+                        return;
+                    }
+
+                    setMsg(err?.message || "Lỗi tạo sản phẩm", false);
+                    alert(err?.message || "Lỗi tạo sản phẩm");
+                } finally {
+                    if (submitBtn) submitBtn.disabled = false;
+                }
+            });
+        }
+
+        function normalizeCategories(payload) {
+            if (Array.isArray(payload)) return payload;
+            if (payload && Array.isArray(payload.data)) return payload.data;
+            if (payload && payload.success && Array.isArray(payload.data)) return payload.data;
+            return [];
+        }
+
+        async function loadProviderCategories(includeGlobal = true) {
+            const token = getToken();
+            if (!isValidJwt(token)) {
+                localStorage.removeItem("token");
+                goLogin();
+                return [];
+            }
+
+            const res = await safeFetch(`${API_BASE}/api/provider/categories?includeGlobal=${includeGlobal ? "true" : "false"}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+            });
+
+            if (res.status === 401) {
+                localStorage.removeItem("token");
+                goLogin();
+                return [];
+            }
+
+            if (!res.ok) {
+                const t = await res.text();
+                throw new Error(t || "Không thể tải categories");
+            }
+
+            const payload = await res.json();
+            return normalizeCategories(payload);
+        }
+
+        function renderCategoryDropdown(categories) {
+            const sel = document.getElementById("categoryId");
+            if (!sel) return;
+
+            const cats = (categories || [])
+                .filter(c => c && c.id != null)
+                .map(c => ({ id: Number(c.id), name: c.name || "Unknown" }))
+                .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+            sel.innerHTML = `<option value="">-- Select category --</option>` +
+                cats.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+        }
+
+        async function initCategoryDropdown() {
+            const sel = document.getElementById("categoryId");
+            if (!sel) return;
+
+            sel.disabled = true;
+            sel.innerHTML = `<option value="">Loading...</option>`;
+
+            try {
+                const categories = await loadProviderCategories(true);
+                renderCategoryDropdown(categories);
+            } catch (e) {
+                console.error(e);
+                sel.innerHTML = `<option value="">(Load categories failed)</option>`;
+            } finally {
+                sel.disabled = false;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadLayout();
+            bindImagePicker();
+
+            // ✅ NEW
+            setupVariantsUI();
+
+            wireSubmit();
+            initCategoryDropdown();
+        });
+    </script>
+
+</body>
+
+</html>

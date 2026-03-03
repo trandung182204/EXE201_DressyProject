@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sherah eCommerce Admin Dashboard">
+    <title>Sherah - Product List Management</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="img/favicon.png">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome-all.min.css">
+    <link rel="stylesheet" href="css/charts.min.css">
+    <link rel="stylesheet" href="css/datatables.min.css">
+    <link rel="stylesheet" href="css/jvector-map.css">
+    <link rel="stylesheet" href="css/slickslider.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* --- 1. Filter Toolbar Styles --- */
+        .filter-toolbar {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .filter-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .filter-input {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            width: 100%;
+            transition: all 0.3s;
+            background-color: #fff;
+        }
+
+        .filter-input:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+            outline: none;
+        }
+
+        /* --- 2. Table Styles --- */
+        .table-responsive {
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            overflow-x: auto;
+        }
+        
+        .sherah-table__head th {
+            font-weight: 600;
+            color: #333;
+            background: #f9fafb;
+            padding: 15px;
+            border-bottom: 2px solid #eee;
+            white-space: nowrap;
+        }
+
+        .sherah-table__body td {
+            vertical-align: middle;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* Product Info Cell */
+        .product-info-cell {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product-img-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            background: #f9f9f9;
+            flex-shrink: 0;
+            display: flex; /* Căn giữa nội dung nếu ảnh lỗi */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-details h6 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            line-height: 1.2;
+        }
+        
+        .product-details small {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .badge-type {
+            background: #f3f4f6;
+            color: #4b5563;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        /* --- 3. Status Select --- */
+        .status-select {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            text-align: center;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 120px;
+        }
+        .status-available { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+        .status-unavailable { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+        /* --- 4. Pagination & Sort --- */
+        .pagination-btn {
+            border: 1px solid #ddd;
+            background: #fff;
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .pagination-btn:hover:not(:disabled) { background: #f3f4f6; }
+        .pagination-btn.active { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+        .pagination-btn:disabled { color: #ccc; cursor: not-allowed; }
+
+        .sortable { cursor: pointer; user-select: none; }
+        .sortable:hover { background-color: #f1f5f9; }
+        .sort-indicator { margin-left: 5px; font-size: 10px; }
+    </style>
+</head>
+
+<body id="sherah-dark-light">
+
+    <div class="sherah-body-area">
+        <div id="header-container"></div>
+        <div id="dashboard-container"></div>
+
+        <section class="sherah-adashboard sherah-show">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sherah-body">
+                            <div class="sherah-dsinner">
+                                
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="sherah-breadcrumb mg-top-30">
+                                            <h2 class="sherah-breadcrumb__title">Quản lý sản phẩm</h2>
+                                            <ul class="sherah-breadcrumb__list">
+                                                <li><a href="#">Trang chủ</a></li>
+                                                <li class="active"><a href='product-list.html'>Danh sách sản phẩm</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sherah-page-inner mg-top-25">
+                                    
+                                    <div class="filter-toolbar">
+                                        <div class="row g-3 align-items-end">
+                                            <div class="col-lg-3 col-md-6 col-12">
+                                                <label class="filter-label">Tìm kiếm</label>
+                                                <input id="search-input" type="text" class="filter-input" placeholder="Tên sản phẩm, NCC...">
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-6 col-6">
+                                                <label class="filter-label">Loại sản phẩm</label>
+                                                <select id="type-filter" class="filter-input">
+                                                    <option value="">Tất cả loại</option>
+                                                    </select>
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-6 col-6">
+                                                <label class="filter-label">Trạng thái</label>
+                                                <select id="status-filter" class="filter-input">
+                                                    <option value="">Tất cả</option>
+                                                    <option value="AVAILABLE">Available (Sẵn sàng)</option>
+                                                    <option value="UNAVAILABLE">Unavailable (Hết hàng)</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-6 col-12">
+                                                <label class="filter-label">Ngày tạo</label>
+                                                <div class="d-flex gap-2" style="gap:5px">
+                                                    <input type="date" id="date-from" class="filter-input" title="Từ ngày">
+                                                    <input type="date" id="date-to" class="filter-input" title="Đến ngày">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-12 col-12 text-end">
+                                                <button id="btn-reset" class="btn btn-light border w-100" style="padding: 9px;" onclick="resetFilters()">
+                                                    <i class="fa fa-sync"></i> Làm mới
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="sherah-table__head">
+                                                <tr>
+                                                    <th class="sortable" data-sort="name" style="width: 35%;">
+                                                        Sản phẩm <span class="sort-indicator"></span>
+                                                    </th>
+                                                    <th class="sortable" data-sort="providerName">
+                                                        Nhà cung cấp <span class="sort-indicator"></span>
+                                                    </th>
+                                                    <th class="sortable text-center" data-sort="status">
+                                                        Trạng thái <span class="sort-indicator"></span>
+                                                    </th>
+                                                    <th class="sortable text-end" data-sort="createdAt">
+                                                        Ngày tạo <span class="sort-indicator"></span>
+                                                    </th>
+                                                    <th class="text-end">Hành động</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="sherah-table__body" id="product-table-body">
+                                                </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mt-4">
+                                        <div class="text-muted small">
+                                            Hiển thị <span id="showing-count" style="font-weight:bold;">0</span> sản phẩm
+                                        </div>
+                                        <div id="pagination" class="d-flex">
+                                            </div>
+                                    </div>
+
+                                </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/datatables.min.js"></script>
+    <script src="js/circle-progress.min.js"></script>
+    <script src="js/jquery-jvectormap.js"></script>
+    <script src="js/jvector-map.js"></script>
+    <script src="js/slickslider.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth-header.js"></script>
+
+    <script>
+        async function loadLayout() {
+            try {
+                const headerRes = await fetch("header.html");
+                if(headerRes.ok) document.getElementById("header-container").innerHTML = await headerRes.text();
+
+                const dashRes = await fetch("dashboard.html");
+                if(dashRes.ok) document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+
+                if (typeof initSherahLayout === 'function') initSherahLayout();
+                if (window.loadAuthToHeader) window.loadAuthToHeader();
+            } catch (e) {
+                console.error("Layout loading error:", e);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", () => { loadLayout(); });
+    </script>
+
+    <script>
+        // --- CONFIG & STATE ---
+        const API_BASE = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+                ? "http://localhost:5135/api"
+                : "/api";
+        const endpoints = {
+            products: `${API_BASE}/Products`,
+            providers: `${API_BASE}/Providers`,
+            images: `${API_BASE}/ProductImages`
+        };
+
+        // API_HOST is API_BASE without trailing '/api' so we can prefix media URLs
+        const API_HOST = (typeof API_BASE === 'string') ? API_BASE.replace(/\/api\/?$/i, '') : window.location.origin;
+
+        let allProducts = [];
+        let allProviders = [];
+        let allImages = [];
+        
+        let currentPage = 1;
+        const pageSize = 6;
+        let currentSort = { field: 'createdAt', dir: 'desc' };
+
+        // DOM Elements
+        const filters = {
+            search: document.getElementById('search-input'),
+            type: document.getElementById('type-filter'),
+            status: document.getElementById('status-filter'),
+            dateFrom: document.getElementById('date-from'),
+            dateTo: document.getElementById('date-to')
+        };
+
+        // --- 1. DATA FETCHING ---
+        function fetchData() {
+            Promise.all([
+                fetch(endpoints.products).then(res => res.json()),
+                fetch(endpoints.providers).then(res => res.json()),
+                fetch(endpoints.images).then(res => res.json())
+            ]).then(([prodRes, provRes, imgRes]) => {
+                if (prodRes.success) allProducts = prodRes.data || [];
+                if (provRes.success) allProviders = provRes.data || [];
+                if (imgRes.success) allImages = imgRes.data || [];
+                
+                populateTypeFilter(); 
+                applyFiltersAndSort();
+            }).catch(err => console.error('Error fetching data:', err));
+        }
+
+        // --- 2. HELPERS ---
+        function getProductImage(productId, product) {
+            let img = null;
+            // Ưu tiên ảnh trong object product (nếu API trả về lồng nhau)
+            if (product && Array.isArray(product.productImages) && product.productImages.length > 0) {
+                const pi = product.productImages[0];
+                img = pi.imageUrl || pi.ImageUrl || null;
+                // If product image entry contains a file id, build media URL
+                const fid = pi.fileId || pi.fileID || pi.imageFileId || pi.file_id || pi.id || pi.image_file_id;
+                if (!img && fid) img = API_HOST.replace(/\/$/, '') + "/api/media-files/" + fid;
+            }
+
+            // Nếu không có, tìm trong mảng ảnh rời
+            if (!img) {
+                const found = allImages.find(i => Number(i.productId) === Number(productId));
+                if (found) {
+                    img = found.imageUrl || found.ImageUrl || null;
+                    const fid2 = found.fileId || found.fileID || found.imageFileId || found.file_id || found.id || found.image_file_id;
+                    if (!img && fid2) img = API_HOST.replace(/\/$/, '') + "/api/media-files/" + fid2;
+                }
+            }
+
+            // Nếu vẫn không có hoặc chuỗi rỗng, trả về null để render xử lý
+            return (img && String(img).trim() !== "") ? String(img).trim() : null;
+        }
+
+        function getProviderName(providerId, product) {
+            if (product.provider) return product.provider.brandName || product.provider.BrandName || 'Unknown';
+            const found = allProviders.find(p => p.id === providerId);
+            return found ? (found.brandName || found.BrandName) : '--';
+        }
+
+        function populateTypeFilter() {
+            const types = [...new Set(allProducts.map(p => p.productType || p.ProductType).filter(Boolean))];
+            const select = filters.type;
+            select.innerHTML = '<option value="">Tất cả loại</option>';
+            types.sort().forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                select.appendChild(opt);
+            });
+        }
+
+        // --- 3. FILTER & SORT LOGIC ---
+        function applyFiltersAndSort() {
+            let result = allProducts.map(p => ({
+                ...p,
+                finalProviderName: getProviderName(p.providerId, p),
+                finalImage: getProductImage(p.id, p),
+                finalType: p.productType || p.ProductType || '',
+                finalStatus: (p.status || p.Status || 'UNAVAILABLE').toUpperCase(),
+                finalDate: p.createdAt || p.CreatedAt
+            }));
+
+            // Filter Logic (Search, Type, Status, Date)
+            const searchVal = filters.search.value.trim().toLowerCase();
+            if (searchVal) {
+                result = result.filter(p => 
+                    (p.name || '').toLowerCase().includes(searchVal) ||
+                    p.finalProviderName.toLowerCase().includes(searchVal)
+                );
+            }
+            const typeVal = filters.type.value;
+            if (typeVal) result = result.filter(p => p.finalType === typeVal);
+            
+            const statusVal = filters.status.value;
+            if (statusVal) result = result.filter(p => p.finalStatus === statusVal);
+
+            if (filters.dateFrom.value || filters.dateTo.value) {
+                const dFrom = filters.dateFrom.value ? new Date(filters.dateFrom.value).setHours(0,0,0,0) : null;
+                const dTo = filters.dateTo.value ? new Date(filters.dateTo.value).setHours(23,59,59,999) : null;
+                result = result.filter(p => {
+                    if (!p.finalDate) return false;
+                    const time = new Date(p.finalDate).getTime();
+                    if (dFrom && time < dFrom) return false;
+                    if (dTo && time > dTo) return false;
+                    return true;
+                });
+            }
+
+            // Sort Logic
+            if (currentSort.field) {
+                result.sort((a, b) => {
+                    let va, vb;
+                    if (currentSort.field === 'name') { va = a.name; vb = b.name; }
+                    else if (currentSort.field === 'providerName') { va = a.finalProviderName; vb = b.finalProviderName; }
+                    else if (currentSort.field === 'status') { va = a.finalStatus; vb = b.finalStatus; }
+                    else if (currentSort.field === 'createdAt') { 
+                        va = a.finalDate ? new Date(a.finalDate).getTime() : 0; 
+                        vb = b.finalDate ? new Date(b.finalDate).getTime() : 0; 
+                    }
+                    else { va = a[currentSort.field]; vb = b[currentSort.field]; }
+
+                    if (typeof va === 'string') va = va.toLowerCase();
+                    if (typeof vb === 'string') vb = vb.toLowerCase();
+
+                    if (va < vb) return currentSort.dir === 'asc' ? -1 : 1;
+                    if (va > vb) return currentSort.dir === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            // Update Pagination & UI
+            const total = result.length;
+            document.getElementById('showing-count').textContent = total;
+            const start = (currentPage - 1) * pageSize;
+            renderTable(result.slice(start, start + pageSize));
+            renderPagination(total);
+            updateSortIndicators();
+        }
+
+        // --- 4. RENDER UI ---
+        function renderTable(products) {
+            const tbody = document.getElementById('product-table-body');
+            tbody.innerHTML = '';
+
+            if (products.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted"><i class="fa fa-box-open fa-2x mb-2"></i><br>Không tìm thấy sản phẩm</td></tr>`;
+                return;
+            }
+
+            // URL ảnh dự phòng online (đảm bảo luôn hiển thị được)
+            const fallbackImg = "https://placehold.co/100x100?text=No+Img"; 
+
+            // Normalize image URLs so relative paths like '/api/...' load correctly using API_HOST
+            function safeImg(url) {
+                if (!url) return null;
+                url = String(url).trim();
+                if (url.startsWith('http://') || url.startsWith('https://')) return url;
+                if (url.startsWith('//')) return window.location.protocol + url;
+                if (url.startsWith('/')) return API_HOST + url;
+                return API_HOST + '/' + url;
+            }
+
+            products.forEach(p => {
+                const isAvailable = p.finalStatus === 'AVAILABLE';
+                
+                // Logic xử lý ảnh: Nếu p.finalImage null thì dùng fallback ngay lập tức
+                // Nếu p.finalImage có link nhưng link chết -> onerror sẽ bắt
+                const imgSrc = safeImg(p.finalImage) || fallbackImg;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="product-info-cell">
+                            <div class="product-img-wrapper">
+                                <img src="${imgSrc}" 
+                                     alt="${p.name}" 
+                                     onerror="this.onerror=null; this.src='${fallbackImg}';"> 
+                            </div>
+                            <div class="product-details">
+                                <h6>${p.name || 'No Name'}</h6>
+                                <span class="badge-type">${p.finalType}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${p.finalProviderName}</td>
+                    <td class="text-center">
+                        <select class="status-select ${isAvailable ? 'status-available' : 'status-unavailable'}" 
+                                onchange="updateStatus(${p.id}, this.value, this)">
+                            <option value="AVAILABLE" ${isAvailable ? 'selected' : ''}>Available</option>
+                            <option value="UNAVAILABLE" ${!isAvailable ? 'selected' : ''}>Unavailable</option>
+                        </select>
+                    </td>
+                    <td class="text-end">
+                        ${p.finalDate ? new Date(p.finalDate).toLocaleDateString('vi-VN') : '--'}
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${p.id})">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderPagination(total) {
+            const pageCount = Math.ceil(total / pageSize);
+            const container = document.getElementById('pagination');
+            container.innerHTML = '';
+            if (pageCount <= 1) return;
+
+            let html = `<button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="gotoPage(${currentPage - 1})">&lt;</button>`;
+            for (let i = 1; i <= pageCount; i++) {
+                if (i === 1 || i === pageCount || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="gotoPage(${i})">${i}</button>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += `<span>...</span>`;
+                }
+            }
+            html += `<button class="pagination-btn" ${currentPage === pageCount ? 'disabled' : ''} onclick="gotoPage(${currentPage + 1})">&gt;</button>`;
+            container.innerHTML = html;
+        }
+
+        // --- 5. ACTIONS ---
+        function updateStatus(id, newStatus, selectEl) {
+            selectEl.disabled = true;
+            fetch(`${endpoints.products}/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(res => res.json())
+            .then(res => {
+                selectEl.disabled = false;
+                if (res.success) {
+                    const prod = allProducts.find(p => p.id === id);
+                    if(prod) prod.status = newStatus;
+                    selectEl.className = `status-select ${newStatus === 'AVAILABLE' ? 'status-available' : 'status-unavailable'}`;
+                } else {
+                    alert('Lỗi cập nhật: ' + res.message);
+                    selectEl.value = newStatus === 'AVAILABLE' ? 'UNAVAILABLE' : 'AVAILABLE';
+                }
+            })
+            .catch(err => {
+                selectEl.disabled = false;
+                alert('Lỗi kết nối: ' + err);
+            });
+        }
+
+        function _readToken() {
+            let raw = localStorage.getItem('token') || '';
+            raw = raw.replace(/\s+/g, '').trim();
+            if (raw.toLowerCase().startsWith('bearer')) raw = raw.slice(6).trim();
+            raw = raw.replace(/^"+|"+$/g, '').replace(/^'+|'+$/g, '');
+            const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
+            return m ? m[1] : (raw || '');
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm("Bạn có chắc muốn xóa sản phẩm này?")) return;
+
+            const url = `${endpoints.products}/${id}`;
+            const token = _readToken();
+
+            try {
+                const res = await fetch(url, {
+                    method: 'DELETE',
+                    headers: Object.assign({ 'Accept': 'application/json' }, token ? { 'Authorization': 'Bearer ' + token } : {})
+                });
+
+                let payload = {};
+                try { payload = await res.json(); } catch(_) { payload = {}; }
+
+                if (res.ok && (payload.success === undefined || payload.success === true)) {
+                    // remove from local array and re-render
+                    allProducts = allProducts.filter(p => Number(p.id) !== Number(id));
+                    applyFiltersAndSort();
+                    alert('Xóa sản phẩm thành công');
+                } else {
+                    const msg = payload?.message || payload?.error || ('HTTP ' + res.status);
+                    alert('Xóa thất bại: ' + msg);
+                }
+            } catch (err) {
+                console.error('Delete product failed', err);
+                alert('Lỗi kết nối khi xóa sản phẩm');
+            }
+        }
+
+        function gotoPage(p) { currentPage = p; applyFiltersAndSort(); }
+        
+        function resetFilters() {
+            filters.search.value = '';
+            filters.type.value = '';
+            filters.status.value = '';
+            filters.dateFrom.value = '';
+            filters.dateTo.value = '';
+            currentPage = 1;
+            applyFiltersAndSort();
+        }
+
+        function sortBy(field) {
+            if (currentSort.field === field) {
+                currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.field = field;
+                currentSort.dir = 'asc';
+            }
+            applyFiltersAndSort();
+        }
+
+        function updateSortIndicators() {
+            document.querySelectorAll('.sortable .sort-indicator').forEach(span => span.textContent = '');
+            const th = document.querySelector(`.sortable[data-sort="${currentSort.field}"]`);
+            if (th) {
+                th.querySelector('.sort-indicator').textContent = currentSort.dir === 'asc' ? ' ▲' : ' ▼';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            Object.values(filters).forEach(el => {
+                el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', () => {
+                    currentPage = 1;
+                    applyFiltersAndSort();
+                });
+            });
+            document.querySelectorAll('.sortable').forEach(th => {
+                th.addEventListener('click', () => sortBy(th.dataset.sort));
+            });
+        });
+    </script>
+</body>
+</html>

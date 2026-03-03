@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đăng ký</title>
+
+  <link
+		href="https://fonts.googleapis.com/css?family=Abril+Fatface|Forum|Open+Sans:400,600|Roboto:100,300,400,500,700"
+		rel="stylesheet">
+	<link rel="stylesheet" href="../assets/dist/style/elements.css">
+	<link rel="stylesheet" href="../assets/dist/style/header.css">
+	<link rel="stylesheet" href="../assets/dist/style/footer.css">
+	<link rel="stylesheet" href="../assets/dist/style/blog.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+
+
+  <style>
+    :root{--card:#fff;--accent:#ff5a7a;--muted:#6b7280}
+    *{box-sizing:border-box}
+    body{font-family: 'Open Sans', Roboto, Arial, sans-serif;background:linear-gradient(180deg,#fffaf6,#fff);margin:0}
+    .auth-wrap{min-height:70vh;display:flex;align-items:center;justify-content:center;padding:40px 16px}
+
+    .auth-card{width:480px;max-width:100%;background:var(--card);border-radius:14px;padding:26px;border:1px solid #f0f0f2;box-shadow:0 12px 30px rgba(16,24,40,0.06)}
+
+    .auth-switch{display:flex;gap:8px;margin-bottom:16px}
+    .auth-switch a{flex:1;text-align:center;padding:10px 12px;border-radius:10px;text-decoration:none;color:#374151;border:1px solid transparent;background:transparent;font-weight:600}
+    .auth-switch a.active{background:linear-gradient(90deg,#fff0f2,#fff5f7);border-color:rgba(255,90,122,0.12);color:var(--accent)}
+
+    h3{margin:0 0 8px;font-size:20px;color:#111827}
+    .subtitle{color:var(--muted);margin-bottom:14px}
+
+    .auth-form{display:flex;flex-direction:column;gap:12px}
+    .auth-form input,.auth-form select{padding:12px 14px;border-radius:10px;border:1px solid #e6e9ef;font-size:15px}
+    .auth-form button{padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#ff7b95);color:#fff;font-weight:700;cursor:pointer}
+
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:520px){.two-col{grid-template-columns:1fr}}
+
+    .auth-msg{color:#dc2626;font-size:13px;margin-top:6px}
+    /* decorative images + animations */
+    .decor-img{position:absolute;pointer-events:none;opacity:.96}
+    .decor-1{left:4%;top:12%;width:180px;animation:floatY 7s ease-in-out infinite}
+    .decor-2{right:8%;top:6%;width:140px;animation:floatY 6s ease-in-out infinite reverse}
+
+    @keyframes floatY{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .auth-card{animation:fadeInUp .58s ease both}
+    .auth-form input:focus,.auth-form select:focus{border-color:rgba(255,90,122,0.5);box-shadow:0 6px 18px rgba(255,90,122,0.06)}
+  </style>
+</head>
+
+<body>
+  <div id="app-header"></div>
+
+  <main class="auth-wrap" style="position:relative;">
+    <!-- <img src="../assets/dist/img/banner/2.jpg" alt="decor" class="decor-img decor-1">
+    <img src="../assets/dist/img/community/3.jpg" alt="decor" class="decor-img decor-2"> -->
+
+    <div class="auth-card" role="form" aria-labelledby="registerTitle">
+      <div class="auth-switch">
+        <a href="login.html">Đăng nhập</a>
+        <a class="active" href="register.html">Đăng ký</a>
+      </div>
+
+      <h3 id="registerTitle">Đăng ký</h3>
+      <div class="subtitle">Tạo tài khoản mới để quản lý đơn hàng và theo dõi mẫu yêu thích</div>
+
+      <form id="registerForm" class="auth-form" action="#" method="post">
+        <div class="two-col">
+          <input name="fullName" type="text" placeholder="Họ và tên" aria-label="Họ và tên" />
+          <input name="phone" type="text" placeholder="Số điện thoại" aria-label="Số điện thoại" />
+        </div>
+
+        <input name="email" type="email" placeholder="Email" required aria-label="Email" />
+        <input name="password" type="password" placeholder="Mật khẩu" required aria-label="Mật khẩu" />
+
+        <select name="role" aria-label="Vai trò">
+          <option value="customer">Khách hàng</option>
+          <option value="provider">Nhà cung cấp</option>
+        </select>
+
+        <button type="submit">Tạo tài khoản</button>
+        <div id="registerMsg" class="auth-msg"></div>
+      </form>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <!-- Toast container for top-right notifications -->
+  <div id="toastContainer" aria-live="polite" aria-atomic="true" style="position:fixed;top:18px;right:18px;z-index:99999;display:flex;flex-direction:column;gap:8px;pointer-events:none"></div>
+  <script src="../assets/dist/js/layout-auth.js"></script>
+  <script src="../assets/dist/js/auth-header.js"></script>
+  
+  <script src="../assets/dist/js/auth-page.js"></script>
+  
+</body>
+
+</html>

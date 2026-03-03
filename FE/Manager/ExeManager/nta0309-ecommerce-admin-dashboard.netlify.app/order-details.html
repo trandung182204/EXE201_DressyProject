@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="keywords" content="Site keywords here">
+  <meta name="description" content="#">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Chi tiết đơn hàng</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+    rel="stylesheet">
+  <link rel="icon" href="img/favicon.png">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/font-awesome-all.min.css">
+  <link rel="stylesheet" href="css/charts.min.css">
+  <link rel="stylesheet" href="css/datatables.min.css">
+  <link rel="stylesheet" href="css/jvector-map.css">
+  <link rel="stylesheet" href="css/slickslider.min.css">
+  <link rel="stylesheet" href="css/jquery-ui.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body id="sherah-dark-light">
+  <div class="sherah-body-area">
+    <div id="header-container"></div>
+    <div id="dashboard-container"></div>
+
+    <section class="sherah-adashboard sherah-show">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="sherah-body">
+              <div class="sherah-dsinner">
+
+                <div class="row mg-top-30">
+                  <div class="col-12 sherah-flex-between">
+                    <div class="sherah-breadcrumb">
+                      <h2 class="sherah-breadcrumb__title">Chi tiết đơn hàng</h2>
+                      <ul class="sherah-breadcrumb__list">
+                        <li><a href="#">Trang chủ</a></li>
+                        <li class="active"><a href='order-list.html'>Danh sách đơn hàng</a></li>
+                      </ul>
+                    </div>
+
+                    <a href="order-list.html" class="sherah-btn sherah-gbcolor">Quay lại</a>
+                  </div>
+                </div>
+
+                <div class="sherah-page-inner sherah-border sherah-default-bg mg-top-25">
+
+                  <!-- Header (dynamic) -->
+                  <div class="sherah-table__head sherah-table__main">
+                    <h4 class="sherah-order-title" id="order-title">Items from Order #...</h4>
+
+                    <div class="sherah-order-right">
+                      <p class="sherah-order-text" id="order-meta">...</p>
+                      <div class="sherah-table-status" id="order-status-badges">
+                        <!-- badges injected -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Error box -->
+                  <div class="row">
+                    <div class="col-12 mg-top-20">
+                      <div id="error-box" class="alert alert-danger" style="display:none;"></div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-8 col-md-12 col-12 mg-top-30">
+                      <div class="sherah-table-order">
+                        <table id="sherah-table__orderv1" class="sherah-table__main sherah-table__main--orderv1">
+                          <thead class="sherah-table__head">
+                            <tr>
+                              <th class="sherah-table__column-1 sherah-table__h1">Ảnh</th>
+                              <th class="sherah-table__column-2 sherah-table__h2">Sản phẩm</th>
+                              <th class="sherah-table__column-3 sherah-table__h3">Giá</th>
+                              <th class="sherah-table__column-4 sherah-table__h4">Thành tiền</th>
+                            </tr>
+                          </thead>
+                          <tbody class="sherah-table__body" id="items-tbody">
+                            <!-- items injected -->
+                          </tbody>
+                        </table>
+
+                        <div class="order-totals">
+                          <ul class="order-totals__list">
+                            <li class="order-totals__list--sub">
+                              <span>Tạm tính</span>
+                              <span class="order-totals__amount" id="subtotal">0</span>
+                            </li>
+                            <li class="order-totals__bottom">
+                              <span>Tổng cộng </span>
+                              <span class="order-totals__amount" id="total">0</span>
+                            </li>
+                          </ul>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <!-- Right column: customer info -->
+                    <div class="col-lg-4 col-md-12 col-12 mg-top-30">
+                      <div class="sherah-default-bg sherah-border p-4" style="border-radius:12px;">
+                        <h5 class="mb-3">Thông tin khách</h5>
+                        <p class="mb-2"><b>Tên:</b> <span id="customer-name">-</span></p>
+                        <p class="mb-2"><b>Mã đơn:</b> <span id="booking-id">-</span></p>
+                        <p class="mb-2"><b>Ngày tạo:</b> <span id="created-at">-</span></p>
+                        <p class="mb-0"><b>Thanh toán:</b> <span id="payment-status-text">-</span></p>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/datatables.min.js"></script>
+  <script src="js/circle-progress.min.js"></script>
+  <script src="js/jquery-jvectormap.js"></script>
+  <script src="js/jvector-map.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth-header.js"></script>
+    <script src="js/provider-notifications.js"></script>
+
+  <script>
+    async function loadLayout() {
+      const headerRes = await fetch("header.html");
+      document.getElementById("header-container").innerHTML = await headerRes.text();
+
+      const dashRes = await fetch("dashboard.html");
+      document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+
+      initSherahLayout();
+      if (window.loadAuthToHeader) window.loadAuthToHeader();
+      if (window.initProviderNotifications) window.initProviderNotifications();
+    }
+  </script>
+
+  <script>
+    const isLocal =
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1";
+
+    const API_BASE = isLocal ? "http://localhost:5135" : "";
+
+    function getToken() {
+      return localStorage.getItem("token") || "";
+    }
+
+    function money(v) {
+      return (v ?? 0).toLocaleString("vi-VN");
+    }
+
+    function formatDateTime(isoOrDate) {
+      if (!isoOrDate) return "";
+      const d = new Date(isoOrDate);
+      const date = d.toLocaleDateString("vi-VN");
+      const time = d.toLocaleTimeString("vi-VN");
+      return `${date} ${time}`;
+    }
+
+    function paymentBadge(status) {
+      const s = (status || "").toUpperCase();
+      if (s === "SUCCESS" || s === "PAID") {
+        return `<div class="sherah-table__status sherah-color2 sherah-color2__bg--opactity">Đã thanh toán</div>`;
+      }
+      return `<div class="sherah-table__status sherah-color1 sherah-color1__bg--opactity">Chưa thanh toán</div>`;
+    }
+
+    function bookingBadge(status) {
+      const s = (status || "").toUpperCase();
+      // DB constraint booking: COMPLETED / PENDING / CANCELLED
+      if (s === "COMPLETED") {
+        return `<div class="sherah-table__status sherah-color2 sherah-color2__bg--opactity">${s}</div>`;
+      }
+      if (s === "CANCELLED") {
+        return `<div class="sherah-table__status sherah-color1 sherah-color1__bg--opactity">${s}</div>`;
+      }
+      return `<div class="sherah-table__status sherah-color3 sherah-color3__bg--opactity">${s}</div>`;
+    }
+
+    function toDateRangeText(startDate, endDate) {
+      // startDate/endDate từ backend là DateOnly? => thường serialize thành "2026-01-10"
+      if (!startDate && !endDate) return "";
+      const s = startDate ? new Date(startDate).toLocaleDateString("vi-VN") : "";
+      const e = endDate ? new Date(endDate).toLocaleDateString("vi-VN") : "";
+      if (s && e) return `${s} → ${e}`;
+      return s || e;
+    }
+
+    function getQueryId() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      return id ? Number(id) : null;
+    }
+
+    function showError(msg) {
+      const box = document.getElementById("error-box");
+      box.style.display = "block";
+      box.textContent = msg;
+    }
+
+    async function fetchOrderDetail(bookingId) {
+      const token = getToken();
+      if (!token) {
+        showError("Bạn chưa đăng nhập hoặc token bị thiếu.");
+        return null;
+      }
+
+      const url = `${API_BASE}/api/Bookings/provider/${bookingId}/detail`;
+
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        if (res.status === 401) showError("Không có quyền (401). Token thiếu providerId hoặc hết hạn.");
+        else if (res.status === 403) showError("Bị chặn quyền (403). Role PROVIDER không hợp lệ.");
+        else if (res.status === 404) showError("Không tìm thấy đơn hàng hoặc đơn không thuộc provider này.");
+        else showError(`Lỗi tải chi tiết đơn: ${res.status} ${text}`);
+        return null;
+      }
+
+      const json = await res.json();
+      return json.data || null;
+    }
+
+    function renderDetail(detail) {
+      // Header
+      document.getElementById("order-title").textContent = `Items from Order #${detail.bookingId}`;
+      document.getElementById("booking-id").textContent = `#${detail.bookingId}`;
+      document.getElementById("customer-name").textContent = detail.customerName || "Unknown";
+      document.getElementById("created-at").textContent = formatDateTime(detail.createdAt);
+      document.getElementById("payment-status-text").textContent = (detail.paymentStatus || "").toUpperCase();
+
+      const items = detail.items || [];
+      const itemCount = items.length;
+
+      document.getElementById("order-meta").innerHTML =
+        `${formatDateTime(detail.createdAt)} / ${itemCount} sản phẩm / Tổng ${money(detail.totalPrice)} VNĐ`;
+
+      document.getElementById("order-status-badges").innerHTML =
+        paymentBadge(detail.paymentStatus) + bookingBadge(detail.bookingStatus);
+
+      // Items table
+      const tbody = document.getElementById("items-tbody");
+      tbody.innerHTML = "";
+
+      let subtotal = 0;
+
+      items.forEach(it => {
+        const price = Number(it.price ?? 0);
+        const qty = Number(it.quantity ?? 1);
+        const lineTotal = price * qty;
+        subtotal += lineTotal;
+
+        const imgSrc = it.imageUrl ? (API_BASE + it.imageUrl) : "img/product-img1.png"; // fallback ảnh template
+        const variant = it.variantName || "";
+        const range = toDateRangeText(it.startDate, it.endDate);
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="sherah-table__column-1 sherah-table__data-1">
+            <div class="sherah-table__product--thumb">
+              <img src="${imgSrc}" onerror="this.src='img/product-img1.png'" style="width:48px;height:48px;object-fit:cover;border-radius:10px;">
+            </div>
+          </td>
+          <td class="sherah-table__column-2 sherah-table__data-2">
+            <div class="sherah-table__product-name">
+              <h4 class="sherah-table__product-name--title">${it.productName || "Unknown"}</h4>
+              <p class="sherah-table__product-name--text">${variant ? ("Phân loại: " + variant) : ""}</p>
+              <p class="sherah-table__product-name--text">${range ? ("Thời gian thuê: " + range) : ""}</p>
+            </div>
+          </td>
+          <td class="sherah-table__column-3 sherah-table__data-3">
+            <div class="sherah-table__product-content">
+              <p class="sherah-table__product-desc">${money(price)} x ${qty}</p>
+            </div>
+          </td>
+          <td class="sherah-table__column-4 sherah-table__data-4">
+            <div class="sherah-table__product-content">
+              <p class="sherah-table__product-desc">${money(lineTotal)}</p>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById("subtotal").textContent = money(subtotal) + " VNĐ";
+      document.getElementById("total").textContent = money(detail.totalPrice ?? subtotal) + " VNĐ";
+    }
+
+    async function boot() {
+      await loadLayout();
+
+      const id = getQueryId();
+      if (!id) {
+        showError("Thiếu booking id trên URL. Ví dụ: order-details.html?id=1");
+        return;
+      }
+
+      const detail = await fetchOrderDetail(id);
+      if (!detail) return;
+
+      renderDetail(detail);
+    }
+
+    boot();
+  </script>
+
+</body>
+</html>

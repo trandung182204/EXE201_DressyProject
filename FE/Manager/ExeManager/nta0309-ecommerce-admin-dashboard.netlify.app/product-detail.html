@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+
+<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/product-list by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:11 GMT -->
+<!-- Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+
+<head>
+  <!-- Meta Tags -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="keywords" content="Site keywords here">
+  <meta name="description" content="#">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Site Title -->
+  <title>Chi tiết sản phẩm</title>
+
+  <!-- Font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+    rel="stylesheet">
+
+  <!-- Fav Icon -->
+  <link rel="icon" href="img/favicon.png">
+
+  <!-- sherah Stylesheet -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/font-awesome-all.min.css">
+  <link rel="stylesheet" href="css/charts.min.css">
+  <link rel="stylesheet" href="css/datatables.min.css">
+  <link rel="stylesheet" href="css/jvector-map.css">
+  <link rel="stylesheet" href="css/slickslider.min.css">
+  <link rel="stylesheet" href="css/jquery-ui.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body id="sherah-dark-light">
+
+  <div class="sherah-body-area">
+    <!-- sherah Admin Menu -->
+    <div id="header-container"></div>
+    <!-- End sherah Admin Menu -->
+    <div id="dashboard-container"></div>
+    <!-- End Header -->
+
+    <!-- sherah Dashboard -->
+    <section class="sherah-adashboard sherah-show">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="sherah-body">
+              <!-- Dashboard Inner -->
+              <div class="sherah-dsinner">
+
+                <div class="row mg-top-30">
+                  <div class="col-12 sherah-flex-between">
+                    <!-- Sherah Breadcrumb -->
+                    <div class="sherah-breadcrumb">
+                      <h2 class="sherah-breadcrumb__title">Chi tiết sản phẩm</h2>
+                      <ul class="sherah-breadcrumb__list">
+                        <li><a href="#">Trang chủ</a></li>
+                        <li class="active"><a href='products.html'>Chi tiết sản phẩm</a></li>
+                      </ul>
+                    </div>
+                    <!-- End Sherah Breadcrumb -->
+                  </div>
+                </div>
+
+                <div class="product-detail-body sherah-default-bg sherah-border mg-top-30">
+                  <div class="row">
+                    <div class="col-lg-6 col-md-6 col-12">
+                      <!-- Product Slider -->
+                      <div class="product-gallery">
+                        <!-- product details image -->
+                        <div class="product-details-image">
+                          <ul class="nav-pills nav flex-nowrap product-thumbs" id="pills-tab" role="tablist"></ul>
+                          <div class="main-preview-image">
+                            <div class="tab-content product-image" id="pills-tabContent"></div>
+                          </div>
+                        </div>
+                        <!-- product details image -->
+                      </div>
+                      <!-- End Product slider -->
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-12">
+                      <div class="product-detail-body__content">
+                        <h2 class="product-detail-body__title" id="pd-name">Loading...</h2>
+
+                        <div class="product-detail-body__deal--rating">
+                          <h5 class="sherah-product-card__price" id="pd-price">--</h5>
+                          <div class="sherah-product-card__meta sherah-dflex sherah-flex-gap-30">
+                            <!-- <div class="sherah-product-card__rating sherah-dflex sherah-flex-gap-5">
+                              <span class="sherah-color4"><i class="fa fa-star"></i></span>
+                              <span class="sherah-color4"><i class="fa fa-star"></i></span>
+                              <span class="sherah-color4"><i class="fa fa-star"></i></span>
+                              <span class="sherah-color4"><i class="fa fa-star"></i></span>
+                              <span class="sherah-color4"><i class="fa fa-star"></i></span>
+                              (33)
+                            </div> -->
+                          </div>
+                        </div>
+                        <p class="product-detail-body__stock sherah-color3" id="pd-stock">--</p>
+                        <div class="product-detail-body__text" id="pd-desc">--</div>
+
+
+                        <div class="sherah-border-btm pd-top-40 mg-btm-40"></div>
+                        <div class="sherah-products-meta">
+                          <ul class="sherah-products-meta__list">
+                            <li><span class="p-list-title">Danh mục : </span> <span id="pd-category">--</span></li>
+                            <li><span class="p-list-title">Màu sắc : </span> <span id="pd-colors">--</span></li>
+                            <li><span class="p-list-title">Kích thước : </span> <span id="pd-sizes">--</span></li>
+
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End Dashboard Inner -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End sherah Dashboard -->
+
+  </div>
+
+  <!-- sherah Scripts -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/final-countdown.min.html"></script>
+  <script src="js/fancy-box.min.html"></script>
+  <script src="js/fullcalendar.min.html"></script>
+  <script src="js/circle-progress.min.js"></script>
+  <script src="js/jquery-jvectormap.js"></script>
+  <script src="js/jvector-map.js"></script>
+  <script src="js/flex-slider.html"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth-header.js"></script>
+  <script src="js/provider-notifications.js"></script>
+  <script>
+    $('.button.plus').on('click', function () {
+      // var $qty = $('.input-number');
+      var $button = $(this);
+      var $input = $button.closest('.quantity').find("input.input-number");
+      var currentVal = parseInt($input.val(), 10);
+      if (!isNaN(currentVal)) {
+        $input.val(currentVal + 1);
+      }
+    });
+    $('.button.minus').on('click', function () {
+      var $qty = $('.input-number');
+      var $button = $(this);
+      var $input = $button.closest('.quantity').find("input.input-number");
+      var currentVal = parseInt($input.val(), 10);
+      if (!isNaN(currentVal) && currentVal > 1) {
+        $input.val(currentVal - 1);
+      }
+    });
+  </script>
+  <script>
+		async function loadLayout() {
+			const headerRes = await fetch("header.html");
+			document.getElementById("header-container").innerHTML = await headerRes.text();
+
+			const dashRes = await fetch("dashboard.html");
+			document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+
+			initSherahLayout();
+
+			// ✅ quan trọng: gọi sau khi header đã có trong DOM
+			if (window.loadAuthToHeader) window.loadAuthToHeader();
+      if (window.initProviderNotifications) window.initProviderNotifications();
+		}
+	</script>
+  <script>
+    // ===== CONFIG =====
+    const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    const API_BASE = isLocal ? "http://127.0.0.1:5135" : "";
+    const LOGIN_URL = new URL(
+      "../../../dress-rental-template/wpdemo.redq.io/sites/dress-rental/html/login.html",
+      location.href
+    ).href;
+
+    const FALLBACK_IMG = "img/product-detail.png";
+
+    function getToken() {
+      let raw = localStorage.getItem("token") || "";
+      raw = raw.replace(/\s+/g, "").trim();
+      if (raw.toLowerCase().startsWith("bearer")) {
+        raw = raw.slice(6).replace(/\s+/g, "").trim();
+      }
+      raw = raw.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "");
+      const m = raw.match(/([A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+)/);
+      return m ? m[1] : "";
+    }
+
+    function isValidJwt(t) {
+      return !!t && t.split(".").length === 3;
+    }
+
+    function goLogin() {
+      localStorage.setItem("redirect_after_login", window.location.href);
+      window.location.href = LOGIN_URL;
+    }
+
+    function getProductIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id") || params.get("productId");
+      return id ? Number(id) : null;
+    }
+
+    function safeText(v) {
+      return v === null || v === undefined ? "" : String(v);
+    }
+
+    function formatMoney(v) {
+      if (v === null || v === undefined || v === "") return "--";
+      const n = Number(v);
+      if (Number.isNaN(n)) return safeText(v);
+      return n.toLocaleString("vi-VN") + " ₫/ Ngày";
+    }
+
+    function uniqueNonEmpty(arr) {
+      return [...new Set((arr || []).filter(x => x !== null && x !== undefined && String(x).trim() !== ""))];
+    }
+
+    // Build full URL (handle "/api/..." or "http...")
+    function toAbsUrl(u) {
+      if (!u) return "";
+      if (/^https?:\/\//i.test(u)) return u;
+      if (u.startsWith("/")) return API_BASE + u;
+      return API_BASE + "/" + u;
+    }
+
+    // Ưu tiên ImageUrls từ BE, fallback ImageFileIds
+    function resolveImageUrlsFromDetail(p) {
+      const urlsRaw = p?.imageUrls || p?.ImageUrls;       // tùy JSON serializer
+      const fileIdsRaw = p?.imageFileIds || p?.ImageFileIds;
+
+      let urls = [];
+      if (Array.isArray(urlsRaw) && urlsRaw.length) {
+        urls = urlsRaw.filter(Boolean).map(toAbsUrl);
+      } else if (Array.isArray(fileIdsRaw) && fileIdsRaw.length) {
+        urls = fileIdsRaw
+          .filter(x => x !== null && x !== undefined)
+          .map(fid => `${API_BASE}/api/media-files/${fid}`);
+      }
+
+      // fallback nếu vẫn rỗng
+      if (!urls.length) urls = [FALLBACK_IMG];
+      return urls;
+    }
+
+    // Bootstrap 4 uses data-toggle, not data-bs-toggle
+    function renderGallery(urls) {
+      const list = (Array.isArray(urls) && urls.length ? urls : [FALLBACK_IMG]).map(u => u || FALLBACK_IMG);
+
+      const $thumbs = $("#pills-tab");
+      const $tabs = $("#pills-tabContent");
+      $thumbs.empty();
+      $tabs.empty();
+
+      list.forEach((url, idx) => {
+        const tabId = `pills-img-${idx}`;
+        const isActive = idx === 0;
+
+        $thumbs.append(`
+      <li class="nav-item single-thumbs" role="presentation">
+        <a class="nav-link ${isActive ? "active" : ""}" id="${tabId}-tab"
+           data-toggle="pill" href="#${tabId}" role="tab"
+           aria-controls="${tabId}" aria-selected="${isActive ? "true" : "false"}">
+          <img src="${url}" alt="thumb" onerror="this.onerror=null;this.src='${FALLBACK_IMG}'">
+        </a>
+      </li>
+    `);
+
+        $tabs.append(`
+      <div class="tab-pane fade ${isActive ? "show active" : ""}" id="${tabId}"
+           role="tabpanel" aria-labelledby="${tabId}-tab">
+        <div class="single-product-image">
+          <img src="${url}" alt="product" onerror="this.onerror=null;this.src='${FALLBACK_IMG}'">
+        </div>
+      </div>
+    `);
+      });
+
+
+      $thumbs.off("click", "a[data-toggle='pill']");
+      $thumbs.on("click", "a[data-toggle='pill']", function (e) {
+        e.preventDefault();
+        $(this).tab("show"); // Bootstrap 4 tab plugin
+      });
+
+
+      $thumbs.find("a.nav-link.active").trigger("click");
+    }
+
+
+    function fillProductDetail(p) {
+      $("#pd-name").text(p?.name ?? p?.Name ?? "--");
+      $("#pd-desc").text(p?.description ?? p?.Description ?? "--");
+      $("#pd-category").text(p?.categoryName ?? p?.CategoryName ?? "--");
+
+      const variants = Array.isArray(p?.variants || p?.Variants) ? (p.variants || p.Variants) : [];
+
+      const totalQty = variants.reduce((sum, v) => sum + (Number(v?.quantity ?? v?.Quantity) || 0), 0);
+      $("#pd-stock").text(`${totalQty} sản phẩm có sẵn`);
+
+      const prices = variants
+        .map(v => v?.pricePerDay ?? v?.PricePerDay)
+        .filter(x => x !== null && x !== undefined)
+        .map(Number)
+        .filter(n => !Number.isNaN(n));
+
+      const minPrice = prices.length ? Math.min(...prices) : null;
+      $("#pd-price").text(minPrice !== null ? formatMoney(minPrice) : "--");
+
+      const sizes = uniqueNonEmpty(variants.map(v => v?.sizeLabel ?? v?.SizeLabel));
+      const colors = uniqueNonEmpty(variants.map(v => v?.colorName ?? v?.ColorName));
+
+      $("#pd-sizes").text(sizes.length ? sizes.join(", ") : "--");
+      $("#pd-colors").text(colors.length ? colors.join(", ") : "--");
+
+      const imgUrls = resolveImageUrlsFromDetail(p);
+      renderGallery(imgUrls);
+    }
+
+    async function fetchProductDetail(productId) {
+      const token = getToken();
+      if (!isValidJwt(token)) {
+        alert("Token không hợp lệ / bị lỗi. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        goLogin();
+        return null;
+      }
+
+      const res = await fetch(`${API_BASE}/api/provider/products/${productId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        }
+      });
+
+      if (res.status === 401) {
+        const text = await res.text();
+        alert("401 Unauthorized: " + text);
+        localStorage.removeItem("token");
+        goLogin();
+        return null;
+      }
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Không thể tải chi tiết sản phẩm");
+      }
+
+      const payload = await res.json().catch(() => ({}));
+      return (payload && payload.success && payload.data) ? payload.data : payload;
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      
+      const productId = getProductIdFromUrl();
+      if (!productId) {
+        alert("Thiếu id trên URL. Ví dụ: product-detail.html?id=123");
+        return;
+      }
+
+      try {
+        const data = await fetchProductDetail(productId);
+        if (!data) return;
+        fillProductDetail(data);
+      } catch (err) {
+        console.error(err);
+        alert(err?.message || "Lỗi khi tải chi tiết sản phẩm");
+      }
+      loadLayout();
+    });
+  </script>
+
+
+</body>
+
+<!-- Mirrored from nta0309-ecommerce-admin-dashboard.netlify.app/product-list by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 10 Jan 2026 02:38:14 GMT -->
+
+</html>

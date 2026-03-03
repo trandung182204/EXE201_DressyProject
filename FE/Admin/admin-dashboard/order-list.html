@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html class="no-js" lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sherah eCommerce Admin Dashboard">
+    <title>Sherah - Quản lý đơn hàng</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" href="img/favicon.png">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome-all.min.css">
+    <link rel="stylesheet" href="css/charts.min.css">
+    <link rel="stylesheet" href="css/datatables.min.css">
+    <link rel="stylesheet" href="css/jvector-map.css">
+    <link rel="stylesheet" href="css/slickslider.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .filter-toolbar {
+            background: #ffffff;
+            color: #333333 !important;
+            /* QUAN TRỌNG: Ép chữ thành màu đen */
+            padding: 22px;
+            border-radius: 12px;
+            margin-bottom: 22px;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #555;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-input {
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-size: 14px;
+            width: 100%;
+            background-color: #fff;
+            color: #333333 !important;
+            /* QUAN TRỌNG: Chữ trong ô input phải đen */
+            height: 42px;
+            transition: all 0.25s ease;
+        }
+
+        .filter-input:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+            outline: none;
+        }
+
+        .table-responsive {
+            background: #ffffff;
+            color: #333333 !important;
+            /* QUAN TRỌNG: Ép chữ trong bảng thành đen */
+            border-radius: 12px;
+            border: 1px solid #eaeaea;
+            overflow-x: auto;
+            min-height: 420px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+        }
+
+        .sherah-table__head th {
+            font-weight: 700;
+            font-size: 13px;
+            color: #333333 !important;
+            /* Ép màu tiêu đề */
+            background: #f8fafc;
+            padding: 16px;
+            border-bottom: 2px solid #e5e7eb;
+            white-space: nowrap;
+        }
+
+        .sherah-table__body td {
+            vertical-align: middle;
+            padding: 15px;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 14px;
+            color: #333333 !important;
+            /* Ép màu nội dung bảng */
+        }
+
+        .sherah-table__body tr:hover {
+            background-color: #f9fbff;
+        }
+
+        .sherah-table__body td a,
+        .sherah-table__body td span:not(.badge),
+        .sherah-table__body td div {
+            color: #333333;
+        }
+
+        .order-id {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .order-id:hover {
+            text-decoration: underline;
+        }
+
+        .price-text {
+            font-weight: 700;
+            font-size: 15px;
+            color: #111827;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 11px;
+            /* Giảm font một chút cho gọn nếu text tiếng Anh dài */
+            font-weight: 700;
+            text-align: center;
+            display: inline-block;
+            min-width: 100px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            /* Chữ in hoa cho đẹp như ảnh */
+        }
+
+        /* Màu xanh lá (Hoàn thành / Success) */
+        .badge-success {
+            background: #ecfdf5 !important;
+            color: #059669 !important;
+            /* QUAN TRỌNG: Thêm !important để hiện màu xanh */
+            border: 1px solid #a7f3d0 !important;
+        }
+
+        /* Màu vàng cam (Chờ xử lý / Pending) */
+        .badge-warning {
+            background: #fffbeb !important;
+            color: #b45309 !important;
+            /* QUAN TRỌNG: Thêm !important để hiện màu cam */
+            border: 1px solid #fde68a !important;
+        }
+
+        /* Màu đỏ (Hủy / Failed / Cancelled) */
+        .badge-danger {
+            background: #fef2f2 !important;
+            color: #dc2626 !important;
+            /* QUAN TRỌNG: Thêm !important để hiện màu đỏ */
+            border: 1px solid #fecaca !important;
+        }
+
+        /* Màu xanh dương (Đang giao / Info) */
+        .badge-info {
+            background: #eff6ff !important;
+            color: #2563eb !important;
+            /* QUAN TRỌNG: Thêm !important để hiện màu xanh */
+            border: 1px solid #bfdbfe !important;
+        }
+
+        /* Màu riêng cho trạng thái đang giao (shipped) */
+        .badge-shipped {
+            background: #eef2ff !important;
+            color: #1e40af !important;
+            border: 1px solid #c7d2fe !important;
+        }
+
+        /* Màu riêng cho trạng thái đã giao (delivered) */
+        .badge-delivered {
+            background: #f5f3ff !important;
+            color: #6b21a8 !important;
+            border: 1px solid #ddd6fe !important;
+        }
+
+        .pagination-btn {
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            padding: 6px 12px;
+            margin: 0 3px;
+            border-radius: 8px;
+            cursor: pointer;
+            min-width: 36px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #f3f4f6;
+        }
+
+        .pagination-btn.active {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+
+        .pagination-btn:disabled {
+            color: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .sortable:hover {
+            background-color: #eef2f7;
+        }
+
+        .sort-indicator {
+            margin-left: 4px;
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .loading-overlay {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 220px;
+            width: 100%;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: #2563eb;
+        }
+    </style>
+</head>
+
+
+<body id="sherah-dark-light">
+
+    <div class="sherah-body-area">
+        <div id="header-container"></div>
+        <div id="dashboard-container"></div>
+
+        <section class="sherah-adashboard sherah-show">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sherah-body">
+                            <div class="sherah-dsinner">
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="sherah-breadcrumb mg-top-30">
+                                            <h2 class="sherah-breadcrumb__title">Quản lý đơn hàng</h2>
+                                            <ul class="sherah-breadcrumb__list">
+                                                <li><a href="#">Trang chủ</a></li>
+                                                <li class="active"><a href='order-list.html'>Danh sách đơn hàng</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sherah-page-inner mg-top-25">
+
+                                    <div class="filter-toolbar">
+                                        <div class="row g-3 align-items-end">
+                                            <div class="col-lg-3 col-md-6 col-12">
+                                                <label class="filter-label">Tìm kiếm</label>
+                                                <input id="search-input" type="text" class="filter-input"
+                                                    placeholder="Mã đơn, Tên khách hàng...">
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-6 col-6">
+                                                <label class="filter-label">Trạng thái đơn</label>
+                                                <select id="status-filter" class="filter-input">
+                                                    <option value="">Tất cả</option>
+                                                    <option value="pending">Chờ xử lý </option>
+                                                    <option value="completed">Hoàn thành </option>
+                                                    <option value="cancelled">Đã hủy</option>
+                                                    <option value="delivered">Đã giao hàng</option>
+                                                    <option value="shipped">Đang giao hàng</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-6 col-6">
+                                                <label class="filter-label">Thanh toán</label>
+                                                <select id="payment-filter" class="filter-input">
+                                                    <option value="">Tất cả</option>
+                                                    <option value="success">Đã thanh toán</option>
+                                                    <option value="pending">Chờ thanh toán</option>
+                                                    <option value="failed">Thanh toán thất bại</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-6 col-12">
+                                                <label class="filter-label">Ngày đặt</label>
+                                                <div class="d-flex gap-2">
+                                                    <input type="date" id="date-from" class="filter-input"
+                                                        title="Từ ngày">
+                                                    <input type="date" id="date-to" class="filter-input"
+                                                        title="Đến ngày">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-12 col-12">
+                                                <button id="btn-reset" class="btn btn-light border w-100 fw-bold"
+                                                    style="height: 42px;" onclick="resetFilters()">
+                                                    <i class="fa fa-sync me-2"></i> Làm mới
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="sherah-table__head">
+                                                <tr>
+                                                    <th class="sortable" data-sort="bookingId">Mã đơn <span
+                                                            class="sort-indicator"></span></th>
+                                                    <th class="sortable" data-sort="customerName">Khách hàng <span
+                                                            class="sort-indicator"></span></th>
+                                                    <th class="sortable" data-sort="createdAt">Ngày đặt <span
+                                                            class="sort-indicator"></span></th>
+                                                    <th class="text-center">Thanh toán</th>
+                                                    <th class="sortable text-end" data-sort="totalPrice">Tổng tiền <span
+                                                            class="sort-indicator"></span></th>
+                                                    <th class="text-center">Trạng thái</th>
+                                                    <th class="text-end">Hành động</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="sherah-table__body" id="order-table-body">
+                                            </tbody>
+                                        </table>
+
+                                        <div id="loading-spinner" class="loading-overlay">
+                                            <div class="spinner-border" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center mt-4">
+                                        <div class="text-muted small mb-2 mb-md-0">
+                                            Hiển thị <span id="showing-count" class="fw-bold text-dark">0</span> đơn
+                                            hàng
+                                        </div>
+                                        <div id="pagination" class="d-flex">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Chi tiết đơn hàng <span id="modal-order-id"
+                            class="text-primary"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Khách hàng:</strong> <span id="modal-customer"></span></p>
+                            <p><strong>SDT:</strong> <span id="modal-phone"></span></p>
+                            <p><strong>Địa chỉ:</strong> <span id="modal-address"></span></p>
+                            <p><strong>Ngày đặt:</strong> <span id="modal-date"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Tổng tiền:</strong> <span id="modal-price" class="fw-bold text-danger"></span>
+                            </p>
+                            <p><strong>Thanh toán:</strong> <span id="modal-payment-status"></span></p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="bg-light p-3 rounded mb-3">
+                        <label class="form-label fw-bold">Cập nhật trạng thái đơn hàng:</label>
+                        <div class="d-flex gap-2">
+                            <select id="modal-status-select" class="form-select">
+                                <option value="pending">Chờ xử lý </option>
+                                <option value="completed">Hoàn thành </option>
+                                <option value="cancelled">Đã hủy</option>
+                                <option value="delivered">Đã giao hàng</option>
+                                <option value="shipping">Đang giao hàng</option>
+                            </select>
+                            <button id="btn-save-status" class="btn btn-primary text-nowrap">
+                                <i class="fa fa-save"></i> Lưu
+                            </button>
+                            <select id="modal-payment-select" class="form-select" style="max-width:200px;">
+                                <option value="success">Thanh toán thành công</option>
+                                <option value="failed">Thanh toán thất bại</option>
+                                <option value="pending">Chờ thanh toán</option>
+                            </select>
+                            <button id="btn-save-payment" class="btn btn-outline-primary text-nowrap">
+                                <i class="fa fa-save"></i> Lưu thanh toán
+                            </button>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold">Thông tin chi tiết dịch vụ:</h6>
+                    <div id="modal-items-list" class="border p-2 rounded"
+                        style="background: #fafafa; min-height: 100px;">
+                        <p class="text-muted small">Đang tải dữ liệu...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/datatables.min.js"></script>
+    <script src="js/circle-progress.min.js"></script>
+    <script src="js/jquery-jvectormap.js"></script>
+    <script src="js/jvector-map.js"></script>
+    <script src="js/slickslider.min.js"></script>
+    <script src="js/main.js"></script>
+
+
+    <script>
+        // --- CONFIG & STATE ---
+        // Tự động nhận diện localhost hoặc server thật
+        const API_BASE = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+            ? "http://localhost:5135/api"
+            : "/api";
+
+        const endpoints = {
+            bookings: `${API_BASE}/bookings/list`,
+            detail: (id) => `${API_BASE}/bookings/${id}/detail`,
+            updateStatus: (id) => `${API_BASE}/bookings/${id}/status`,
+            updatePayment: (id) => `${API_BASE}/bookings/${id}/payment-status`,
+            delete: (id) => `${API_BASE}/bookings/${id}`
+        };
+
+        // Derive API host (used for building absolute image URLs)
+        const API_HOST = (typeof API_BASE === 'string' && API_BASE.startsWith('http'))
+            ? (API_BASE.endsWith('/api') ? API_BASE.slice(0, -4) : API_BASE)
+            : window.location.origin;
+
+        // Safe image URL helper: returns absolute URL or placeholder
+        function safeImg(url) {
+            if (!url) return 'https://placehold.co/100x100?text=No+Img';
+            if (url.startsWith('http')) return url;
+            if (url.startsWith('/')) return API_HOST + url;
+            return API_HOST + '/' + url;
+        }
+
+        // Build media URL from a file id (like manager page does)
+        function buildMediaUrl(fileId) {
+            if (!fileId) return null;
+            return API_HOST.replace(/\/$/, '') + '/api/media-files/' + String(fileId);
+        }
+
+        let state = {
+            data: [],
+            filteredData: [],
+            currentPage: 1,
+            pageSize: 10,
+            sort: { field: 'createdAt', dir: 'desc' }
+        };
+
+        let currentBookingId = null;
+
+        // DOM Elements
+        const els = {
+            tableBody: document.getElementById('order-table-body'),
+            loading: document.getElementById('loading-spinner'),
+            pagination: document.getElementById('pagination'),
+            count: document.getElementById('showing-count'),
+            filters: {
+                search: document.getElementById('search-input'),
+                status: document.getElementById('status-filter'),
+                payment: document.getElementById('payment-filter'),
+                dateFrom: document.getElementById('date-from'),
+                dateTo: document.getElementById('date-to')
+            }
+        };
+
+        // --- 1. DATA FETCHING ---
+        function init() {
+            setLoading(true);
+            // Gọi API trực tiếp, không cần Header Authorization
+            fetch(endpoints.bookings)
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        state.data = res.data || [];
+                        processData();
+                        applyFilters();
+                    } else {
+                        els.tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">${res.message || 'Lỗi tải dữ liệu'}</td></tr>`;
+                    }
+                })
+                .catch(err => {
+                    console.error('Error fetching bookings:', err);
+                    els.tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">Lỗi kết nối Server</td></tr>`;
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
+
+        // --- 2. PROCESSING DATA ---
+        function processData() {
+            state.data = state.data.map(item => ({
+                ...item,
+                searchStr: `${item.bookingId} ${item.customerName || ''}`.toLowerCase(),
+                timestamp: item.createdAt ? new Date(item.createdAt).getTime() : 0,
+                statusRaw: (item.bookingStatus || 'pending').toLowerCase(),
+                paymentRaw: (item.paymentStatus || 'unpaid').toLowerCase()
+            }));
+        }
+
+        // --- 3. FILTER & SORT LOGIC ---
+        function applyFilters() {
+            let result = [...state.data];
+
+            // Filter Search
+            const searchVal = els.filters.search.value.trim().toLowerCase();
+            if (searchVal) result = result.filter(o => o.searchStr.includes(searchVal));
+
+            // Filter Status
+            const statusVal = els.filters.status.value;
+            if (statusVal) result = result.filter(o => o.statusRaw === statusVal);
+
+            // Filter Payment
+            const paymentVal = els.filters.payment.value;
+            if (paymentVal) result = result.filter(o => o.paymentRaw === paymentVal);
+
+            // Filter Date
+            const dFrom = els.filters.dateFrom.value ? new Date(els.filters.dateFrom.value).setHours(0, 0, 0, 0) : null;
+            const dTo = els.filters.dateTo.value ? new Date(els.filters.dateTo.value).setHours(23, 59, 59, 999) : null;
+
+            if (dFrom || dTo) {
+                result = result.filter(o => {
+                    if (!o.timestamp) return false;
+                    if (dFrom && o.timestamp < dFrom) return false;
+                    if (dTo && o.timestamp > dTo) return false;
+                    return true;
+                });
+            }
+
+            // Sort
+            const { field, dir } = state.sort;
+            result.sort((a, b) => {
+                let va = a[field], vb = b[field];
+                if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+                if (va < vb) return dir === 'asc' ? -1 : 1;
+                if (va > vb) return dir === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            state.filteredData = result;
+
+            // Reset page if needed
+            const totalPages = Math.ceil(result.length / state.pageSize);
+            if (state.currentPage > totalPages) state.currentPage = 1 || 1;
+
+            renderTable();
+            renderPagination();
+            updateSortUI();
+        }
+
+        // --- 4. RENDER UI ---
+        function renderTable() {
+            const { filteredData, currentPage, pageSize } = state;
+            const start = (currentPage - 1) * pageSize;
+            const pageData = filteredData.slice(start, start + pageSize);
+
+            els.count.textContent = filteredData.length;
+            els.tableBody.innerHTML = '';
+
+            if (pageData.length === 0) {
+                els.tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-muted">Không tìm thấy đơn hàng nào</td></tr>`;
+                return;
+            }
+
+            const formatMoney = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+
+            pageData.forEach(item => {
+                let statusClass = 'badge-warning';
+                // Custom color for shipped vs delivered
+                if (item.statusRaw === 'delivered') statusClass = 'badge-delivered';
+                else if (item.statusRaw === 'shipping') statusClass = 'badge-shipped';
+                else if (['completed', 'success'].includes(item.statusRaw)) statusClass = 'badge-success';
+                else if (['cancelled', 'failed'].includes(item.statusRaw)) statusClass = 'badge-danger';
+                else if (['processing', 'confirmed'].includes(item.statusRaw)) statusClass = 'badge-info';
+
+                let payClass = item.paymentRaw === 'success' ? 'badge-success' : (item.paymentRaw === 'failed' ? 'badge-danger' : 'badge-warning');
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                <td><a href="javascript:void(0)" onclick="openDetailModal(${item.bookingId})" class="fw-bold text-primary">#${item.bookingId}</a></td>
+                <td><span class="fw-bold">${item.customerName || 'Khách vãng lai'}</span></td>
+                <td>
+                    ${new Date(item.createdAt).toLocaleDateString('vi-VN')}
+                    <small class="d-block text-muted">${new Date(item.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</small>
+                </td>
+                <td class="text-center"><span class="badge ${payClass}">${item.paymentStatus}</span></td>
+                <td class="text-end fw-bold">${formatMoney(item.totalPrice)}</td>
+                <td class="text-center"><span class="badge ${statusClass}">${item.bookingStatus}</span></td>
+                <td class="text-end">
+                    <button class="btn btn-sm btn-light border me-2" onclick="openDetailModal(${item.bookingId})"><i class="fa fa-eye text-primary"></i></button>
+                    <button class="btn btn-sm btn-light border text-danger" onclick="deleteBooking(${item.bookingId})" title="Xóa đơn"><i class="fa fa-trash"></i></button>
+                </td>
+            `;
+                els.tableBody.appendChild(tr);
+            });
+        }
+
+        function renderPagination() {
+            const total = state.filteredData.length;
+            const pageCount = Math.ceil(total / state.pageSize);
+            els.pagination.innerHTML = '';
+            if (pageCount <= 1) return;
+
+            const createBtn = (page, text, isActive = false) =>
+                `<button class="pagination-btn ${isActive ? 'active' : ''}" onclick="gotoPage(${page})">${text}</button>`;
+
+            let html = createBtn(state.currentPage - 1, '&lt;');
+            for (let i = 1; i <= pageCount; i++) {
+                if (i === 1 || i === pageCount || (i >= state.currentPage - 1 && i <= state.currentPage + 1)) {
+                    html += createBtn(i, i, i === state.currentPage);
+                } else if (i === state.currentPage - 2 || i === state.currentPage + 2) {
+                    html += `<span class="mx-1">...</span>`;
+                }
+            }
+            html += createBtn(state.currentPage + 1, '&gt;');
+            els.pagination.innerHTML = html;
+        }
+
+        // --- 5. ACTIONS (DETAIL, UPDATE, DELETE) ---
+        function openDetailModal(id) {
+            currentBookingId = id;
+            const modalEl = document.getElementById('orderDetailModal');
+            const modal = new bootstrap.Modal(modalEl);
+
+            document.getElementById('modal-items-list').innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary"></div></div>';
+            document.getElementById('modal-order-id').innerText = '#' + id;
+
+            modal.show();
+
+            // Fetch Detail - Không Token
+            fetch(endpoints.detail(id))
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success && res.data) {
+                        const d = res.data;
+                        document.getElementById('modal-customer').innerText = d.customerName || 'N/A';
+                        document.getElementById('modal-phone').innerText = d.recipientPhone || 'N/A';
+                        document.getElementById('modal-address').innerText = d.recipientAddress || 'N/A';
+                        document.getElementById('modal-date').innerText = new Date(d.createdAt).toLocaleString('vi-VN');
+                        document.getElementById('modal-price').innerText = d.totalPrice.toLocaleString('vi-VN') + ' đ';
+                        document.getElementById('modal-payment-status').innerText = d.paymentStatus || 'Unknown';
+
+                        const statusSelect = document.getElementById('modal-status-select');
+                        if (statusSelect) statusSelect.value = (d.bookingStatus || 'pending').toLowerCase();
+                        const paySelect = document.getElementById('modal-payment-select');
+                        if (paySelect) paySelect.value = (d.paymentStatus || 'unpaid').toLowerCase();
+
+                        // Render Items
+                        let htmlItems = '<div class="d-flex flex-column gap-3">';
+                        const items = d.items || [];
+
+                        if (items.length > 0) {
+                            items.forEach(item => {
+                                let dateInfo = '';
+                                if (item.startDate && item.endDate) {
+                                    dateInfo = `<div class="small text-muted"><i class="fa fa-calendar-alt"></i> ${item.startDate} - ${item.endDate}</div>`;
+                                }
+                                // Fallback ảnh (normalize via safeImg). Also handle numeric/fileId values.
+                                let imgUrl = null;
+                                if (item && item.imageUrl && String(item.imageUrl).trim() !== "") {
+                                    imgUrl = safeImg(item.imageUrl);
+                                } else {
+                                    // possible file id fields from backend
+                                    const fid = item && (item.imageFileId || item.fileId || item.file_id || item.id || item.image_file_id);
+                                    if (fid) imgUrl = buildMediaUrl(fid);
+                                    // also check nested productImage object
+                                    if (!imgUrl && item && item.productImage) {
+                                        const pi = item.productImage;
+                                        const pf = pi.fileId || pi.id || pi.imageFileId || pi.file_id;
+                                        if (pf) imgUrl = buildMediaUrl(pf);
+                                    }
+                                }
+                                if (!imgUrl) imgUrl = 'https://placehold.co/100x100?text=No+Img';
+
+                                htmlItems += `
+                            <div class="d-flex align-items-center border p-2 rounded bg-white">
+                                <img src="${imgUrl}" alt="Img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 15px;" 
+                                     onerror="this.src='https://placehold.co/100x100?text=Err'">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0 fw-bold">${item.productName || 'Service'}</h6>
+                                    <small class="text-primary">${item.variantName || ''}</small>
+                                    ${dateInfo}
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold">${(item.price || 0).toLocaleString()} đ</div>
+                                    <small class="text-muted">x${item.quantity || 1}</small>
+                                </div>
+                            </div>`;
+                            });
+                        } else {
+                            htmlItems += `<div class="text-center text-muted p-3">Không có dịch vụ.</div>`;
+                        }
+                        htmlItems += '</div>';
+                        document.getElementById('modal-items-list').innerHTML = htmlItems;
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('modal-items-list').innerHTML = '<p class="text-danger text-center">Lỗi tải chi tiết!</p>';
+                });
+        }
+
+        // Nút Lưu trạng thái
+        const btnSave = document.getElementById('btn-save-status');
+        if (btnSave) {
+            btnSave.addEventListener('click', () => {
+                if (!currentBookingId) return;
+                const newStatus = document.getElementById('modal-status-select').value.toUpperCase();
+
+                btnSave.disabled = true;
+                btnSave.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+
+                fetch(endpoints.updateStatus(currentBookingId), {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }, // Chỉ cần Content-Type
+                    body: JSON.stringify({ status: newStatus })
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            alert('Cập nhật thành công!');
+                            const itemIndex = state.data.findIndex(x => x.bookingId == currentBookingId);
+                            if (itemIndex > -1) {
+                                state.data[itemIndex].bookingStatus = newStatus;
+                                state.data[itemIndex].statusRaw = newStatus.toLowerCase();
+                                applyFilters();
+                            }
+                            bootstrap.Modal.getInstance(document.getElementById('orderDetailModal')).hide();
+                        } else {
+                            alert('Lỗi: ' + res.message);
+                        }
+                    })
+                    .catch(err => alert('Lỗi kết nối!'))
+                    .finally(() => {
+                        btnSave.disabled = false;
+                        btnSave.innerHTML = 'Lưu thay đổi';
+                    });
+            });
+        }
+
+        // Nút Lưu trạng thái thanh toán
+        const btnSavePayment = document.getElementById('btn-save-payment');
+        if (btnSavePayment) {
+            btnSavePayment.addEventListener('click', () => {
+                if (!currentBookingId) return;
+                const newStatus = document.getElementById('modal-payment-select').value.toUpperCase();
+
+                btnSavePayment.disabled = true;
+                btnSavePayment.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+
+                fetch(endpoints.updatePayment(currentBookingId), {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            alert('Cập nhật trạng thái thanh toán thành công!');
+                            const itemIndex = state.data.findIndex(x => x.bookingId == currentBookingId);
+                            if (itemIndex > -1) {
+                                state.data[itemIndex].paymentStatus = newStatus;
+                                state.data[itemIndex].paymentRaw = newStatus.toLowerCase();
+                                applyFilters();
+                            }
+                            bootstrap.Modal.getInstance(document.getElementById('orderDetailModal')).hide();
+                        } else {
+                            alert('Lỗi: ' + res.message);
+                        }
+                    })
+                    .catch(err => alert('Lỗi kết nối!'))
+                    .finally(() => {
+                        btnSavePayment.disabled = false;
+                        btnSavePayment.innerHTML = 'Lưu thanh toán';
+                    });
+            });
+        }
+
+        // Xóa đơn hàng
+        function deleteBooking(id) {
+            if (!confirm(`Xóa đơn hàng #${id}?`)) return;
+
+            fetch(endpoints.delete(id), { method: 'DELETE' })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        state.data = state.data.filter(item => item.bookingId !== id);
+                        applyFilters();
+                        alert('Đã xóa!');
+                    } else {
+                        alert('Xóa thất bại: ' + res.message);
+                    }
+                })
+                .catch(err => alert('Lỗi kết nối!'));
+        }
+
+        // --- 6. HELPERS & EVENTS ---
+        function setLoading(isLoading) {
+            if (els.loading) els.loading.style.display = isLoading ? 'flex' : 'none';
+            if (els.tableBody) els.tableBody.style.display = isLoading ? 'none' : 'table-row-group';
+        }
+
+        function gotoPage(page) {
+            if (page < 1) page = 1;
+            state.currentPage = page;
+            renderTable();
+            renderPagination();
+        }
+
+        function sortBy(field) {
+            state.sort.dir = (state.sort.field === field && state.sort.dir === 'asc') ? 'desc' : 'asc';
+            state.sort.field = field;
+            applyFilters();
+        }
+
+        function updateSortUI() {
+            document.querySelectorAll('.sortable .sort-indicator').forEach(el => el.textContent = '');
+            const activeTh = document.querySelector(`.sortable[data-sort="${state.sort.field}"]`);
+            if (activeTh) {
+                const icon = activeTh.querySelector('.sort-indicator');
+                if (icon) icon.textContent = state.sort.dir === 'asc' ? ' ▲' : ' ▼';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            Object.values(els.filters).forEach(input => {
+                if (!input) return;
+                input.addEventListener(input.tagName === 'SELECT' ? 'change' : 'input', () => {
+                    state.currentPage = 1;
+                    applyFilters();
+                });
+            });
+            document.querySelectorAll('.sortable').forEach(th => th.addEventListener('click', () => sortBy(th.dataset.sort)));
+        });
+    </script>
+
+    <script>
+        async function loadLayout() {
+            try {
+                const [headerRes, dashRes] = await Promise.all([
+                    fetch("header.html"),
+                    fetch("dashboard.html")
+                ]);
+
+                if (headerRes.ok) document.getElementById("header-container").innerHTML = await headerRes.text();
+                if (dashRes.ok) document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+
+                if (typeof initSherahLayout === 'function') initSherahLayout();
+            } catch (e) {
+                console.warn("Layout files not found.");
+            }
+        }
+        loadLayout();
+    </script>
+
+
+</body>
+
+</html>
