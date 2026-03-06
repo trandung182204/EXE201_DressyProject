@@ -39,6 +39,81 @@
 		}
 
 		/* ===============================
+   AI TRY ON SECTION
+================================ */
+		.ai-tryon {
+			padding: 60px 0;
+			background: linear-gradient(135deg, #faf7f3, #ffffff);
+		}
+
+		.ai-tryon .wrapper {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 40px;
+			align-items: center;
+		}
+
+		.ai-tryon img {
+			width: 100%;
+			border-radius: 10px;
+			box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+		}
+
+		.ai-tryon .text h2 {
+			font-size: 36px;
+			font-weight: 700;
+			margin-bottom: 10px;
+		}
+
+		.ai-tryon .text p {
+			font-size: 16px;
+			color: #555;
+			line-height: 1.7;
+			margin-bottom: 20px;
+		}
+
+		.ai-tryon .features {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			margin-bottom: 25px;
+		}
+
+		.ai-tryon .features span {
+			font-size: 15px;
+			color: #333;
+		}
+
+		.ai-tryon .features i {
+			color: #c21807;
+			margin-right: 8px;
+		}
+
+		.ai-tryon .btn-ai {
+			display: inline-block;
+			background: #c21807;
+			color: white;
+			padding: 14px 28px;
+			border-radius: 6px;
+			font-weight: 600;
+			text-decoration: none;
+			transition: 0.25s;
+		}
+
+		.ai-tryon .btn-ai:hover {
+			background: #8f0f03;
+			transform: translateY(-2px);
+		}
+
+		/* responsive */
+		@media (max-width: 900px) {
+			.ai-tryon .wrapper {
+				grid-template-columns: 1fr;
+				text-align: center;
+			}
+		}
+
+		/* ===============================
    CONTENT: FULL WIDTH + GRID
 ================================ */
 		.content.base-padd,
@@ -203,21 +278,82 @@
 		/* ===============================
 		   FAVORITES - improved styling for original markup
 		================================= */
-		.favorites { padding: 36px 0; }
-		.favorites h2 { text-align:center; font-weight:700; margin-bottom:18px; }
+		.favorites {
+			padding: 36px 0;
+		}
 
-		.owl-favorites .item { display:flex; justify-content:center; }
+		.favorites h2 {
+			text-align: center;
+			font-weight: 700;
+			margin-bottom: 18px;
+		}
+
+		.owl-favorites .item {
+			display: flex;
+			justify-content: center;
+		}
+
 		/* Keep fixed aspect ratio so provider images always render consistently */
-		.owl-favorites .item figure { width:260px; max-width:100%; margin:0; position:relative; overflow:hidden; border-radius:8px; box-shadow:0 8px 20px rgba(32,32,32,0.06); aspect-ratio: 13/16; }
-		.owl-favorites .item figure img { width:100%; height:100%; object-fit:cover; display:block; }
-		.owl-favorites .item figure a { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.6); color:#fff; padding:10px 14px; border-radius:4px; text-decoration:none; opacity:0; transition:opacity .15s ease; font-weight:600; }
-		.owl-favorites .item figure:hover a { opacity:1; }
+		.owl-favorites .item figure {
+			width: 260px;
+			max-width: 100%;
+			margin: 0;
+			position: relative;
+			overflow: hidden;
+			border-radius: 8px;
+			box-shadow: 0 8px 20px rgba(32, 32, 32, 0.06);
+			aspect-ratio: 13/16;
+		}
 
-		.owl-favorites .item h3.font-25-for-reg-0 { margin:10px 0 6px; font-size:16px; font-weight:700; text-align:center; }
-		.owl-favorites .item .elements { text-align:center; padding:0 6px 10px; }
-		.owl-favorites .item .elements .font-16-for-reg-0 { color:#c21807; font-weight:700; display:block; }
-		.owl-favorites .item .elements .font-15-for-reg-0 { color:#666; font-size:13px; display:block; }
+		.owl-favorites .item figure img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
 
+		.owl-favorites .item figure a {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			background: rgba(0, 0, 0, 0.6);
+			color: #fff;
+			padding: 10px 14px;
+			border-radius: 4px;
+			text-decoration: none;
+			opacity: 0;
+			transition: opacity .15s ease;
+			font-weight: 600;
+		}
+
+		.owl-favorites .item figure:hover a {
+			opacity: 1;
+		}
+
+		.owl-favorites .item h3.font-25-for-reg-0 {
+			margin: 10px 0 6px;
+			font-size: 16px;
+			font-weight: 700;
+			text-align: center;
+		}
+
+		.owl-favorites .item .elements {
+			text-align: center;
+			padding: 0 6px 10px;
+		}
+
+		.owl-favorites .item .elements .font-16-for-reg-0 {
+			color: #c21807;
+			font-weight: 700;
+			display: block;
+		}
+
+		.owl-favorites .item .elements .font-15-for-reg-0 {
+			color: #666;
+			font-size: 13px;
+			display: block;
+		}
 	</style>
 </head>
 
@@ -346,12 +482,38 @@
 			<div class="owl-favorites owl-carousel owl-theme"></div>
 		</div>
 	</div>``
+	<!-- ================= AI TRY ON ================= -->
+	<div class="ai-tryon">
+		<div class="container">
+			<div class="wrapper">
 
+				<div class="image">
+					<img src="../assets/dist/img/content/bbc0f646-3c8e-4379-8cae-198a7a9a49fb.jpg" alt="AI Try On">
+				</div>
 
+				<div class="text">
+					<h2>Thử đồ cùng AI</h2>
 
+					<p>
+						Chỉ cần tải ảnh của bạn lên, hệ thống AI sẽ tự động thử
+						các mẫu váy ngay trên cơ thể bạn. Trải nghiệm thử đồ online
+						thông minh giúp bạn chọn trang phục phù hợp nhất trước khi thuê.
+					</p>
 
+					<div class="features">
+						<span><i class="fa fa-check"></i> Thử hàng trăm mẫu váy ngay lập tức</span>
+						<span><i class="fa fa-check"></i> AI tự động ghép trang phục vào ảnh</span>
+						<span><i class="fa fa-check"></i> Giúp chọn mẫu và phong cách phù hợp</span>
+					</div>
 
+					<a href="ai-tryon.html" class="btn-ai">
+						<i class="fa fa-magic"></i> Thử ngay
+					</a>
+				</div>
 
+			</div>
+		</div>
+	</div>
 
 
 	<div class="content base-padd">
@@ -582,7 +744,7 @@
 				console.error('Lỗi khi tải header:', error);
 			});
 	</script>
-    <script src="../assets/dist/js/layout-auth.js"></script>
+	<script src="../assets/dist/js/layout-auth.js"></script>
 	<script src="../assets/dist/js/vendor/jquery-3.2.0.min.js"></script>
 	<script src="../assets/dist/js/vendor/bootstrap.min.js"></script>
 	<script src="../assets/dist/js/vendor/countUp.js"></script>
@@ -660,7 +822,7 @@
 
 				const detailUrl = `booking.html?id=${encodeURIComponent(id)}`;
 
-								return `
+				return `
 				<div class="item">
 					<figure>
 						<img src="${img}" alt="${name}">

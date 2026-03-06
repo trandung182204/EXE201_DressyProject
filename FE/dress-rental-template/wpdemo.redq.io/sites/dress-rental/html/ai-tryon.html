@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thử đồ cùng AI</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/dist/style/elements.css">
+    <link rel="stylesheet" href="../assets/dist/style/header.css">
+    <link rel="stylesheet" href="../assets/dist/style/footer.css">
+    <link rel="stylesheet" href="../assets/dist/style/style.css">
+    <link rel="stylesheet" href="../assets/dist/style/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 80px 40px 60px;
+        }
+
+        .page {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 30px;
+        }
+
+        .left-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .upload-section {
+            margin-bottom: 35px;
+        }
+
+        .upload-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .upload-grid {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .upload-box {
+            width: 120px;
+            height: 140px;
+            border: 2px dashed #d6d6d6;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: #fafafa;
+            transition: 0.2s;
+        }
+
+        .upload-box input[type="file"] {
+            display: none;
+        }
+
+        .upload-box:hover {
+            border-color: #2ea39b;
+            background: #fff;
+        }
+
+        .upload-box i {
+            font-size: 26px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .preview-img {
+            width: 120px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #eee;
+        }
+
+        .preview-img.hidden {
+            display: none;
+        }
+
+        .preview {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            align-items: center;
+        }
+
+        .preview img {
+            width: 90px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        .preview .sample {
+            opacity: .6;
+        }
+
+        .generate-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            background: #2ea39b;
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .generate-btn:hover {
+            background: #248a83;
+        }
+
+        .right-panel {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 650px;
+        }
+
+        .result-placeholder {
+            text-align: center;
+            color: #888;
+        }
+
+        .result-placeholder i {
+            font-size: 50px;
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .result-image {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .download {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .preview-wrapper {
+            position: relative;
+        }
+
+        .sample-badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: #000;
+            color: white;
+            font-size: 11px;
+            padding: 3px 7px;
+            border-radius: 5px;
+            opacity: 0.75;
+        }
+
+        .sample-img {
+            border: 2px dashed #ddd;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .loading i {
+            font-size: 30px;
+            display: block;
+            margin-bottom: 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        @media (max-width:1000px) {
+            .page {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <script>
+        fetch('header.html')
+            .then(r => {
+                if (!r.ok) throw new Error("Header load failed")
+                return r.text()
+            })
+            .then(html => {
+                document.getElementById("header-placeholder").innerHTML = html
+                document.dispatchEvent(new Event("header:loaded"))
+
+                if (typeof window.renderAuthHeader === "function") {
+                    window.renderAuthHeader()
+                }
+            })
+            .catch(err => console.error("Header error:", err))
+    </script>
+    <div class="container">
+
+        <div class="title">Thử đồ cùng AI</div>
+
+        <div class="page">
+
+            <!-- LEFT -->
+            <div class="left-panel">
+
+                <div class="upload-section">
+
+                    <div class="upload-title">Chọn trang phục</div>
+
+                    <div class="upload-grid">
+
+                        <label class="upload-box">
+                            <i class="fa fa-upload"></i>
+                            <span>Tải ảnh</span>
+                            <input type="file" id="clothInput" hidden>
+                        </label>
+
+                        <img id="clothPreview" class="preview-img hidden">
+
+                        <div class="preview-wrapper">
+                            <span class="sample-badge">Ảnh mẫu</span>
+                            <img src="../assets/dist/img/content/anh12.jpg" class="preview-img sample-img">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="upload-section">
+
+                    <div class="upload-title">Tải ảnh thân hình bạn</div>
+
+                    <div class="upload-grid">
+
+                        <label class="upload-box">
+                            <i class="fa fa-user"></i>
+                            <span>Tải ảnh</span>
+                            <input type="file" id="personInput" hidden>
+                        </label>
+
+                        <img id="personPreview" class="preview-img hidden">
+
+                        <div class="preview-wrapper">
+                            <span class="sample-badge">Ảnh mẫu</span>
+                            <img src="../assets/dist/img/content/94d371481e954d8baf4fe93bbdb91217.jpg"
+                                class="preview-img sample-img">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button class="generate-btn" id="generateBtn">
+                    <i class="fa fa-magic"></i>
+                    Tạo ảnh thử đồ
+                </button>
+
+            </div>
+
+
+            <!-- RIGHT -->
+
+            <div class="right-panel">
+
+                <div class="result-placeholder" id="placeholder">
+
+                    <i class="fa fa-image"></i>
+                    <p>Ảnh sau khi AI tạo sẽ hiển thị ở đây</p>
+
+                </div>
+
+                <img id="resultImage" class="result-image">
+
+                
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const isLocal =
+            location.hostname === "localhost" ||
+            location.hostname === "127.0.0.1";
+
+        const API_BASE = isLocal ? "http://localhost:5135" : "";
+
+        /* =========================
+           Preview Image
+        ========================= */
+
+        function previewImage(input, preview) {
+
+            input.addEventListener("change", function () {
+
+                const file = this.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    preview.src = e.target.result;
+                    preview.classList.remove("hidden");
+
+                };
+
+                reader.readAsDataURL(file);
+
+            });
+
+        }
+
+        previewImage(
+            document.getElementById("clothInput"),
+            document.getElementById("clothPreview")
+        );
+
+        previewImage(
+            document.getElementById("personInput"),
+            document.getElementById("personPreview")
+        );
+
+
+        /* =========================
+           Generate Try-On
+        ========================= */
+
+        document.getElementById("generateBtn").addEventListener("click", async () => {
+
+            const cloth = document.getElementById("clothInput").files[0];
+            const model = document.getElementById("personInput").files[0];
+
+            if (!cloth || !model) {
+                alert("Vui lòng tải đủ ảnh trang phục và ảnh người.");
+                return;
+            }
+
+            const form = new FormData();
+            form.append("cloth_image", cloth);
+            form.append("model_image", model);
+
+            const placeholder = document.getElementById("placeholder");
+            const resultImg = document.getElementById("resultImage");
+            const downloadBtn = document.getElementById("downloadBtn");
+
+            placeholder.style.display = "block";
+
+            placeholder.innerHTML = `
+        <div class="loading">
+            <i class="fa fa-spinner"></i>
+            AI đang thử đồ... vui lòng chờ khoảng 10 giây
+        </div>
+    `;
+
+            resultImg.style.display = "none";
+            downloadBtn.style.display = "none";
+
+            try {
+
+                const res = await fetch(`${API_BASE}/api/tryon`, {
+                    method: "POST",
+                    body: form
+                });
+
+                if (!res.ok) {
+                    throw new Error("API error");
+                }
+
+                const data = await res.json();
+
+                if (data.success) {
+
+                    resultImg.src = data.image;
+                    resultImg.style.display = "block";
+                    downloadBtn.style.display = "block";
+
+                    placeholder.style.display = "none";
+
+                } else {
+
+                    placeholder.innerHTML = "AI xử lý thất bại.";
+
+                }
+
+            } catch (err) {
+
+                console.error(err);
+                placeholder.innerHTML = "Lỗi kết nối server.";
+
+            }
+
+        });
+
+
+        /* =========================
+           Download Result
+        ========================= */
+
+        document.getElementById("downloadBtn").addEventListener("click", () => {
+
+            const img = document.getElementById("resultImage").src;
+
+            if (!img) return;
+
+            const a = document.createElement("a");
+            a.href = img;
+            a.download = "ai-tryon.jpg";
+            a.click();
+
+        });
+    </script>
+    <div id="footer-placeholder"></div>
+
+    <script>
+        fetch('footer.html')
+            .then(r => {
+                if (!r.ok) throw new Error("Footer load failed")
+                return r.text()
+            })
+            .then(html => {
+                document.getElementById("footer-placeholder").innerHTML = html
+            })
+            .catch(err => console.error("Footer error:", err))
+    </script>
+    <script src="../assets/dist/js/vendor/jquery-3.2.0.min.js"></script>
+    <script src="../assets/dist/js/vendor/bootstrap.min.js"></script>
+    <script src="../assets/dist/js/custom.js"></script>
+    <script src="../assets/dist/js/auth-header.js"></script>
+</body>
+
+</html>
