@@ -53,7 +53,7 @@ public class TryOnController : ControllerBase
 
         while (true)
         {
-            await Task.Delay(2000);
+            await Task.Delay(3000);
 
             var statusResponse = await client.GetAsync(
                 $"https://platform.fitroom.app/api/tryon/v2/tasks/{taskId}"

@@ -108,6 +108,44 @@
       margin-top: 12px;
       font-size: 13px;
     }
+
+    /* ===== FIX: màu chữ khi nhập trong form ===== */
+    .sherah-wc__form-input,
+    input.sherah-wc__form-input,
+    textarea.sherah-wc__form-input,
+    select.sherah-wc__form-input {
+      color: #222 !important;
+      font-weight: 500;
+      background: #fff;
+    }
+
+    /* placeholder */
+    .sherah-wc__form-input::placeholder,
+    input::placeholder,
+    textarea::placeholder {
+      color: #999 !important;
+      opacity: 1;
+    }
+
+    /* khi focus */
+    .sherah-wc__form-input:focus,
+    input.sherah-wc__form-input:focus,
+    textarea.sherah-wc__form-input:focus,
+    select.sherah-wc__form-input:focus {
+      color: #111 !important;
+      border-color: #6c5ce7 !important;
+      box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.1);
+    }
+
+    /* input trong bảng variants */
+    .v-input {
+      color: #222 !important;
+      font-weight: 500;
+    }
+
+    .v-input::placeholder {
+      color: #999;
+    }
   </style>
 </head>
 
@@ -296,7 +334,7 @@
       </div>
     </section>
   </div>
-
+  <script src="js/auth-header.js"></script>
   <script src="js/jquery.min.js"></script>
   <script src="js/jquery-migrate.js"></script>
   <script src="js/jquery-ui.min.js"></script>
@@ -305,17 +343,19 @@
   <script src="js/main.js"></script>
 
   <script>
-    async function loadLayout() {
-      const headerRes = await fetch("header.html");
-      document.getElementById("header-container").innerHTML = await headerRes.text();
+        async function loadLayout() {
+            const headerRes = await fetch("header.html");
+            document.getElementById("header-container").innerHTML = await headerRes.text();
 
-      const dashRes = await fetch("dashboard.html");
-      document.getElementById("dashboard-container").innerHTML = await dashRes.text();
+            const dashRes = await fetch("dashboard.html");
+            document.getElementById("dashboard-container").innerHTML = await dashRes.text();
 
-      initSherahLayout();
-    }
-    loadLayout();
-  </script>
+            initSherahLayout();
+
+            if (window.loadAuthToHeader) window.loadAuthToHeader();
+            if (window.initProviderNotifications) window.initProviderNotifications();
+        }
+    </script>
 
   <script>
     // ===== CONFIG =====
@@ -712,6 +752,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
+      loadLayout();
       bindImagePicker();
 
       const productId = getQueryId();

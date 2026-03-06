@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="css/jquery-ui.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="style.css">
-    
+
 
     <style>
         #imagePreviewRow {
@@ -124,6 +124,33 @@
             margin-top: 12px;
             font-size: 13px;
         }
+
+        /* ===== Fix màu chữ khi nhập ===== */
+        .sherah-wc__form-input,
+        .sherah-wc__form-input input,
+        .sherah-wc__form-input textarea,
+        input.sherah-wc__form-input,
+        textarea.sherah-wc__form-input,
+        select.sherah-wc__form-input {
+            color: #222 !important;
+            /* chữ đậm hơn */
+            font-weight: 500;
+        }
+
+        /* placeholder (Type here...) */
+        .sherah-wc__form-input::placeholder,
+        input::placeholder,
+        textarea::placeholder {
+            color: #999 !important;
+            opacity: 1;
+        }
+
+        /* khi focus */
+        .sherah-wc__form-input:focus,
+        input.sherah-wc__form-input:focus,
+        textarea.sherah-wc__form-input:focus {
+            color: #111 !important;
+        }
     </style>
 
 </head>
@@ -146,13 +173,15 @@
                                             <h2 class="sherah-breadcrumb__title">Tải lên sản phẩm</h2>
                                             <ul class="sherah-breadcrumb__list">
                                                 <li><a href="#">Trang chủ</a></li>
-                                                <li class="active"><a href='upload-product.html'>Tải lên sản phẩm</a></li>
+                                                <li class="active"><a href='upload-product.html'>Tải lên sản phẩm</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="sherah-page-inner sherah-border sherah-basic-page sherah-default-bg mg-top-25 p-0">
+                                <div
+                                    class="sherah-page-inner sherah-border sherah-basic-page sherah-default-bg mg-top-25 p-0">
                                     <form id="uploadProductForm" class="sherah-wc__form-main" action="#"
                                         onsubmit="return false;">
                                         <div class="row">
@@ -163,7 +192,8 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Tên sản phẩm</label>
+                                                                <label class="sherah-wc__form-label">Tên sản
+                                                                    phẩm</label>
                                                                 <div class="form-group__input">
                                                                     <input id="name" class="sherah-wc__form-input"
                                                                         placeholder="Type here" type="text" name="name">
@@ -173,7 +203,8 @@
 
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Giá mỗi ngày</label>
+                                                                <label class="sherah-wc__form-label">Giá mỗi
+                                                                    ngày</label>
                                                                 <div class="form-group__input">
                                                                     <input id="pricePerDay"
                                                                         class="sherah-wc__form-input"
@@ -209,7 +240,8 @@
 
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-group">
-                                                                <label class="sherah-wc__form-label">Loại sản phẩm</label>
+                                                                <label class="sherah-wc__form-label">Loại sản
+                                                                    phẩm</label>
                                                                 <div class="form-group__input">
                                                                     <select id="productType"
                                                                         class="sherah-wc__form-input"
@@ -270,7 +302,8 @@
                                                     </div>
 
                                                     <p class="form-msg" style="color:#666;">
-                                                        Nhập theo từng dòng: <b>Kích cỡ → tên màu → mã màu → số lượng</b>. Nếu có nhiều size/màu, bấm <b>Thêm dòng</b>.
+                                                        Nhập theo từng dòng: <b>Kích cỡ → tên màu → mã màu → số
+                                                            lượng</b>. Nếu có nhiều size/màu, bấm <b>Thêm dòng</b>.
                                                     </p>
                                                 </div>
                                                 <!-- End Specification -->
@@ -283,7 +316,8 @@
                                                 <div class="image-upload-group" id="imagePreviewRow">
 
                                                     <!-- Ô upload (luôn nằm cuối) -->
-                                                    <div class="image-upload-group__single image-upload-group__single--upload">
+                                                    <div
+                                                        class="image-upload-group__single image-upload-group__single--upload">
                                                         <input type="file" class="btn-check" id="input-img1" multiple
                                                             accept="image/*" autocomplete="off">
                                                         <label class="image-upload-label" for="input-img1">
@@ -313,8 +347,10 @@
                                         <p id="formMsg" class="form-msg"></p>
 
                                         <div class="mg-top-40 sherah-dflex sherah-dflex-gap-30 justify-content-end">
-                                            <button type="submit" class="sherah-btn sherah-btn__primary">Tải lên</button>
-                                            <button class="sherah-btn sherah-btn__third" type="button" onclick="window.location.href='products.html'">Hủy</button>
+                                            <button type="submit" class="sherah-btn sherah-btn__primary">Tải
+                                                lên</button>
+                                            <button class="sherah-btn sherah-btn__third" type="button"
+                                                onclick="window.location.href='products.html'">Hủy</button>
                                         </div>
                                     </form>
                                 </div>
