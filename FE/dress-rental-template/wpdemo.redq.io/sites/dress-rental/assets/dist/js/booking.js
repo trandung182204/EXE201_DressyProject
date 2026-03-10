@@ -547,6 +547,20 @@ function checkDateInputs() {
     const startVal = startInput.value;
     const endVal = endInput.value;
 
+    // If start_date is set but end_date is empty, auto-set end = start (1-day rental)
+    if (startVal && startVal !== "" && (!endVal || endVal === "")) {
+        const start = parseDate(startVal);
+        if (start) {
+            endInput.value = startVal; // sync the hidden input
+            if (!startDate || !endDate ||
+                start.getTime() !== startDate.getTime() ||
+                start.getTime() !== endDate.getTime()) {
+                validateRentalDays(start, new Date(start.getTime()));
+            }
+        }
+        return;
+    }
+
     if (startVal && endVal && startVal !== "" && endVal !== "") {
         const start = parseDate(startVal);
         const end = parseDate(endVal);
@@ -592,7 +606,7 @@ function parseDate(dateStr) {
 
 /**
  * Validate rental days (Realtime)
- * Allow >= 3 days
+ * Allow >= 1 day
  */
 function validateRentalDays(start, end) {
     start.setHours(0, 0, 0, 0);
@@ -610,19 +624,11 @@ function validateRentalDays(start, end) {
     const infoDiv = document.getElementById("rentalDaysInfo");
     const daysCount = document.getElementById("rentalDaysCount");
 
-    // Logic: >= 3 days (Updated per request)
-    if (rentalDays < 3) {
-        if (errorDiv) {
-            errorDiv.innerHTML = `<i class="fa fa-exclamation-circle"></i> Số ngày thuê phải từ 3 ngày trở lên (hiện tại: ${rentalDays} ngày)`;
-            errorDiv.style.display = "block";
-        }
-        if (infoDiv) infoDiv.style.display = "none";
-    } else {
-        if (errorDiv) errorDiv.style.display = "none";
-        if (infoDiv) {
-            infoDiv.style.display = "block";
-            if (daysCount) daysCount.textContent = rentalDays;
-        }
+    // Always valid as long as >= 1 day
+    if (errorDiv) errorDiv.style.display = "none";
+    if (infoDiv) {
+        infoDiv.style.display = "block";
+        if (daysCount) daysCount.textContent = rentalDays;
     }
 }
 
@@ -642,12 +648,6 @@ function validateAllFieldsOnSubmit() {
             dateErrorDiv.innerHTML = `<i class="fa fa-exclamation-circle"></i> Vui lòng chọn ngày thuê`;
             dateErrorDiv.style.display = "block";
             firstErrorEl = dateErrorDiv;
-        }
-    } else if (rentalDays < 3) { // Check < 3
-        if (dateErrorDiv) {
-            dateErrorDiv.innerHTML = `<i class="fa fa-exclamation-circle"></i> Số ngày thuê phải từ 3 ngày trở lên`;
-            dateErrorDiv.style.display = "block";
-            if (!firstErrorEl) firstErrorEl = dateErrorDiv;
         }
     }
 

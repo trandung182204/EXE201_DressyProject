@@ -281,10 +281,7 @@ function saveEdit() {
     }
 
     const diffDays = Math.ceil((endD - startD) / (1000 * 60 * 60 * 24)) + 1;
-    if (diffDays < 3) {
-        showToast("Số ngày thuê phải từ 3 ngày trở lên", "error");
-        return;
-    }
+
 
     item.color = newColor;
     item.size = newSize;
@@ -394,9 +391,7 @@ function validateCheckout() {
         if (!item.startDate || !item.endDate) {
             errors.push(`Sản phẩm "${item.productName}" chưa chọn ngày nhận/trả`);
         }
-        if (item.days < 3) {
-            errors.push(`Sản phẩm "${item.productName}" phải thuê tối thiểu 3 ngày`);
-        }
+
     }
 
     const name = document.getElementById("delivery-name")?.value?.trim();
