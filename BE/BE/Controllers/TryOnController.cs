@@ -8,7 +8,7 @@ public class TryOnController : ControllerBase
 {
     private readonly IHttpClientFactory _httpClientFactory;
 
-    private const string API_KEY = "b3e93676d2924689ac00120b594ec2b544c2c4b0c65d7f5bb9984003bef0608e";
+    private const string API_KEY = "78e08b430f7a4ef18fba128876727162b88623e62a23b8e8ead461b5b8a1b75e";
 
     public TryOnController(IHttpClientFactory httpClientFactory)
     {
@@ -21,7 +21,7 @@ public class TryOnController : ControllerBase
         if (cloth_image == null || model_image == null)
             return BadRequest("Missing images");
 
-        var client = _httpClientFactory.CreateClient();
+        var client = _httpClientFactory.CreateClient("fitroom");
 
         var form = new MultipartFormDataContent();
 
