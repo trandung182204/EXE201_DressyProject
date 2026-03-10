@@ -1,269 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Mirrored from wpdemo.redq.io/sites/dress-rental/html/listing-page.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 22 Jan 2026 15:16:28 GMT -->
-
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title> Xúng Xính </title>
-	<link
-		href="https://fonts.googleapis.com/css?family=Abril+Fatface|Forum|Open+Sans:400,600|Roboto:100,300,400,500,700"
-		rel="stylesheet">
-	<link rel="stylesheet" href="../assets/dist/style/elements.css">
-	<link rel="stylesheet" href="../assets/dist/style/header.css">
-	<link rel="stylesheet" href="../assets/dist/style/footer.css">
-	<link rel="stylesheet" href="../assets/dist/style/blog.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Xúng Xính </title>
+    <link
+        href="https://fonts.googleapis.com/css?family=Abril+Fatface|Forum|Open+Sans:400,600|Roboto:100,300,400,500,700"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/dist/style/elements.css">
+    <link rel="stylesheet" href="../assets/dist/style/header.css">
+    <link rel="stylesheet" href="../assets/dist/style/footer.css">
+    <link rel="stylesheet" href="../assets/dist/style/blog.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
-	<style>
-		/* Product list - modern card */
-		.product-display .prod-title { font-weight:700; font-size: 18px; color:#222; display:block; margin-bottom:6px; }
-		.product-card { background:#fff; border-radius:8px; box-shadow:0 8px 20px rgba(32,32,32,0.06); overflow:hidden; margin-bottom:20px; display:flex; flex-direction:column; height:100%; }
-		/* Use a fixed height so all product images render the same visible frame regardless of source size */
-		.product-card .product-media { position:relative; overflow:hidden; height:320px; flex:0 0 auto; }
-		.product-card img { width:100%; height:100%; object-fit:cover; display:block; }
-		@media (max-width: 991px) {
-			.product-card .product-media { height:260px; }
-		}
-		@media (max-width: 575px) {
-			.product-card .product-media { height:200px; }
-		}
-		/* Make columns stretch so cards align in rows */
-		.col-def { display:flex; align-items:stretch; }
-		.product-card .description { padding:14px 16px; display:flex; flex-direction:column; justify-content:space-between; flex:1 1 auto; min-height:160px; }
-		.product-card .actions { margin-top:12px; }
-		.product-card .actions .btn { margin-top:auto; }
-		/* Limit title to 2 lines to keep card heights consistent */
-		.product-card .prod-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-		.product-card .wish { position:absolute; right:10px; top:10px; background:rgba(255,255,255,0.92); border-radius:50%; padding:6px; border:none; }
-		.product-card .description { padding:14px 16px; }
+    <style>
+        /* Product list - modern card */
+        .product-card { 
+            background:#fff; 
+            border-radius:8px; 
+            box-shadow:0 8px 20px rgba(32,32,32,0.06); 
+            overflow:hidden; 
+            margin-bottom:20px; 
+            display:flex; 
+            flex-direction:column; 
+            height:100%; 
+            min-height:510px; /* Tăng nhẹ để chứa thêm nội dung giá */
+        }
 
-		/* Responsive adjustments: reduce min-height on narrower screens so cards remain balanced */
-		@media (max-width: 991px) {
-			.product-card .description { min-height:140px; }
-		}
-		@media (max-width: 575px) {
-			.product-card .description { min-height:120px; }
-		}
-		.product-card .price { color:#c21807; font-weight:800; margin-top:8px; }
-		.product-card .prod-cat { color:#888; font-size:13px; margin:6px 0 0 0; }
-		.product-card .actions { margin-top:12px; }
-		.product-card .btn { padding:8px 12px; border-radius:4px; text-decoration:none; }
-		.product-card .btn-primary { background:#222; color:#fff; }
-		@media (max-width:767px){ .product-card .product-media { height:240px; } }
+        /* Use a fixed height so all product images render the same visible frame regardless of source size */
+        .product-card .product-media { position:relative; overflow:hidden; height:320px; flex:0 0 auto; }
+        .product-card img { width:100%; height:100%; object-fit:cover; display:block; }
+        
+        @media (max-width: 991px) {
+            .product-card .product-media { height:260px; }
+        }
+        @media (max-width: 575px) {
+            .product-card .product-media { height:200px; }
+        }
 
-	</style>
+        /* Adjust overall card min-height to match image + description space */
+        @media (max-width: 991px) {
+            .product-card { min-height:430px; }
+        }
+        @media (max-width: 767px) {
+            .product-card { min-height:410px; }
+        }
+        @media (max-width: 575px) {
+            .product-card { min-height:350px; }
+        }
+        
+        /* Make columns stretch so cards align in rows */
+        .col-def { display:flex; align-items:stretch; }
+        
+        .product-card .description { 
+            padding:14px 16px; 
+            display:flex; 
+            flex-direction:column; 
+            justify-content:space-between; 
+            flex:1 1 auto; 
+            min-height:190px; /* Tăng nhẹ để chứa thêm nội dung giá */
+        }
+        
+        .product-card .actions { margin-top:12px; }
+        .product-card .actions .btn { margin-top:auto; }
+        
+        /* Cố định không gian cho Title để tránh vỡ layout khi có 1 hoặc 2 dòng */
+        .product-card .prod-title { 
+            font-weight: 700; 
+            font-size: 18px; 
+            line-height: 1.4; 
+            color: #222; 
+            display: -webkit-box; 
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            margin-bottom: 6px; 
+            min-height: 51px; 
+        }
+        
+        .product-card .wish { position:absolute; right:10px; top:10px; background:rgba(255,255,255,0.92); border-radius:50%; padding:6px; border:none; }
 
+        /* Responsive adjustments */
+        @media (max-width: 991px) {
+            .product-card .description { min-height:170px; }
+        }
+        @media (max-width: 575px) {
+            .product-card .description { min-height:150px; }
+        }
+        
+        /* Chỉnh sửa kiểu giá */
+        .product-card .price { color:#c21807; font-weight:800; font-size: 20px; margin-top: 8px; } /* Giá thuê to hơn */
+        .product-card .price-label { color: #888; font-size: 14px; font-weight: normal; margin-right: 4px; } /* Nhãn "giá thuê: " */
+        .product-card .prod-cat { color:#888; font-size:14px; margin: 6px 0 0 0; } /* Giá cọc nhỏ hơn */
+        
+        .product-card .btn { padding:8px 12px; border-radius:4px; text-decoration:none; }
+        .product-card .btn-primary { background:#222; color:#fff; }
+        
+        @media (max-width:767px){ .product-card .product-media { height:240px; } }
 
+    </style>
 
 </head>
 
 <body>
 
-	<!-- ==========================-->
-	<!-- LOADER-->
-	<!-- ==========================-->
-	<div id="gl-circle-loader-wrapper">
-		<div id="gl-circle-loader-center">
-			<div class="gl-circle-load">
-				<img src="../assets/dist/img/ploading.gif" alt="Page Loader">
-			</div>
-		</div>
-	</div>
+    <div id="gl-circle-loader-wrapper">
+        <div id="gl-circle-loader-center">
+            <div class="gl-circle-load">
+                <img src="../assets/dist/img/ploading.gif" alt="Page Loader">
+            </div>
+        </div>
+    </div>
 
 
-	<!-- ==========================-->
-	<!-- SEARCH MODAL-->
-	<!-- ==========================-->
+    <div id="header-placeholder"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+                if (typeof renderAuthHeader === "function") renderAuthHeader();
+                if (typeof renderHeaderCart === "function") renderHeaderCart();
+                if (typeof initHeaderDelegatedHandlers === "function") initHeaderDelegatedHandlers();
+            })
+            .catch(error => {
+                console.error('Lỗi khi tải header:', error);
+            });
+    </script>
+
+
+    <div class="container">
+        <ol class="breadcrumb underline">
+            <li><a href="index.html">Trang chủ</a></li>
+            <li>Danh sách sản phẩm</li>
+        </ol></div><div class="filter-list base-padd">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="filters">
+                        <div class="filter-header">
+                            <span class="font-22-for-reg-2">Bộ lọc</span>
+                            <a href="#" class="font-20-for-reg-0">Xóa tất cả</a>
+                        </div>
+                        
+                        <div class="range dropdown">
+                            <header>
+                                <span class="font-20-for-reg-0">Khoảng giá</span>
+                                <i class="fa fa-angle-down" aria-hidden="true"></i>
+                            </header>
+                            <input type="text" id="range_id" value="" />
+                        </div>
+
+
+                        <div class="category dropdown">
+                            <header>
+                                <span class="font-20-for-reg-0">Chọn danh mục</span>
+                                <i class="fa fa-angle-down" aria-hidden="true"></i>
+                            </header>
+                            <div id="categoryList">
+                                <p style="padding: 10px; color: #999;">Đang tải...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="size dropdown rq-collupse">
+                            <header>
+                                <span class="font-20-for-reg-0">Chọn kích thước (Size)</span>
+                                <i class="fa fa-angle-down open" aria-hidden="true"></i>
+                            </header>
+                            <div>
+                                <span class="rq-checkbox">
+                                    <input type="checkbox" id="size-three">
+                                    <label for="size-three">S (Nhỏ)</label>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="rq-checkbox">
+                                    <input type="checkbox" id="size-four">
+                                    <label for="size-four">M (Trung bình)</label>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="rq-checkbox">
+                                    <input type="checkbox" id="size-five">
+                                    <label for="size-five">L (Lớn)</label>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="rq-checkbox">
+                                    <input type="checkbox" id="size-six">
+                                    <label for="size-six">XL (Rất lớn)</label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div><div class="col-sm-9">
+                    <div class="product-display">
+                        <h4 class="font-25-for-reg-0">
+                            Sản phẩm <span id="totalCount">(0)</span>
+                        </h4>
+                        <div class="view">
+                            <div class="col-sm-5">
+                                <span class="short">Sắp xếp theo : </span>
+                                <select class="rq-rental-select2" id="sortSelect">
+                                    <option value="newest">Mới nhất</option>
+                                    <option value="name-asc">Tên (A-Z)</option>
+                                    <option value="price-asc">Giá thấp đến cao</option>
+                                    <option value="price-desc">Giá cao đến thấp</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="text-center">
+
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+
+                            </div>
+                        </div>
+                        <div class="row" id="productGrid">
+                            <div class="col-md-4 col-sm-6">
+                                <div class="product-card">
+                                    <div class="product-media">
+                                        <img src="path_to_image.jpg" alt="Sản phẩm ví dụ">
+                                        <button class="wish"><i class="fa fa-gift"></i></button>
+                                    </div>
+                                    <div class="description">
+                                        <div>
+                                            <a href="#" class="prod-title">Sản phẩm ví dụ với tiêu đề dài để kiểm tra layout</a>
+                                            <p class="price"><span class="price-label">giá thuê:</span>100.000 đ</p>
+                                            <p class="prod-cat">Cọc: 50.000 đ</p>
+                                        </div>
+                                        <div class="actions">
+                                            <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="product-card">
+                                    <div class="product-media">
+                                        <img src="path_to_image.jpg" alt="Sản phẩm ví dụ">
+                                        <button class="wish"><i class="fa fa-gift"></i></button>
+                                    </div>
+                                    <div class="description">
+                                        <div>
+                                            <a href="#" class="prod-title">Sản phẩm ví dụ</a>
+                                            <p class="price"><span class="price-label">giá thuê:</span>50.000 đ</p>
+                                            <p class="prod-cat">Cọc: 25.000 đ</p>
+                                        </div>
+                                        <div class="actions">
+                                            <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                    </div><div class="row mrg-top">
+                        <div class="col-xs-4">
+                            <a class="pages-on" href="#">1-9 of 432</a>
+                        </div>
+                        <div class="col-xs-8">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination" id="pagination"></ul>
+                            </nav>
+                        </div>
+                    </div></div></div></div></div><div id="go-to-top">
+        <a href="#stickynav"><i class="fa fa-angle-up"></i></a>
+    </div>
 
 
 
-	<div id="header-placeholder"></div>
-
-	<script>
-		fetch('header.html')
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				return response.text();
-			})
-			.then(data => {
-				document.getElementById('header-placeholder').innerHTML = data;
-				if (typeof renderAuthHeader === "function") renderAuthHeader();
-				if (typeof renderHeaderCart === "function") renderHeaderCart();
-				if (typeof initHeaderDelegatedHandlers === "function") initHeaderDelegatedHandlers();
-			})
-			.catch(error => {
-				console.error('Lỗi khi tải header:', error);
-			});
-	</script>
-
-
-	<div class="container">
-		<ol class="breadcrumb underline">
-			<li><a href="index.html">Trang chủ</a></li>
-			<li>Danh sách sản phẩm</li>
-		</ol><!-- /.breadcrumb -->
-	</div><!-- /.container -->
-
-
-	<div class="filter-list base-padd">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-3">
-					<div class="filters">
-						<div class="filter-header">
-							<span class="font-22-for-reg-2">Bộ lọc</span>
-							<a href="#" class="font-20-for-reg-0">Xóa tất cả</a>
-						</div>
-						
-						<div class="range dropdown">
-							<header>
-								<span class="font-20-for-reg-0">Khoảng giá</span>
-								<i class="fa fa-angle-down" aria-hidden="true"></i>
-							</header>
-							<input type="text" id="range_id" value="" />
-						</div>
-
-
-						<div class="category dropdown">
-							<header>
-								<span class="font-20-for-reg-0">Chọn danh mục</span>
-								<i class="fa fa-angle-down" aria-hidden="true"></i>
-							</header>
-							<!-- Dynamic categories loaded from API -->
-							<div id="categoryList">
-								<p style="padding: 10px; color: #999;">Đang tải...</p>
-							</div>
-						</div>
-						
-						<div class="size dropdown rq-collupse">
-							<header>
-								<span class="font-20-for-reg-0">Chọn kích thước (Size)</span>
-								<i class="fa fa-angle-down open" aria-hidden="true"></i>
-							</header>
-							<div>
-								<span class="rq-checkbox">
-									<input type="checkbox" id="size-three">
-									<label for="size-three">S (Nhỏ)</label>
-								</span>
-							</div>
-							<div>
-								<span class="rq-checkbox">
-									<input type="checkbox" id="size-four">
-									<label for="size-four">M (Trung bình)</label>
-								</span>
-							</div>
-							<div>
-								<span class="rq-checkbox">
-									<input type="checkbox" id="size-five">
-									<label for="size-five">L (Lớn)</label>
-								</span>
-							</div>
-							<div>
-								<span class="rq-checkbox">
-									<input type="checkbox" id="size-six">
-									<label for="size-six">XL (Rất lớn)</label>
-								</span>
-							</div>
-						</div>
-					</div>
-				</div><!-- /.col-sm-3 -->
-
-				<div class="col-sm-9">
-					<div class="product-display">
-						<h4 class="font-25-for-reg-0">
-							Sản phẩm <span id="totalCount">(0)</span>
-						</h4>
-						<div class="view">
-							<div class="col-sm-5">
-								<span class="short">Sắp xếp theo : </span>
-								<select class="rq-rental-select2" id="sortSelect">
-									<option value="newest">Mới nhất</option>
-									<option value="name-asc">Tên (A-Z)</option>
-									<option value="price-asc">Giá thấp đến cao</option>
-									<option value="price-desc">Giá cao đến thấp</option>
-								</select>
-							</div>
-							<div class="col-sm-4">
-								<div class="text-center">
-
-								</div>
-							</div>
-							<div class="col-sm-3">
-
-							</div>
-						</div>
-						<!-- Product Grid - rendered dynamically by product-list.js -->
-						<div class="row" id="productGrid">
-							<div class="col-sm-12">
-								<p style="text-align:center; padding: 40px 0;">Đang tải sản phẩm...</p>
-							</div>
-						</div>
-					</div><!-- /.product-display -->
-					<div class="row mrg-top">
-						<div class="col-xs-4">
-							<a class="pages-on" href="#">1-9 of 432</a>
-						</div>
-						<div class="col-xs-8">
-							<nav aria-label="Page navigation">
-								<ul class="pagination" id="pagination"></ul>
-							</nav>
-						</div>
-					</div><!-- /.row -->
-				</div><!-- /.col-sm-9 -->
-			</div><!-- /.row -->
-		</div><!-- /.container -->
-	</div><!-- /.filter-list -->
-
-
-
-	<div id="go-to-top">
-		<a href="#stickynav"><i class="fa fa-angle-up"></i></a>
-	</div>
-
-
-
-	<div id="footer-placeholder"></div>
-	<script>
-		fetch('footer.html')
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				return response.text();
-			})
-			.then(data => {
-				document.getElementById('footer-placeholder').innerHTML = data;
-			})
-			.catch(error => {
-				console.error('Lỗi khi tải header:', error);
-			});
-	</script>
+    <div id="footer-placeholder"></div>
+    <script>
+        fetch('footer.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('footer-placeholder').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Lỗi khi tải header:', error);
+            });
+    </script>
 
 
      <script src="../assets/dist/js/layout-auth.js"></script>
-	<script src="../assets/dist/js/vendor/jquery-3.2.0.min.js"></script>
-	<script src="../assets/dist/js/vendor/bootstrap.min.js"></script>
-	<script src="../assets/dist/js/vendor/countUp.js"></script>
-	<script src="../assets/dist/js/vendor/owl.carousel.min.js"></script>
-	<script src="../assets/dist/js/vendor/ion.rangeSlider.min.js"></script>
-	<script src="../assets/dist/js/vendor/dateRangePicker.js"></script>
-	<script src="../assets/dist/js/vendor/jquery.flexslider-min.js"></script>
-	<script src="../assets/dist/js/vendor/jquery.nicescroll.min.js"></script>
-	<script src="../assets/dist/js/vendor/select2.min.js"></script>
-	<script src="../assets/dist/js/vendor/lightbox.min.js"></script>
-	<script src="../assets/dist/js/vendor/jquery.smooth-scroll.js"></script>
-	<script src="../assets/dist/js/custom.js"></script>
-	<script src="../assets/dist/js/auth-header.js"></script>
-	<!-- <script src="../assets/dist/js/layout.js"></script> -->
-	<script src="../assets/dist/js/product-list.js"></script>
+    <script src="../assets/dist/js/vendor/jquery-3.2.0.min.js"></script>
+    <script src="../assets/dist/js/vendor/bootstrap.min.js"></script>
+    <script src="../assets/dist/js/vendor/countUp.js"></script>
+    <script src="../assets/dist/js/vendor/owl.carousel.min.js"></script>
+    <script src="../assets/dist/js/vendor/ion.rangeSlider.min.js"></script>
+    <script src="../assets/dist/js/vendor/dateRangePicker.js"></script>
+    <script src="../assets/dist/js/vendor/jquery.flexslider-min.js"></script>
+    <script src="../assets/dist/js/vendor/jquery.nicescroll.min.js"></script>
+    <script src="../assets/dist/js/vendor/select2.min.js"></script>
+    <script src="../assets/dist/js/vendor/lightbox.min.js"></script>
+    <script src="../assets/dist/js/vendor/jquery.smooth-scroll.js"></script>
+    <script src="../assets/dist/js/custom.js"></script>
+    <script src="../assets/dist/js/auth-header.js"></script>
+    <script src="../assets/dist/js/product-list.js"></script>
 </body>
-
-<!-- Mirrored from wpdemo.redq.io/sites/dress-rental/html/listing-page.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 22 Jan 2026 15:16:31 GMT -->
 
 </html>
