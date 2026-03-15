@@ -8,7 +8,7 @@ public class TryOnController : ControllerBase
 {
     private readonly IHttpClientFactory _httpClientFactory;
 
-    private const string API_KEY = "78e08b430f7a4ef18fba128876727162b88623e62a23b8e8ead461b5b8a1b75e";
+    private const string API_KEY = "62e25c5ebdaa46369580ff9d15a0fb2110cd51a7eceed538b60cad082f2dc94b";
 
     public TryOnController(IHttpClientFactory httpClientFactory)
     {
