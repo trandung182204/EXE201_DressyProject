@@ -354,6 +354,127 @@
 			font-size: 13px;
 			display: block;
 		}
+
+		/* ===== ZALO FLOAT BUTTON ===== */
+		#zalo-chat {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			z-index: 9999;
+		}
+
+		/* ===== ICON ===== */
+		.zalo-icon {
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			background: #008fe5;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+			/* rung nhẹ */
+			animation: shake 4s infinite;
+		}
+
+		.zalo-icon img {
+			width: 32px;
+		}
+
+		/* ===== POPUP ===== */
+		.zalo-popup {
+			width: 280px;
+			background: #fff;
+			border-radius: 12px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+			position: absolute;
+			bottom: 75px;
+			right: 0;
+			overflow: hidden;
+
+			/* hiệu ứng mượt */
+			opacity: 0;
+			transform: translateY(20px);
+			pointer-events: none;
+			transition: all 0.3s ease;
+		}
+
+		/* trạng thái mở */
+		.zalo-popup.show {
+			opacity: 1;
+			transform: translateY(0);
+			pointer-events: auto;
+		}
+
+		/* ===== HEADER ===== */
+		.zalo-header {
+			background: #008fe5;
+			color: white;
+			padding: 12px;
+			font-weight: 600;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.zalo-header button {
+			background: none;
+			border: none;
+			color: white;
+			font-size: 18px;
+			cursor: pointer;
+		}
+
+		/* ===== BODY ===== */
+		.zalo-body {
+			padding: 15px;
+			text-align: center;
+			font-size: 14px;
+		}
+
+		.zalo-chat-btn {
+			display: inline-block;
+			margin-top: 12px;
+			padding: 10px 16px;
+			background: #008fe5;
+			color: white;
+			border-radius: 6px;
+			text-decoration: none;
+			font-weight: 600;
+			transition: 0.2s;
+		}
+
+		.zalo-chat-btn:hover {
+			background: #0070b8;
+		}
+
+		/* ===== RUNG NHẸ ===== */
+		@keyframes shake {
+
+			0%,
+			92%,
+			100% {
+				transform: translateX(0);
+			}
+
+			93% {
+				transform: translateX(-4px);
+			}
+
+			94% {
+				transform: translateX(4px);
+			}
+
+			95% {
+				transform: translateX(-4px);
+			}
+
+			96% {
+				transform: translateX(4px);
+			}
+		}
 	</style>
 </head>
 
@@ -598,10 +719,11 @@
 
 			</div>
 		</div>
-	</div>```
+
+	</div>
 
 
-	`
+
 
 
 
@@ -728,6 +850,7 @@
 			</div>
 		</div>
 	</div> -->
+
 	<div id="footer-placeholder"></div>
 	<script>
 		fetch('footer.html')
@@ -861,6 +984,52 @@
 		document.addEventListener("DOMContentLoaded", () => {
 			renderLatestFavorites(5).catch(console.error);
 		});
+	</script>
+
+	</a>
+	<!-- Nút Zalo -->
+	<div id="zalo-chat">
+		<div class="zalo-icon" onclick="toggleZalo()">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg">
+		</div>
+
+		<!-- Popup -->
+		<div class="zalo-popup" id="zaloPopup">
+			<div class="zalo-header">
+				<span>Chat với chúng tôi</span>
+				<button onclick="toggleZalo()">✕</button>
+			</div>
+
+			<div class="zalo-body">
+				<p>Xin chào 👋</p>
+				<p>Nhắn tin qua Zalo để được tư vấn nhanh nhất!</p>
+
+				<a href="https://zalo.me/0363274012" target="_blank" class="zalo-chat-btn">
+					Mở Zalo Chat
+				</a>
+			</div>
+		</div>
+	</div>
+	<script>
+		function toggleZalo() {
+			const popup = document.getElementById("zaloPopup");
+			popup.classList.toggle("show");
+		}
+
+		// auto hiện rồi tắt (mượt)
+		setInterval(() => {
+			const popup = document.getElementById("zaloPopup");
+
+			// nếu đang mở thì bỏ qua (tránh spam)
+			if (popup.classList.contains("show")) return;
+
+			popup.classList.add("show");
+
+			setTimeout(() => {
+				popup.classList.remove("show");
+			}, 5000);
+
+		}, 10000);
 	</script>
 </body>
 
